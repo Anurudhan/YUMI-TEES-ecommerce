@@ -1,0 +1,248 @@
+<%-include("../layout/userheader.ejs")-%>
+<%-include("../layout/usercentre.ejs")-%>
+<style>
+    .badge-dark{
+        background-color: black;
+        height: 3%;
+    }
+    .card-header{
+        background-color: rgb(187, 203, 211);
+        height: 8%;
+        padding: 2%;
+    }
+    .card-radio {
+    background-color: #fff;
+    border: 2px solid #eff0f2;
+    border-radius: .75rem;
+    padding: .5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block
+}
+
+.card-radio:hover {
+    cursor: pointer
+}
+.card-radio-label {
+    display: block
+}
+.card-radio-input {
+    display: none
+}
+
+.card-radio-input:checked+.card-radio {
+    border-color: #3b76e1!important
+}
+    
+</style>
+<%-include("../partials/usernavbar.ejs")-%>
+ <!-- cart + summary -->
+ <section class="bg-light" style="padding-top: 50px;margin-top: 80px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card-header">
+                    <a class="btn btn-primary float-end" href="/addaddress">Add Address</a>
+                    <h4 class="card-title">Delivery Address</h4>
+                </div>
+
+                <% if (address != null && address.length > 0) { %>
+                    <div class="card border mb-5 shadow-0" id="addressCard0" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);">
+                        <div class="m-4">
+                            <!-- Container to display existing addresses -->
+                            <div id="existingAddressesContainer">
+                                <!-- Display the first address -->
+                                <div class="form-check mb-2">
+                                    <!-- Container for selected label -->
+                                    <div id="selectedLabelContainer" class="float-end"></div>
+                                    <input class="form-check-input" type="radio" name="existingAddress" id="address0">
+                                    <ul class="address-list">
+                                        <!-- Sample address item -->
+                                        <li class="address-item" style="list-style: none;">
+                                            <button type="button" class="badge badge-dark" style="border-radius: 10px; height: 25px; font-size: 12px;">
+                                                <%= address[0].addressType %>
+                                            </button>
+                                            <br><br>
+                                            <% if (adrsSelect == address[0]._id) { %>
+                                                <div class="text-end">
+                                                    <i class="fa-solid fa-circle-check text-success" style="font-size: 24px;position: absolute;margin-left: -40px;"></i>
+                                                </div>
+                                            <% } %>
+                                            <p style="font-weight: bold;"><%-address[0].name-%></p>
+                                            <p><%= address[0].address %>, <%= address[0].locality %>, <%= address[0].city %>, <%= address[0].district %>, <%= address[0].state %></p>
+                                            <p><%-address[0].mobile-%></p>
+                                            <p><%-address[0].pincode-%></p>
+                                            <br>
+                                            <button type="button" class="btn btn-success btn-sm d-none" id="deliverHereBtn0" onclick="selectAddress('<%-address[0]._id-%>')">Deliver Here</button>
+                                        </li>
+                                    </ul>
+                                    <hr style="color: #9a9a9a;">
+                                </div>
+
+                                <!-- Additional addresses hidden by default -->
+                                <% address.forEach(function(data, i) { %>
+                                    <% if (i != 0) { %>
+                                        <div class="hidden-address form-check mb-2 ">
+                                        <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %>> 
+                                        <ul class="address-list">
+                                            <li class="address-item" style="list-style: none;">
+                                                <button type="button" class="badge badge-dark"><%= data.addressType %></button>
+                                                <br><br>
+                                                <% if (adrsSelect == data._id) { %>
+                                                    <div class="text-end">
+                                                        <i class="fa-solid fa-circle-check text-success" style="font-size: 24px; position: absolute; margin-left: -40px;"></i>
+                                                    </div>
+                                                <% } %>
+                                                <p style="font-weight: bold;"><%= data.name %></p>
+                                                <p><%= data.address %>, <%= data.locality %>, <%= data.city %>, <%= data.district %>, <%= data.state %></p>
+                                                <p><%= data.mobile %></p>
+                                                <p><%= data.pincode %></p>
+                                                <br>
+                                                <a type="button" class="btn btn-success btn-sm d-none" id=<%= "deliverHereBtn" + i %> onclick="selectAddress('<%-data._id-%>')">Deliver Here</a>
+                                            </li>
+                                        </ul>
+                                        <hr style="color: #554f4f;">
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                                <% if (address.length > 1) { %>
+                                    <div class="text-end">
+                                        <a href="#" class="show-all-addresses" style="text-decoration: none; font-size: 20px;" onclick="toggleHiddenAddresses()">Show All</a>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+                <div class="card-header">
+                    <h4 class="card-title">Payment Options</h4>
+                </div>
+                <div class="card mt-3">
+                    <div class="row p-4">
+                        <div class="col-lg-3 col-sm-6">
+                            <div data-bs-toggle="collapse">
+                                <label class="card-radio-label">
+                                    <input type="radio" name="pay-method" id="pay-methodoption1" class="card-radio-input">
+                                    <span class="card-radio py-3 text-center text-truncate">
+                                        <i class="bi bi-credit-card d-block h2 mb-3"></i>
+                                        Credit / Debit Card
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-3 col-sm-6">
+                            <div>
+                                <label class="card-radio-label">
+                                    <input type="radio" name="pay-method" id="pay-methodoption2" class="card-radio-input">
+                                    <span class="card-radio py-3 text-center text-truncate">
+                                        <i class="bi bi-paypal d-block h2 mb-3"></i>
+                                        Paypal
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-sm-6">
+                            <div>
+                                <label class="card-radio-label">
+                                    <input type="radio" name="pay-method" id="pay-methodoption3" class="card-radio-input" checked="">
+
+                                    <span class="card-radio py-3 text-center text-truncate">
+                                        <i class="bi bi-cash-stack d-block h2 mb-3"></i>
+                                        <span>Cash on Delivery</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col">
+                        <a href="/home" class="btn btn-link text-muted" style="text-decoration: none;">
+                            <i class="bi bi-arrow-left me-1"></i> Continue Shopping </a>
+                    </div> <!-- end col -->
+                    <div class="col">
+                        <div class="text-end mt-2 mt-sm-0">
+                            <a href="#" class="btn btn-success">
+                                <i class="bi bi-basket2-fill me-1"></i> Procced </a>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row-->
+            </div>
+            <div class="col-lg-3"  >
+                <div class="card" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);position: fixed;width: 25%;">
+                    <div class="card-body">
+                        <h5>PRICE DETAILS</h5>
+                        <hr style="color:#554f4f;">
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Total price:</p>
+                            <p class="mb-2">₹ <%=grandtotal%>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Discount:</p>
+                            <p class="mb-2 text-success">-₹ <%=disctotal%>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Delivery charges:</p>
+                            <span style="font-size: small;color: green;">Free</span><del
+                                class="text-muted text-nowrap" style="font-size: small;">₹ 40
+                            </del>
+                        </div>
+                        <hr style="color:#554f4f;">
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">TOTAL PAYABLE</p>
+                            <p class="mb-2 fw-bold">₹ <%=totalprice%>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    function toggleHiddenAddresses() {
+        var hiddenAddresses = document.querySelectorAll('.hidden-address');
+        hiddenAddresses.forEach(function(address) {
+            address.classList.toggle('show-hidden-addresses');
+        });
+
+        var showAllLink = document.querySelector('.show-all-addresses');
+        if (showAllLink) {
+            if (showAllLink.textContent === 'Show All') {
+                showAllLink.textContent = 'Show Less';
+            } else {
+                showAllLink.textContent = 'Show All';
+            }
+        }
+    }
+</script>
+<% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= successMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "green",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= errorMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "red",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+
+<%-include("../layout/userfooter.ejs")-%>

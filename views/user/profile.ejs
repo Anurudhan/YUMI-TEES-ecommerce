@@ -1,0 +1,320 @@
+<%-include("../layout/userheader.ejs")-%>
+<%-include("../layout/usercentre.ejs")-%>
+<%-include("../partials/usernavbar.ejs")-%>
+<style>
+    /* Increase the height of the card container */
+    .card-container {
+        height: 400px; /* Adjust the height as needed */
+    }
+
+    /* Set the list items to have the same height */
+    .list-group-item {
+        height: 60px; /* Adjust the height as needed */
+        line-height: 60px; /* Center the content vertically */
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+    }
+    #editIcon{
+        color: blue;
+        font-size: 20px;
+    }
+    .hidden-div{
+        display: none;
+    }
+    .badge-dark{
+        background-color: black;
+    }
+    .btn-delete{
+        background-color: rgba(245, 21, 21, 0.904);
+        color: white;
+        border: none;
+        border-radius: 10%;
+    }
+    .btn-edit{
+        background-color:rgb(34, 34, 224);
+        color: white;
+        border: none;
+        border-radius: 10%;
+    }
+</style>
+<section style="min-height: 90vh;margin-top: 100px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center mb-5 mt-2">
+                <h3>User Profile</h3>
+            </div>
+            <div class="col-md-5 col-xl-4 mb-4" >
+                <div class="card ">
+                    <div class="card-header d-flex justify-content-center align-items-center">
+                        <h5 class="card-title mb-0">Profile Settings</h5>
+                    </div>
+                    <div class="list-group list-group-flush " role="tablist">
+                        <a class="list-group-item list-group-item-action active" onclick="showDivAndSendGet(this,'/profile')" role="tab">
+                            Account
+                        </a>
+                        <a class="list-group-item list-group-item-action" onclick="manageAddresses(this,'div2')"
+                            role="tab">
+                            Password
+                        </a>
+                        <a  data-toggle="list">
+                            <button class="list-group-item list-group-item-action" onclick="manageAddresses(this,'div3')" role="tab">
+                                Manage Addresses
+                            </button>
+                        </a>
+                        <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div4')"
+                            role="tab">
+                            Available Coupons
+                        </a>
+                        <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div5')"
+                            role="tab">
+                            Refer and Earn
+                        </a>
+                        <!--<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Widgets
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Your data
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Delete account
+                    </a> -->
+                    </div>
+                    </div>
+            </div>
+            
+            <div class="col-md-7 col-xl-8 mt-4">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="account" role="tabpanel">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-center align-items-center">
+
+                                <h5 class="card-title mb-0">Public info</h5>
+                            </div>
+
+
+                            <div class="card-body-main ps-2" id="div1">
+                                <form action="/resetusername" method="post">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                
+                                                <label for="inputUsername" style="font-weight: bold;">Username</label><br><br>
+                                                <div class="row d-flex">
+                                                <div class="col-md-9 text-right d-flex" >
+                                                <input type="text" class="form-control" id="inputUsername"
+                                                    name="username" placeholder="Username"
+                                                    value="<%=username%>" disabled> 
+                                                </div>
+                                            
+                                            <div class="col-md-2">
+                                                <!-- Edit icon -->
+                                                <i class="bi bi-pencil-square" id="editIcon"
+                                                style="cursor: pointer;margin-left: 10%;"></i>
+                                            </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group">
+                                                <label for="inputEmail" style="font-weight: bold;">Email</label><br><br>
+                                                <div class="col-md-9 text-right d-flex" >
+                                                    <input type="email" class="form-control" id="inputEmail" placeholder="Email" value="<%=email%>" 
+                                                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required disabled>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                        <h5>FAQs</h5>
+                                        <p style="font-weight: 600;">What happens when I update my email address?</p>
+                                        <p>Your login email id changes, likewise. You'll receive all your account related communication on your updated email address .</p>
+                                        <p style="font-weight: 600;">When will my yumitees account be updated with the new email address?</p>
+                                        <p>It happens as soon as you confirm the verification code sent to your email and save the changes.</p>
+                                        <p style="font-weight: 600;">Does my Seller account get affected when I update my email address?</p>
+                                        <p>Flipkart has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
+                                    <br>
+
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 20%;display: none;" id="saveButton">Save changes</button>
+                                </form>
+                            </div>
+
+
+
+                            <div class="card-body hidden-div" id="div2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5 class="card-title">Password</h5>
+                                    <label for="" class="text-center"
+                                        style="color: red;font-size: smaller;"><%-locals.err?err:""-%></label>
+                                    <form action="/changepassword" method="post">
+                                        <!-- Current password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordCurrent" style="font-weight: 600;">Current password</label>
+                                            <br><br>
+                                            <input type="password" placeholder="Current Password" name="currentpassword"
+                                                class="form-control" id="password1" oninput="validateCurrentPassword()"
+                                                required>
+                                            <p id="current-password-error" class="current-error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                                <small style="float: right;margin-right: 7%;"><a style="text-decoration: none;color: rgb(247, 18, 18);" href="/verifyemail">Forgot your password?</a></small>
+                                        </div>
+
+                                        <!-- New password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordNew" style="font-weight: 600;">New password</label>
+                                            <br><br>
+                                            <input id="new-password" type="password" placeholder="New Password" class="form-control"
+                                                name="password" oninput="validatePassword()" required>
+                                            <p id="password-error" class="error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                        </div>
+
+                                        <!-- Confirm password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordNew2" style="font-weight: 600;">Confirm password</label>
+                                            <br><br>
+                                            <input type="password" placeholder="Confirm Password" class="form-control"
+                                                id="inputPasswordNew2" oninput="validateConfirmPassword()" required>
+                                            <p id="confirmpassword-error" class="error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                        </div>
+                                        <br>
+                                        <button id="create-button" class="btn-delete" type="submit" >Submit</button>
+                                    </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="card-body hidden-div" id="div4">
+                                <div class="row">
+                                    <div class="col-12">
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="card-body hidden-div" id="div5">
+                                <div class="row">
+                                    <div class="col-12">
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="card-body hidden-div" id="div3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="address-container">
+                                            <div class="add-address d-flex">
+                                                <div>
+                                                    <h2>Manage Address</h2>
+                                                </div>
+                                                <a class="ms-auto me-0" href="/addaddress">
+                                                    <button class="add-address-btn p-3" 
+                                                style="background-color: rgba(59, 59, 231, 0.753);color: azure;border: none;border-radius: 10%;">
+                                                Add Address</button>
+                                                </a>
+                                                
+                                            </div>
+
+                                            <% address.forEach(data=> { %>
+
+                                                <ul class="address-list">
+                                                    <!-- Sample address item -->
+            
+                                                    <li class="address-item  p-3 mb-5 mt-3 bg-white rounded" style="box-shadow:  0 7px 7px rgba(0, 0, 0, 0.1);list-style: none;">
+                                                        <button type="button" class="badge badge-dark">
+                                                            <%= data.addressType %>
+                                                        </button><br><br>
+                                                        <p><span style="font-weight: bold;">Name: </span><%-data.name-%></p>
+                                                        <p><span style="font-weight: bold;">Address: </span><%= data.address %>, <%= data.locality %>, <%= data.city %>, <%=
+                                                                            data.district %>, <%= data.state %>
+                                                        </p>
+                                                        <p><span style="font-weight: bold;">Phone: </span><%-data.mobile-%></p>
+                                                        <p><span style="font-weight: bold;">Pin: </span><%-data.pincode-%></p>
+            
+                                                        <a href="/editaddress/<%=data._id%>"><button class="btn-sm btn-edit"><i
+                                                                    class="bi bi-pencil-square"></i> Edit</button></a>
+            
+                                                        <p hidden>id: <%-data.userId-%></p>
+            
+                                                        <button class="btn-sm btn-delete" onclick="confirmDelete('<%- data._id %>')">
+                                                            <i class="bi bi-trash-fill"></i> Delete
+                                                        </button>
+                                                        
+                                                    </li>
+            
+                                                    <!-- Add more address items here -->
+                                                </ul>
+            
+            
+            
+                                                <% }) %>
+            
+            
+                                            
+                                        </div>
+                                    </div>
+
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    // Get references to the edit icon and the save button
+    var editIcon = document.getElementById('editIcon');
+    var saveButton = document.getElementById('saveButton');
+    var inputEmail = document.getElementById('inputEmail');
+    var inputUser = document.getElementById('inputUsername')
+
+    // Add click event listener to the edit icon
+    editIcon.addEventListener('click', function() {
+
+        inputUser.removeAttribute('disabled');
+        inputEmail.removeAttribute('disabled');
+
+        // Toggle the visibility of the save button
+        saveButton.style.display = (saveButton.style.display === 'none') ? 'inline-block' : 'none';
+    });
+</script>
+<% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= successMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "green",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= errorMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "red",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+
+<%-include("../partials/userfooter.ejs")-%>
+<%-include("../layout/userfooter.ejs")-%>

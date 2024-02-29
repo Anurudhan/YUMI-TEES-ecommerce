@@ -1,0 +1,42 @@
+<%-include("../layout/userheader.ejs")-%>
+<%-include("../layout/usercentre.ejs")-%>
+<style>
+    body{
+        background-image: url("/assets/bgtheme.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust as needed */
+    }
+    .login-page{
+        background-color: black;
+        padding: 3%;
+        border-radius: 6%;
+    }
+</style>
+<div class="container">
+    <div class="login-page" >
+        <div class="form">
+            <!-- <i class="fa-solid fa-user fa-2xl" style="color: #4ff977"></i> -->
+            <h5 style="color: rgb(114, 255, 112);display: flex;justify-content: center;">Verify Email</h5>
+            <label for="" class="text-center" style="color: rgb(4, 94, 3);font-size: smaller;"><%=msg?msg:""-%></label>
+    
+            <form class="login-form" method="post" action="/verifyemail" >
+                <input id="email" class="form-control" type="email" placeholder="Email" name="email" oninput="validateEmail()" required/>
+                <p id="email-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: small;"></p>
+                <div class="d-flex justify-content-center">
+                <button class="btn mt-2" style="background-color: rgb(114, 255, 112);font-weight: 700;"  id="create-button" type="submit">Verify</button>
+                </div>
+                <p class="message mt-3" style="color: azure;">Not registered? <a href="/signup">Create an account</a></p>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<%-include("../layout/userfooter.ejs")-%>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="/admin/addproducts" class="btn  float-end m-3" style="background-color: blue !important; color: white;"><small>Add Product</small></a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table shadow-sm" id="example">
+                    <thead>
+                      <tr>
+                        <th scope="col">NO</th>
+                        <th scope="col">IMAGE</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">PRICE</th>
+                        <th scope="col">CATEGORY</th>
+                        <th scope="col">BRAND</th>
+                        <th scope="col">STOCK</th>
+                        <th scope="col">BLOCK/UNBLOCK</th>
+                        <th scope="col">EDIT</th>
+                        <th scope="col">DELETE</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach((ele,index) => { %>
+                      <tr>
+                       
+                        <td><%-index+1-%></td>
+                        <td><img src="/product-images/<%=ele.images[0]%>" alt="" style="width: 80px;height: 80px;"></td>
+                        <td><%-ele.ProductName-%></td>
+                        <td><%-ele.Price-%></td>
+                        <td><%-ele.Category.categoryname-%></td>
+                        <td><%-ele.BrandName-%></td>
+                        <td><%-ele.AvailableQuantity-%></td>
+                         <% if (ele.status=="Active") { %>
+                            <td><a href="/admin/products/block/<%= ele._id%>/<%-ele.status-%>"><button style="background-color: green; border-radius: 30px; border:none; width:90px; color: white;">block</button></a></td>
+                           
+                        <%} else {%>
+                
+                            <td><a href="/admin/products/block/<%= ele._id%>/<%-ele.status-%>"><button style="background-color:red; border-radius: 30px; border:none; width:90px; color: white;">Unblock</button></a></td>
+                        <% } %>
+                        
+                        <td><a href="/admin/editproduct/<%-ele._id-%>"><i class="fa-solid fa-pen-to-square" style="color:blue; padding:10px"></i></a></td>
+                        <td><a><i class="fa-solid fa-trash" style="color: red; " onclick="deletepro('<%-ele._id-%>')"></i></a></td>
+                      </tr> 
+                       <% }) %>
+                    
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+    
+      
+      </div>
+    </div>
+
+</body>
+</html>

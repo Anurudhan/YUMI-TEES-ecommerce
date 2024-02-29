@@ -1,0 +1,65 @@
+<%-include("../layout/adminheader.ejs")-%>
+<%-include("../layout/admincentre.ejs")-%>
+<style>
+.main{
+    width: 450px ;
+    height: 300px;
+    margin-top: auto;
+    margin-bottom: auto;
+    color: white;
+    background-color: orange;
+    margin-top: 200px;
+    border-radius: 10px;
+    border:4px rgb(60, 58, 61);
+    border-style: ridge;
+}
+h4{
+    text-shadow: 2px 2px black;
+}
+
+</style>
+<section>
+    <div class="main container d-flex align-items-center justify-content-center mb-auto  " >
+        <div class="wrapper">
+            <div class="title d-flex justify-content-center mt-2">
+                <h4>ADMIN LOGIN</h4>
+            </div>
+            <form action="/admin/login" method="post">
+                <div class=" loginDiv d-flex justify-content-center ">
+                    <span><%=err%></span>
+                </div>
+                <div class="d-flex p-3">
+                    <i class="bi bi-envelope-at me-2" style=" color: black; font-weight:bolder;"></i>
+                    <input class="headz d-flex" type="email" placeholder="email" name="email" />
+                </div>
+                <div class="d-flex p-3">
+                    <i class="bi bi-key me-2" style=" color: black; font-weight:bolder;"></i>
+                    <input type="password" placeholder="Password" name="password" id="password"/>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit">Login</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+
+    let password = document.getElementById('password');
+    let eyeicon = document.getElementById('eyeicon');
+    eyeicon.onclick = function(){
+        if(password.type == 'password'){
+            password.type = 'text';
+            eyeicon.src = 'eye-open.png'
+        }else{
+            password.type = 'password';
+            eyeicon.src = 'eye-close.png'
+        }
+    }
+
+</script>
+<%-include("../layout/adminfooter.ejs")-%>

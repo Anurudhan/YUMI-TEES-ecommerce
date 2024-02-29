@@ -1,0 +1,132 @@
+<%-include("../layout/userheader.ejs")-%>
+<link rel="stylesheet" href="/stylesheet/productdetails.css">
+<script src="/javascript/cartAjax.js"></script>
+<%-include("../layout/usercentre.ejs")-%>
+<style media="screen">
+    figure.zoom {
+        background-position: 50% 50%;
+        position: relative;
+        /* margin: 150px auto; */
+        /* border: 5px solid white;
+        box-shadow: -1px 5px 15px black; */
+        /* height: 400px;
+        width: 520px; */
+        width: 100%;
+        height: 60vh;
+        overflow: hidden;
+        cursor: zoom-in;
+      
+    }
+  
+    figure.zoom img:hover {
+        opacity: 0;
+    }
+  
+    figure.zoom img {
+        transition: opacity 0.5s;
+        display: block;
+        width: 100%;
+  
+    }
+  
+    .small-images {
+        max-width: 120px;
+    }
+  </style>
+<%-include("../partials/usernavbar.ejs")-%>
+<div class="container" style="margin-top: 10px;">
+    <div class="card">
+        <div class="container-fliud">
+            <div class="wrapper row">
+                <div class="preview col-md-6">
+                    
+                    <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                        <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" >
+                          <figure class="zoom" onmousemove="zoom(event)" id="main-bg"
+                                    style="background-image: url('/productimages/<%- product.images[0] -%>');background-size:200%;">
+                          <img style="width: 100%;height: 100%; margin: auto;"  class="rounded-8 fit" src="/productimages/<%- product.images[0]-%>" id="mainimg" />
+                        </figure>
+                        </a>
+                      </div>
+            
+                    <div class="d-flex justify-content-center mb-3">
+                        <% product.images.forEach((ele,index) => { %>
+                        <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"    class="item-thumb">
+                          <img width="60" height="60" class="rounded-2" src="/productimages/<%= ele%>" onclick="change('<%-index+1-%>')" id="img<%-index+1-%>"/>
+                        </a>
+                        <% }) %>
+                      </div>
+                                        
+                </div>
+                <div class="details col-md-6 ps-5">
+                    <h3 class="product-title"><%= product.productName %></h3>
+                    <div class="rating">
+                        <div class="stars">
+                            <span class="bi bi-star-fill " style="color: rgb(255, 230, 7);"></span>
+                            <span class="bi bi-star-fill" style="color: rgb(255, 230, 7);"></span>
+                            <span class="bi bi-star-fill" style="color: rgb(255, 230, 7);"></span>
+                            <span class="bi bi-star"></span>
+                            <span class="bi bi-star"></span>
+                        </div>
+                        <span class="review-no">41 reviews</span>
+                    </div>
+                    <p class="product-description"><%=product.Description %>.</p>
+                    <h4 class="price">current price: <span class="bi bi-currency-rupee"><%=product.price-product.discountAmount%></span></h4>
+                    <h6 class="discount"><%=Math.round((product.discountAmount*100)/product.price)%>% Discount of <%=product.price%> </h6>
+                    <h4 class="product-details" style="font-weight:bold;">Product Details</h4>
+                    <ul class="product-details">
+                        <li><%=product.Specification1%></li>
+                        <li><%=product.Specification2%></li>
+                        <li><%=product.Specification3%></li>
+                        <li><%=product.Specification4%></li>
+                      </ul>
+                    <p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
+                    <div class="action">
+                        <a href=""><button class="buynow btn btn-default" type="button">buy now</button></a>
+                        <% if (checkcart) { %>
+                          <!-- If checkcart is true, render the "Go to Cart" button -->
+                          <a href="/cart">
+                              <button class="go-to-cart btn "><i class="bi bi-cart4" style="font-size: 20px;"></i>Go to Cart</button>
+                          </a>
+                      <% } else { %>
+                          <!-- If checkcart is false, render the "Add to Cart" button -->
+                          <a>
+                              <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
+                          </a>
+                      <% } %>
+                        <!-- <a><button class="add-to-cart btn btn-default"  onclick="addTocart('<%-product._id-%>')">add to cart</button></a> -->
+                        <a href=""><button class="like btn btn-default" type="button"><span class="bi bi-heart"></span></button></a>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function change(data){
+      var mainimg=document.getElementById('mainimg').src
+      console.log(mainimg)
+     
+        console.log("ok")
+        imgs=document.getElementById(`img${data}`).src
+        document.getElementById('mainimg').src=imgs
+        document.getElementById('main-bg').style.backgroundImage = `url(${imgs})`;
+    
+    }
+    
+    </script>
+    
+    
+    <script type="text/javascript">
+      function zoom(e) {
+          var zoomer = e.currentTarget;
+          e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX
+          e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX
+          x = offsetX / zoomer.offsetWidth * 100
+          y = offsetY / zoomer.offsetHeight * 100
+          zoomer.style.backgroundPosition = x + '% ' + y + '%';
+      }
+    </script>
+    
+<%-include("../partials/userfooter.ejs")-%>
+<%-include("../layout/userfooter.ejs")-%>

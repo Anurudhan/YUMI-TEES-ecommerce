@@ -1,0 +1,193 @@
+<%-include("../layout/userheader.ejs")-%>
+<%-include("../layout/usercentre.ejs")-%>
+<style>
+        /* Hide the up and down arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>
+<div class="container">
+    <div class="d-flex justify-content-center align-items-center mt-4"
+            style="border-radius: 15px;">
+            <div class="d-flex justify-content-center align-items-center ps-5 pe-5" style="background-color: rgb(25, 27, 36); border-radius: 10px 10px 0 0 ;">
+                <h1 style="color: rgb(255, 255, 255);">Edit Address</h1>
+            </div>
+            
+    </div>
+    <div class="col-12">
+        <form class="p-5" method="post" action="/editaddress" id="addressForm1" onsubmit="return validateForm()">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Name:</label>
+                    <input type="text" class="form-control" name="name" id="recipient-name" value="<%=data.name%>" >
+                    <small class="text-danger" id="nameError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-phone" class="col-form-label">Phone no:</label>
+                    <input type="number" class="form-control" name="mobile" id="recipient-phone" value="<%=data.mobile%>"
+                    inputmode="numeric" onkeydown="disableArrowKeys(event);" >
+                    <small class="text-danger" id="phoneError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-email" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" name="email" id="recipient-email" value="<%=data.email%>" >
+                    <small class="text-danger" id="emailError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-pincode" class="col-form-label">Pincode:</label>
+                    <input type="text" class="form-control" name="pincode" id="recipient-pincode" value="<%=data.pincode%>"
+                    inputmode="numeric" onkeydown="disableArrowKeys(event);">
+                    <small class="text-danger" id="pincodeError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-locality" class="col-form-label">Locality:</label>
+                    <input type="text" class="form-control" name="locality" id="recipient-locality" value="<%=data.locality%>" >
+                    <small class="text-danger" id="localityError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-city" class="col-form-label">City:</label>
+                    <input type="text" class="form-control" name="city" id="recipient-city" value="<%=data.city%>" >
+                    <small class="text-danger" id="cityError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-district" class="col-form-label">District:</label>
+                    <input type="text" class="form-control" name="district" id="recipient-district" value="<%=data.district%>">
+                    <small class="text-danger" id="districtError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="recipient-state" class="col-form-label">State:</label>
+                    <input type="text" class="form-control" name="state" id="recipient-state" value="<%=data.state%>">
+                    <small class="text-danger" id="stateError"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Address:</label>
+                        <textarea class="form-control" id="message-text" name="address" placeholder="house name, post office"><%= data.address %></textarea>
+                        <small class="text-danger" id="addressError"></small>
+                    </div>
+                    
+                </div>
+                <div class="col-md-6" style="margin-top: 5%;">
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <label>Address Type:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="addressType" id="homeType"
+                                    value="Home" <%= data.addressType === 'Home' ? 'checked' : '' %>
+                                    oninput="validateRadio('addressType', 'addressType-error', 'Please select an Address Type'); updateAddAddressBtnState()">
+                                <label style="margin-top: -17px;" class="form-check-label"
+                                    for="homeType">Home</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="addressType" id="workType"
+                                    value="Work" <%= data.addressType === 'Work' ? 'checked' : '' %>
+                                    oninput="validateRadio('addressType', 'addressType-error', 'Please select an Address Type'); updateAddAddressBtnState()">
+                                <label style="margin-top: -17px;" class="form-check-label"
+                                    for="workType">Work</label>
+                            </div>
+                            <p style="color: red;" id="addressType-error" class="error-message"></p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-center align-items-center">
+            <a href="/profile"><button type="button" class="btn " style="background-color:rgb(88, 190, 40); color: white;" data-bs-dismiss="modal"> <small>Cancel</small></button> </a>
+            <button type="submit" class="btn"  style="background-color: rgb(74, 74, 218); color: white ;margin-left:2%;" id="submitBtn" ><small>Submit</small></button>
+          </div>
+        </form>
+    </div>
+    
+</div>
+<script>
+    function disableArrowKeys(event) {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+    }
+}
+
+    // Validate mobile number while typing
+    document.getElementById('recipient-phone').addEventListener('input', function() {
+        const mobile = this.value.trim();
+        const mobileRegex = /^\d{10}$/;
+
+        if (!mobileRegex.test(mobile)) {
+            document.getElementById('recipient-phone').style.color = 'red';
+            this.style.borderColor = 'red';
+        } else {
+            document.getElementById('recipient-phone').style.color = '';
+            this.style.borderColor = '';
+        }
+    });
+
+    // Validate pincode while typing
+    document.getElementById('recipient-pincode').addEventListener('input', function() {
+        const pincode = this.value.trim();
+        const pincodeRegex = /^\d{6}$/;
+
+        if (!pincodeRegex.test(pincode)) {
+            document.getElementById('recipient-pincode').style.color = 'red';
+            this.style.borderColor = 'red';
+        } else {
+            document.getElementById('recipient-pincode').style.color = '';
+            this.style.borderColor = '';
+        }
+    });
+    function validateForm(){
+
+        const name = document.getElementById('recipient-name').value.trim();
+        const address = document.getElementById('message-text').value.trim();
+        const locality = document.getElementById('recipient-locality').value.trim();
+        const city = document.getElementById('recipient-city').value.trim();
+        const district = document.getElementById('recipient-district').value.trim();
+        const state = document.getElementById('recipient-state').value.trim();
+        const mobile = document.getElementById('recipient-phone').value.trim();
+        const pincode = document.getElementById('recipient-pincode').value.trim();
+
+        const mobileRegex = /^\d{10}$/;
+        const pincodeRegex = /^\d{6}$/;
+
+        if (!name || !address || !locality || !city || !district || !state){
+            // Display an error message
+            alert('Please fill in all the fields.');
+            // Prevent the form from being submitted
+            event.preventDefault();
+        }
+         // Validate mobile number
+         if (!mobileRegex.test(mobile)) {
+            document.getElementById('phoneError').innerText = 'Mobile number is 10 digits';
+            return false;
+        }
+
+        // Validate pincode
+        if (!pincodeRegex.test(pincode)) {
+            document.getElementById('pincodeError').innerText = 'Pincode is 6 digits';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+  
+<%-include("../layout/userfooter.ejs")-%>

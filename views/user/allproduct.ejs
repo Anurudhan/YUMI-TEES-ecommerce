@@ -1,0 +1,293 @@
+<%-include("../layout/userheader.ejs")-%>
+<%-include("../layout/usercentre.ejs")-%>
+<%-include("../partials/usernavbar.ejs")-%>
+
+<style>
+    body{
+      background-color: white;
+    }
+    .accordion-button{
+      background-color: white !important;
+    }
+ 
+  </style>
+  <!-- sidebar + content -->
+  <section style="margin-top: 100px;">
+    <div class="container p-2">
+      <div class="row">
+        <!-- sidebar -->
+        <div class="col-lg-3">
+          <!-- Toggle button -->
+          <form action="\filter" method="post" id="filterForm">
+          <button
+                  class="btn btn-outline-secondary mb-3 w-100 d-lg-none"
+                  type="button"
+                  data-mdb-toggle="collapse"
+                  data-mdb-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
+                  >
+            <span>Show filter</span>
+          </button>
+          <!-- Collapsible wrapper -->
+          <div class="collapse card d-lg-block mb-5" style="background-color: white;" id="navbarSupportedContent">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseTwo"
+                          aria-expanded="true"
+                          aria-controls="panelsStayOpen-collapseTwo"
+                          >
+                    Categories
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                  <div class="accordion-body">
+                    <div>
+                      <!-- Checked checkbox -->
+                      <% categories.forEach(ele=> { %>
+                       
+                      
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="Category" value="<%-ele._id.categoryId-%>" id="flexCheckChecked1" />
+                          <label class="form-check-label" for="flexCheckChecked1"><%-ele._id.categoryName-%></label>
+                          <span class="badge badge-secondary float-end"><%-ele.count-%></span>
+                        </div>
+                        <% }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 2nd one -------------------------------- -->
+
+              
+              <div class="accordion-item">
+                <h2 class="accordion-header" style="background-color: white;" id="headingThree">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseThree"
+                          aria-expanded="false"
+                          aria-controls="panelsStayOpen-collapseThree"
+                          >
+                    Price
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" style="background-color: white;" aria-labelledby="headingThree">
+                  <div class="accordion-body">
+                    <div class="range">
+                      <input type="range" class="form-range" id="priceRange" 
+                          min="0" max="10000" oninput="updateMaxPrice()" />
+                  </div>
+                    <div class="row mb-3">
+                     
+                      <div class="col-6">
+                        
+                        <p class="mb-0">
+                          Min
+                        </p>
+                        <div class="form-outline">
+                          <input type="number" id="minPrice"  name="min" class="form-control" value="0" readonly />
+                          <label class="form-label" for="typeNumber">₹ 0</label>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <p class="mb-0">
+                          Max
+                        </p>
+                        <div class="form-outline">
+                          <input type="number" id="maxPrice" name="max" value="10000" class="form-control" readonly/>
+                          <label class="form-label" for="typeNumber" >₹ 100,00</label>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit"  class="btn btn-white w-100 border border-secondary" onclick="filter(event)">apply</button>
+                    <!-- form end ---------------------------------------------------------------------- -->
+                  </form>
+                  </div>
+                </div>
+              </div>
+             
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseFive"
+                          aria-expanded="false"
+                          aria-controls="panelsStayOpen-collapseFive"
+                          >
+                    Ratings
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                  <div class="accordion-body">
+                    <!-- Default checkbox -->
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                      </label>
+                    </div>
+                    <!-- Default checkbox -->
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-secondary"></i>
+                      </label>
+                    </div>
+                    <!-- Default checkbox -->
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-secondary"></i>
+                        <i class="bi bi-star-fill text-secondary"></i>
+                      </label>
+                    </div>
+                    <!-- Default checkbox -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
+                        <label class="form-check-label" for="flexCheckDefault">
+                          <i class="bi bi-star-fill text-warning"></i> <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-secondary"></i><i class="bi bi-star-fill text-secondary"></i>
+                          <i class="bi bi-star-fill text-secondary"></i>
+                        </label>
+                    </div>
+                    <!-- Default checkbox -->
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked />
+                      <label class="form-check-label" for="flexCheckDefault">
+                        <i class="bi bi-star-fill text-warning"></i> <i class="bi bi-star-fill text-secondary"></i><i class="bi bi-star-fill text-secondary"></i><i class="bi bi-star-fill text-secondary"></i>
+                        <i class="bi bi-star-fill text-secondary"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- sidebar -->
+        <!-- content -->
+        <div class="col-lg-9">
+          <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+            <strong class="d-block py-2"><span id="count"><%-count-%></span> Items found </strong>
+            <div class="ms-auto">
+           
+              <div class="btn-group shadow-0 border">
+                <a href="#" class="btn btn-light" title="List view">
+                  <i class="bi bi-layout-text-sidebar-reverse fa-lg"></i>
+                </a>
+                <a href="#" class="btn btn-light active" title="Grid view">
+                  <i class="bi bi-flower2 fa-lg"></i>
+                </a>
+              </div>    
+            </div>
+          </header>
+       
+        
+      
+          <div class="row p-3" id="proview">
+            <span id="inside" class="row">
+            <% product.forEach(el => { %>
+            <div class="col-lg-4 col-md-4 col-sm-6 d-flex">
+              <div class="card w-100 my-1 shadow d-flex align-items-center" style="border: none; ">
+                
+                <a href="/uniqueproduct/<%-el._id-%>">
+                <img src="/productimages/<%-el.images[0]-%>" class="card-img-top p-2" style=" max-width: 100%;
+                max-height: 200px;
+                 "/>
+                 
+              </a>
+             
+                <div class="card-body d-flex flex-column" style="margin-top: -15px;">
+                  <div class="d-flex flex-row">
+                    <% if (el.stockQuantity<0) { %>
+                      <h7 style="font-weight: 500; color: red;">Out of stock</h7>
+                    <% }else { %>
+                      <h7 class="mb-1 me-1"><b>₹<%=el.price-el.discountAmount-%>\-</b></h7>
+                      <% if(el.Price!=el.discountAmount){ %>
+                      <span class="text-danger"><s><small>₹ <%=el.price-%></small></s></span><br>
+                      <%}%>
+                      <%}%>
+
+                   
+                  </div>
+                  <p style="color: red;font-size: 10px;">discount of <%= Math.round((el.discountAmount/el.price)*100) %>%</p>
+                  <p class="card-text" style="margin-top: -15px;"> <small><%=el.productName-%></small></p>
+                  <div class="card-footer d-flex align-items-end pt-0 px-0 pb-0 mt-auto" style="background-color: white;">
+
+                    <% if (el.stockQuantity<=0) { %>
+                      <a href="#!" class="btn  shadow-0 me-1 disabled" style="background-color: blue !important; color: white;" onclick="addTocart('<%-el._id-%>')"><small>Add to cart</small></a>
+                      
+                    <% }else{ %>
+                      <a href="#!" class="btn shadow-0 me-1 btnn " style="background-color:blue !important;  color: white; border-radius:0px !important; " onclick="addTocart('<%-el._id-%>')"><small>Add to cart</small></a>
+                      
+                      <%}%>
+                    
+                    <a  onclick="addTowishlist('<%-el._id-%>')" class="btn px-2 pt-2 btnn " style="background-color:white;  color: black; border-radius:0px !important;"><small><i id="hurt" class="fas fa-heart fa-lg text-secondary px-1"></i></small></a>
+                    <!-- <a href="#!" class="btn btn-primary shadow-0 me-1">view </a> -->
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <% }) %>
+          </span>
+            
+          <hr class="mt-3" />
+  
+          <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+            <ul class="pagination">
+              <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+          
+              <% for (let i = 1; i <= totalpages; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+              <% } %>
+          
+              <li class="page-item <%= currentPage === totalpages ? 'disabled' : '' %>">
+                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          
+          <!-- Pagination -->
+        </div>
+      </div>
+    </div>            
+  </section>
+  <!-- sidebar + content -->
+  
+ 
+  <script>
+    function updateMaxPrice() {
+      const priceRange = document.getElementById('priceRange');
+      const maxPriceInput = document.getElementById('maxPrice');
+    
+      maxPriceInput.value = priceRange.value;
+      updateLabel(maxPriceInput);
+    }
+    
+    function updateLabel(input) {
+      const label = document.querySelector(`[for="${input.id}"]`);
+      label.textContent = `₹ ${input.value}`;
+    }
+    </script>
+  <%-include("../partials/userfooter.ejs")-%>
+<%-include("../layout/adminfooter.ejs")-%>

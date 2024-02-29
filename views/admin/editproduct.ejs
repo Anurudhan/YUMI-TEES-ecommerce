@@ -1,0 +1,186 @@
+<%-include("../layout/adminheader.ejs")-%>
+<%-include("../layout/admincentre.ejs")-%>
+
+<%-include("../partials/adminnavbar.ejs")-%>
+<form action="/admin/editProducts/<%=product._id%>" method="post" enctype="multipart/form-data">
+    <div class="container" style="margin-top: 90px;">
+        <div class="row p-3 d-flex justify-content-center align-items-center shadow-lg mt-4" style="border-radius: 15px;height: 80vh;">
+        <div class="col-12 col-md-6 "
+            style="border-radius: 15px;">
+            <div class="d-flex justify-content-center align-items-center" style="background-color: rgb(25, 27, 36); border-radius: 10px 10px 0 0 ;">
+                <h1 style="color: rgb(255, 255, 255);">Edit Product</h1>
+            </div>
+            <div class="d-flex mt-4 justify-content-center align-items-center">
+                <input type="text" name="productName" placeholder="Product Name" value="<%=product.productName%>"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
+            </div><br>
+            <div class="d-flex justify-content-center align-items-center">
+                <select class="" id="category" name="Category"
+                    style="width:38%;height: 35px;border-radius: 5px;margin-right: 4%;">
+                    <option value="" selected disabled><%=product.Category%></option>
+                    <% category.forEach(x => { %>
+                        <% if (x.categoryname !== product.Category) { %>
+                            <option><%= x.categoryname %></option>
+                        <% } %>
+                    <% }) %>
+                </select>
+            </div>
+            <br>
+            <div class="d-flex">
+
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <textarea name="Specification1" id="spec1" placeholder="Specification1"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
+                <textarea name="Specification2" id="spec2" placeholder="Specification2"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center">
+                <textarea name="Specification3" id="spec3" placeholder="Specification3"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
+                <textarea name="Specification4" id="spec4" placeholder="Specification4"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <input type="hidden" value="false" name="inWish">
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <textarea name="Description" id="desc" placeholder="Description"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <input type="number" name="price" placeholder="Enter the price" value="<%=product.price%>" id="price"
+                    style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
+                <input type="number" name="discountAmount" placeholder="Discount Amount" value="<%=product.discountAmount%>"
+                    id="discountAmount" style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
+                <input type="number" name="stockQuantity" placeholder="Stock" value="<%=product.stockQuantity%>"
+                    id="stockquantity" style="width: 20%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
+            </div>
+        </div>
+        
+            <div class="col-12 col-md-6 pt-3  "
+            style="border-radius: 15px;">
+            
+            <div class="d-flex justify-content-center align-items-center">
+                <input type="file" name="image1" id="imageInput1" accept="image/*"
+                    value="/productimages/<%=product?.images[0]?.filename%>"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;">
+                <input type="file" name="image2" id="imageInput2" accept="image/* "
+                    value="/productimages/<%=product?.images[1]?.filename%>"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;">
+            </div>
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <input type="file" name="image3" id="imageInput3" accept="image/*"
+                    value="/productimages/<%=product?.images[2]?.filename%>"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;">
+                <input type="file" name="image4" id="imageInput4" accept="image/*"
+                    value="/productimages/<%=product?.images[3]?.filename %>"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;">
+            </div>
+            <br>
+            <div class="d-flex justify-content-center">
+                <div style="width: 100px;height: 100px;margin-right: 4%;margin-left: 4%;">
+                    <img id="imagePreview1" src="/productimages/<%=product.images[0]%>" alt="Image Preview 1"
+                        style="max-width: 100px; max-height: 100px;">
+                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[0]%>')"
+                        class="btn btn-danger text-white">Delete</button>
+                </div>
+                <div style="width: 100px;height: 100px;margin-right: 4%;">
+                    <img id="imagePreview2" src="/productimages/<%=product.images[1]%>" alt="Image Preview 2"
+                        style="max-width: 100px; max-height: 100px;">
+                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[1]%>')" class="btn btn-danger text-white">Delete</button>
+                </div>
+                <div style="width: 100px;height: 100px;margin-right: 4%;">
+                    <img id="imagePreview3" src="/productimages/<%=product.images[2]%>" alt="Image Preview 3"
+                        style="max-width: 100px; max-height: 100px;">
+                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[2]%>')" class="btn btn-danger text-white">Delete</button>
+                </div>
+                <div style="width: 100px;height: 100px;">
+                    <img id="imagePreview4" src="/productimages/<%=product.images[3]%>" alt="Image Preview 4"
+                        style="max-width: 100px; max-height: 100px;">
+                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[3]%>')" class="btn btn-danger text-white">Delete</button>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="d-flex justify-content-center align-items-center ">
+                <input name="tags" placeholder="Tags" value="<%=product.tags%>"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></input>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn" style="background-color: rgb(48, 194, 48);color: white;">Edit Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+<script>
+     function change(event,no){
+        console.log("ok da")
+        document.getElementById(`imagePreview${no}`).src=URL.createObjectURL(event.target.files[0])
+      
+     }
+
+    let spec1 = document.getElementById('spec1');
+    spec1.value = '<%=product.Specification1%>'
+    let spec2 = document.getElementById('spec2');
+    spec2.value = '<%=product.Specification2%>'
+    let spec3 = document.getElementById('spec3');
+    spec3.value = '<%=product.Specification3%>'
+    let spec4 = document.getElementById('spec4');
+    spec4.value = '<%=product.Specification4%>'
+    let desc = document.getElementById('desc');
+    desc.value = '<%=product.Description%>'
+
+    const priceInput = document.getElementById('price');
+    const discountInput = document.getElementById('discountAmount');
+    const stockInput = document.getElementById("stockquantity")
+
+    priceInput.addEventListener('input', validatePrice);
+    discountInput.addEventListener('input', validatePrice);
+    stockInput.addEventListener('input', validatestock)
+
+    function validatePrice() {
+        const price = parseFloat(priceInput.value);
+        const discount = parseFloat(discountInput.value);
+
+        if (price <= discount) {
+            priceInput.setCustomValidity('Price must be greater than discount amount.');
+        } else if(discount < 0){
+            discountInput.setCustomValidity('discount must be more than or equal to zero')
+        }else {
+            priceInput.setCustomValidity('');
+        }
+    }
+    function validatestock() {
+        const stock = parseFloat(stockInput.value)
+        if(stock < 0) stockInput.setCustomValidity('Stock must be more than or equal to zero');
+        else stockInput.setCustomValidity('');
+    }
+    
+
+function deleteImage(productId, Index) {
+fetch(`/admin/deleteImage/${productId}/${Index}`, {
+    method: 'GET'
+})
+.then(response => response.json())
+.then(data => {
+    console.log(data, '------------------->');
+    if (data.success) {
+        alert('Image deleted successfully');
+        window.location.reload();
+    } else {
+        alert('Oops!! Something went wrong');
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert('Error occurred while deleting the image');
+});
+}
+</script>
+<%-include("../layout/adminfooter.ejs")-%>
