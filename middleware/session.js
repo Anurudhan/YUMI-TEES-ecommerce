@@ -11,7 +11,7 @@ module.exports={
     userVerify: async (req,res,next)=>{
         try{
             if(req.session.logged) next()
-            else res.redirect("/guest")
+            else res.redirect("/")
         }
         catch(err){ console.log(err);
         }

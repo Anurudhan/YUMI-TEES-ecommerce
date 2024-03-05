@@ -10,8 +10,7 @@ const {CountOfCart}=require("../middleware/cartCount")
 const {userVerify,userExists}=require("../middleware/session")
 
 // Home page
-router.get("/guest",userExists,usercontoller.guestpage)
-router.get("/",userVerify,CountOfCart,usercontoller.homepage)
+router.get("/",CountOfCart,usercontoller.homepage)
 router.get("/home",userExists,userVerify)
 
 // Login page

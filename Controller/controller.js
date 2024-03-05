@@ -7,14 +7,6 @@ const jwt = require("jsonwebtoken")
 
 const JWT_SECRET = "I AM THE SECRET"
 module.exports={
-    guestpage:async(req,res)=>{
-        try{
-            res.render("user/guesthome")
-        }
-        catch(err){
-            console.log(err);
-        }
-    },
     loginpage:async(req,res)=>{
         try{
             const msg=req.session.msg
@@ -57,9 +49,12 @@ module.exports={
     },
     homepage:async(req,res)=>{
         try{
-            const user = await User.findOne({email:req.session.email})
-            req.session._id = user._id
-            res.render("user/home",{username:req.session.username,cart:req.session.cart})    
+            if(req.session.logged){
+                const user = await User.findOne({email:req.session.email})
+                req.session._id = user._id
+                res.render("user/home",{username:req.session.username,cart:req.session.cart})
+            }
+            else res.render("user/guesthome")
         }
         catch(err){
             console.log(err);
