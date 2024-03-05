@@ -16,7 +16,7 @@
                 </thead>
                 <tbody>
                     <% carts.forEach((ele)=>{%>
-                         <tr>
+                         <tr id=<%="cartRow" + ele.productid._id%> >
                         <td class="col-sm-8 col-md-6 ">
                         <div class="media d-flex ">
                             <a class="thumbnail pull-left align-middle" href="/uniqueproduct/<%-ele.productid._id-%>"> <img class="media-object" src="/productimages/<%=ele.productid.images[0]%>" style="width: 90px; height: 90px;"> </a>
@@ -30,11 +30,11 @@
                         <td class="col-sm-1 col-md-1 align-middle">
                             <div class="d-flex justify-content-center ">
                                 <!-- Decrement button -->
-                            <button class="btn btn-sm btn-secondary" id="btnDec" onclick="updateQuantity(-1,'<%=ele.productid._id%>','<%=ele.quantity%>','<%=ele._id%>','<%=ele.productid.price-ele.productid.discountAmount%>')">-</button>
+                            <button class="btn btn-sm btn-secondary" id="btnDec" onclick="updateQuantity(-1,'<%=ele.productid._id%>','<%=ele.productid.stockQuantity%>','<%=ele.quantity%>','<%=ele._id%>','<%=ele.productid.price-ele.productid.discountAmount%>','<%=ele.productid.price%>','<%=ele.productid.discountAmount%>')">-</button>
                             <!-- Quantity input -->
                             <input type="text" class="form-control" id="quantity<%=ele.productid._id%>" value="<%=ele.quantity%>" min="1" max="5" style="width: 50px; text-align: center; padding: 0;">
                             <!-- Increment button -->
-                            <button class="btn btn-sm btn-secondary" id="btnIn" onclick="updateQuantity(1,'<%=ele.productid._id%>','<%=ele.quantity%>','<%=ele._id%>','<%=ele.productid.price-ele.productid.discountAmount%>')" >+</button>
+                            <button class="btn btn-sm btn-secondary" id="btnIn" onclick="updateQuantity(1,'<%=ele.productid._id%>','<%=ele.productid.stockQuantity%>','<%=ele.quantity%>','<%=ele._id%>','<%=ele.productid.price-ele.productid.discountAmount%>','<%=ele.productid.price%>','<%=ele.productid.discountAmount%>')" >+</button>
 
                             </div>
                             
@@ -43,9 +43,10 @@
                         <td class="col-sm-1 col-md-1 text-center align-middle"><strong><i class="bi bi-currency-rupee"></i><%=ele.productid.price-ele.productid.discountAmount%></strong></td>
                         <td class="col-sm-1 col-md-1 text-center align-middle" ><i class="bi bi-currency-rupee"><strong id="total<%=ele.productid._id%>"><%=(ele.productid.price-ele.productid.discountAmount)*ele.quantity%></strong></i></td>
                         <td class="col-sm-1 col-md-1 align-middle">
-                        <button type="button" class="btn d-flex" style="background-color: rgb(230, 6, 6); color: white;" onclick="removeFromCart('<%=ele.productid._id%>')">
-                            <span class="glyphicon glyphicon-remove pe-2"><i class="bi bi-x-circle-fill"></i></span> Remove
-                        </button>
+                            <button type="button" class="btn d-flex" style="background-color: rgb(230, 6, 6); color: white;" onclick="removeFromCart('<%=ele.productid._id%>')">
+                                <span class="glyphicon glyphicon-remove pe-2"><i class="bi bi-x-circle-fill"></i></span> Remove
+                            </button>
+                            
                             
                     </tr>
 
@@ -86,18 +87,21 @@
     </div>
 </div>
 <script>
-    function updateQuantity(change, productId, currentQuantity, id,price) {
+    function updateQuantity(change, productId,stock,currentQuantity, id,price,grandtoatal,discount) {
         var input = document.getElementById('quantity' + productId);
         var total = document.getElementById('total'+ productId)
+        var grandprice=document.getElementById('total-price')
+        var discountAmount = document.getElementById('totalDiscount')
+        var totalAmount = document.getElementById('grand-total')
         var btnIn = document.getElementById('btnIn')
         var btnDec = document.getElementById('btnDec')
         var newValue = parseInt(input.value) + change;
 
         // Check if newValue is within the min and max range
-        if (newValue >= parseInt(input.min) && newValue <= parseInt(input.max)) {
+        if (newValue >= parseInt(input.min) && newValue <= parseInt(input.max) && newValue <= stock) {
             // Make an AJAX request to update the quantity
             input.value = newValue
-            if (input.value >= 5) {
+            if (input.value >= 5 && input.value>=stock) {
                 btnIn.disabled = true;
             }else {
                 btnIn.disabled = false;
@@ -110,6 +114,16 @@
             }
 
             total.innerHTML = newValue*price
+            // Calculate new grand total, discount total, and total amount
+            var newGrandTotal = parseInt(grandprice.innerHTML.replace(/[^\d.-]/g, '')) + (change * grandtoatal);
+            var newDiscountTotal = parseInt(discountAmount.innerHTML.replace(/[^\d.-]/g, '')) + (change * discount);
+            var newTotalAmount = parseInt(totalAmount.innerHTML.replace(/[^\d.-]/g, '')) + (change * price);
+
+            // Update UI with new values
+            grandprice.innerHTML = newGrandTotal;
+            discountAmount.innerHTML = newDiscountTotal;
+            totalAmount.innerHTML = newTotalAmount;
+
             var xhr = new XMLHttpRequest();
             var url = `/addtocart/${productId}/${change}`
             xhr.open("GET", url, true); // Use GET method

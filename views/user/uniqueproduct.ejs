@@ -89,10 +89,16 @@
                               <button class="go-to-cart btn "><i class="bi bi-cart4" style="font-size: 20px;"></i>Go to Cart</button>
                           </a>
                       <% } else { %>
+                        <% if (product.stockQuantity<=0) { %>
+                            <a class="disabled">
+                                <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
+                            </a>
+                            <% }else{ %>
                           <!-- If checkcart is false, render the "Add to Cart" button -->
                           <a>
-                              <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
-                          </a>
+                            <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
+                        </a>
+                          <%}%>
                       <% } %>
                         <!-- <a><button class="add-to-cart btn btn-default"  onclick="addTocart('<%-product._id-%>')">add to cart</button></a> -->
                         <a href=""><button class="like btn btn-default" type="button"><span class="bi bi-heart"></span></button></a>    

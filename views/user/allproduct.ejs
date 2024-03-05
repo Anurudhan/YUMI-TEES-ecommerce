@@ -223,17 +223,11 @@
                   </div>
                   <p style="color: red;font-size: 10px;">discount of <%= Math.round((el.discountAmount/el.price)*100) %>%</p>
                   <p class="card-text" style="margin-top: -15px;"> <small><%=el.productName-%></small></p>
+                  
                   <div class="card-footer d-flex align-items-end pt-0 px-0 pb-0 mt-auto" style="background-color: white;">
 
-                    <% if (el.stockQuantity<=0) { %>
-                      <a href="#!" class="btn  shadow-0 me-1 disabled" style="background-color: blue !important; color: white;" onclick="addTocart('<%-el._id-%>')"><small>Add to cart</small></a>
-                      
-                    <% }else{ %>
-                      <a href="#!" class="btn shadow-0 me-1 btnn " style="background-color:blue !important;  color: white; border-radius:0px !important; " onclick="addTocart('<%-el._id-%>')"><small>Add to cart</small></a>
-                      
-                      <%}%>
-                    
-                    <a  onclick="addTowishlist('<%-el._id-%>')" class="btn px-2 pt-2 btnn " style="background-color:white;  color: black; border-radius:0px !important;"><small><i id="hurt" class="fas fa-heart fa-lg text-secondary px-1"></i></small></a>
+                                         
+                    <a  onclick="addTowishlist('<%-el._id-%>')" class="btn px-2 pt-2  " style="background-color:white;  color: black; border-radius:2px !important;border: 2px black;"><small><i id="hurt" class="bi bi-heart text-secondary px-1"></i></small></a>
                     <!-- <a href="#!" class="btn btn-primary shadow-0 me-1">view </a> -->
                   </div>
                 </div>

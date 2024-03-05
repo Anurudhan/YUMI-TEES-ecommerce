@@ -1,0 +1,124 @@
+<%-include("../layout/userheader.ejs")-%>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<%-include("../layout/usercentre.ejs")-%>
+<style>
+     .avatar-lg {
+      height: 5rem;
+      width: 5rem;
+    }
+    .card {
+    display: flex;
+    
+}
+
+.order-info {
+    display: flex;
+    padding-left: 3%;
+}
+
+.order-date {
+    margin-left: auto; /* Moves Order Date to the right side */
+    padding-right: 3%;
+}
+/* Default button style */
+button {
+    background-color: rgb(36, 221, 36);; /* Button background color */
+    border: 2px solid black; /* Button border */
+    color: black; /* Button text color */
+    padding: 10px 20px; /* Padding for the button */
+    border-radius: 5px; /* Border radius to make the corners rounded */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
+    font-weight: 700;
+}
+
+/* Hover effect */
+button:hover {
+    background-color: #333; /* Dark background color on hover */
+    color: white; /* Light text color on hover */
+}
+
+/* Optional: Adjust the button width as needed */
+button {
+    width: 150px; /* Set the button width */
+}
+
+</style>
+<%-include("../partials/usernavbar.ejs")-%>
+<% if (orders.length > 0) { %>
+    <div class="card-header" style="margin-top: 100px;padding-left: 15%;">
+        <h4>Order Details</h4>
+        <br>
+    </div>
+    <table id="ordersTable" class="display" style="width: 80%;margin-left: 10%;">
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <th>
+                        <div class="card">
+                            <div class="order-info">
+                                <span>Orders: <%= order._id %></span>
+                                <span class="order-date">Order Date: <%- order.orderDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
+                            </div>
+                        </div>
+                        <% order.products.forEach(data => { %>
+                            <div class="container">
+                                <div class="card-body">
+                                    <div class="row align-items-center"> <!-- Added align-items-center class to vertically center content -->
+                                        <div class="col-lg-2">
+                                            <img src="/productimages/<%= data?.productid?.images[0] %>" alt="" class="avatar-lg rounded">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h5 class="text-truncate font-size-18"><a href="#" class="text-dark"><%= data?.productid?.productName %></a></h5>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a href="#" class="text-muted px-1">
+                                                <span style="color: #000000;">Qty: <%= data.quantity %></span>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-4"> <!-- Adjusted the column size to accommodate "order proceed" -->
+                                            <% if (data.status != "Cancelled") { %>
+                                                <a class="text-muted px-1">
+                                                    <% if (order.orderStatus === 'Order Processed') { %>
+                                                        <span class="badge rounded-pill bg-warning" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } else if (order.orderStatus === 'Order Confirmed') { %>
+                                                        <span class="badge rounded-pill bg-primary" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } else if (order.orderStatus === 'Order Shipped') { %>
+                                                        <span class="badge rounded-pill bg-info" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } else if (order.orderStatus === 'Order Delivered') { %>
+                                                        <span class="badge rounded-pill bg-success" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } else if (order.orderStatus === 'Order Rejected'){ %>
+                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } else if (order.orderStatus === "Cancelled"){ %>
+                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                    <% } %>
+                                                </a>
+                                            <% } else { %>
+                                                <a class="text-muted px-1">
+                                                    <span class="badge rounded-pill bg-danger" style="font-weight: 400;margin-left: 20px;"><%= data.status %></span>
+                                                </a>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="float-end">
+                                        <a href="/myorderdetails/<%= order._id %>" class="button btn">
+                                            View details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </th>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } %>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script>
+    // Initialize DataTables
+    $(document).ready(function() {
+        $('#ordersTable').DataTable();
+    });
+</script>
+<%-include("../layout/userfooter.ejs")-%>

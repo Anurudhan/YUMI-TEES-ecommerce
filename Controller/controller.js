@@ -40,15 +40,15 @@ module.exports={
                         res.redirect(`?email=${email}&name=${userdata.name}`)
                     }
                     else{
-                        res.render("user/login",{email_err:null,pass_err:"Your Password is Incorrect",status_err:null})
+                        res.render("user/login",{email_err:null,pass_err:"Your Password is Incorrect",status_err:null,msg:null})
                     }
                 }
                 else{
-                    res.render("user/login",{email_err:null,pass_err:null,status_err:"Your account is access deniedd for some issues"})
+                    res.render("user/login",{email_err:null,pass_err:null,status_err:"Your account is access deniedd for some issues",msg:null})
                 }
             }
            else{
-            res.render('user/login', { email_err: 'Your never signup in this email ID',pass_err:null,status_err:null });
+            res.render('user/login', { email_err: 'Your never signup in this email ID',pass_err:null,status_err:null,msg:null });
         }
         }
         catch(err){

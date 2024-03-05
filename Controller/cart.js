@@ -21,8 +21,24 @@ module.exports={
             req.session.grandtotal = grandtotal
             req.session.disctotal = disctotal
             totalprice = grandtotal-disctotal;  
-            console.log(totalprice);         
-            res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
+            console.log(totalprice);
+            if(carts.length>0){
+                res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
+            }  
+            else{
+                res.redirect("/nocart")
+            }       
+            
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    nocart:async(req,res)=>{
+        try{
+            const username = req.session.username;
+            const cart = req.session.cart
+            res.render("user/nocart",{cart,username})
         }
         catch(err){
             console.log(err);
@@ -75,18 +91,8 @@ module.exports={
     },
     removeCart:async (req,res)=>{
         try{
-            await Cart.updateOne({
-                _id:req.params.id
-            },
-            {
-                $pull:
-                {
-                    products:
-                    {
-                        productid: req.params.id.trim()
-                    }
-                }
-            })
+            console.log("hi------------------->");
+            await Cart.updateOne({ userid: req.session._id }, { $pull: { products: { productid: req.params.prdktId.trim() } } })           
             res.json({msg:'Product removed from cart successfully'})
         }catch(err){
             console.log(err);

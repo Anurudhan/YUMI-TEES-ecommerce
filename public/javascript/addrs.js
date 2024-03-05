@@ -99,6 +99,26 @@ function deleteAddress(addressId) {
         alert("Error deleting address. Please try again later.");
     });
 }
-
+function selectAddress(addressId) {
+    console.log("hello");
+    // Perform AJAX request here
+    // Example using fetch API
+    fetch(`/getaddress/${addressId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the received data here
+            console.log(data);
+            // Reload the page
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+}
 
 

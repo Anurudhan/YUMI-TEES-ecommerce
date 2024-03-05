@@ -41,12 +41,13 @@
  <section class="bg-light" style="padding-top: 50px;margin-top: 80px;">
     <div class="container">
         <div class="row">
+            
             <div class="col-lg-9">
                 <div class="card-header">
                     <a class="btn btn-primary float-end" href="/addaddress">Add Address</a>
                     <h4 class="card-title">Delivery Address</h4>
                 </div>
-
+                <form action="/placeorder/" method="post" id="placeOrderForm">
                 <% if (address != null && address.length > 0) { %>
                     <div class="card border mb-5 shadow-0" id="addressCard0" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);">
                         <div class="m-4">
@@ -56,7 +57,11 @@
                                 <div class="form-check mb-2">
                                     <!-- Container for selected label -->
                                     <div id="selectedLabelContainer" class="float-end"></div>
-                                    <input class="form-check-input" type="radio" name="existingAddress" id="address0">
+                                    <% if (adrsSelect==null || adrsSelect == undefined ) { %>
+                                    <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')">
+                                    <% } else { %>
+                                        <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')" <%= adrsSelect != address[0]._id ? 'disabled' : '' %>> 
+                                        <% } %>
                                     <ul class="address-list">
                                         <!-- Sample address item -->
                                         <li class="address-item" style="list-style: none;">
@@ -66,7 +71,7 @@
                                             <br><br>
                                             <% if (adrsSelect == address[0]._id) { %>
                                                 <div class="text-end">
-                                                    <i class="fa-solid fa-circle-check text-success" style="font-size: 24px;position: absolute;margin-left: -40px;"></i>
+                                                    <i class="bi bi-check-circle-fill text-success" style="font-size: 24px;position: absolute;margin-left: -40px;"></i>
                                                 </div>
                                             <% } %>
                                             <p style="font-weight: bold;"><%-address[0].name-%></p>
@@ -74,7 +79,7 @@
                                             <p><%-address[0].mobile-%></p>
                                             <p><%-address[0].pincode-%></p>
                                             <br>
-                                            <button type="button" class="btn btn-success btn-sm d-none" id="deliverHereBtn0" onclick="selectAddress('<%-address[0]._id-%>')">Deliver Here</button>
+                                            <button type="button" class="btn btn-deliv  d-none" style="background-color: rgb(223, 172, 7);" id="deliverHereBtn0" onclick="selectAddress('<%-address[0]._id-%>')">Deliver Here</button>
                                         </li>
                                     </ul>
                                     <hr style="color: #9a9a9a;">
@@ -84,14 +89,18 @@
                                 <% address.forEach(function(data, i) { %>
                                     <% if (i != 0) { %>
                                         <div class="hidden-address form-check mb-2 ">
-                                        <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %>> 
+                                        <% if (adrsSelect==null || adrsSelect == undefined ) { %>
+                                        <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')">
+                                        <% } else { %>
+                                            <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')" <%= adrsSelect != data._id ? 'disabled' : '' %>> 
+                                            <% } %> 
                                         <ul class="address-list">
                                             <li class="address-item" style="list-style: none;">
                                                 <button type="button" class="badge badge-dark"><%= data.addressType %></button>
                                                 <br><br>
                                                 <% if (adrsSelect == data._id) { %>
                                                     <div class="text-end">
-                                                        <i class="fa-solid fa-circle-check text-success" style="font-size: 24px; position: absolute; margin-left: -40px;"></i>
+                                                        <i class="bi bi-check-circle-fill text-success" style="font-size: 24px; position: absolute; margin-left: -40px;"></i>
                                                     </div>
                                                 <% } %>
                                                 <p style="font-weight: bold;"><%= data.name %></p>
@@ -99,7 +108,7 @@
                                                 <p><%= data.mobile %></p>
                                                 <p><%= data.pincode %></p>
                                                 <br>
-                                                <a type="button" class="btn btn-success btn-sm d-none" id=<%= "deliverHereBtn" + i %> onclick="selectAddress('<%-data._id-%>')">Deliver Here</a>
+                                                <a type="button" class="btn btn-deliv d-none" style="background-color: rgb(223, 172, 7);" id=<%= "deliverHereBtn" + i %> onclick="selectAddress('<%-data._id-%>')">Deliver Here</a>
                                             </li>
                                         </ul>
                                         <hr style="color: #554f4f;">
@@ -123,7 +132,7 @@
                         <div class="col-lg-3 col-sm-6">
                             <div data-bs-toggle="collapse">
                                 <label class="card-radio-label">
-                                    <input type="radio" name="pay-method" id="pay-methodoption1" class="card-radio-input">
+                                    <input type="radio" name="pay-method" id="pay-methodoption1" value="credit/debit" class="card-radio-input">
                                     <span class="card-radio py-3 text-center text-truncate">
                                         <i class="bi bi-credit-card d-block h2 mb-3"></i>
                                         Credit / Debit Card
@@ -135,7 +144,7 @@
                         <div class="col-lg-3 col-sm-6">
                             <div>
                                 <label class="card-radio-label">
-                                    <input type="radio" name="pay-method" id="pay-methodoption2" class="card-radio-input">
+                                    <input type="radio" name="pay-method" id="pay-methodoption2" value="paypal" class="card-radio-input">
                                     <span class="card-radio py-3 text-center text-truncate">
                                         <i class="bi bi-paypal d-block h2 mb-3"></i>
                                         Paypal
@@ -147,7 +156,7 @@
                         <div class="col-lg-3 col-sm-6">
                             <div>
                                 <label class="card-radio-label">
-                                    <input type="radio" name="pay-method" id="pay-methodoption3" class="card-radio-input" checked="">
+                                    <input type="radio" name="pay-method" id="pay-methodoption3" class="card-radio-input" value="cashOnDelivery" checked="">
 
                                     <span class="card-radio py-3 text-center text-truncate">
                                         <i class="bi bi-cash-stack d-block h2 mb-3"></i>
@@ -160,16 +169,20 @@
                 </div>
                 <div class="row my-4">
                     <div class="col">
-                        <a href="/home" class="btn btn-link text-muted" style="text-decoration: none;">
+                        <a href="/" class="btn btn-link text-muted" style="text-decoration: none;">
                             <i class="bi bi-arrow-left me-1"></i> Continue Shopping </a>
                     </div> <!-- end col -->
                     <div class="col">
                         <div class="text-end mt-2 mt-sm-0">
-                            <a href="#" class="btn btn-success">
-                                <i class="bi bi-basket2-fill me-1"></i> Procced </a>
+                            <a class="btn btn-success" id="proceedButton">
+                                <button type="submit">
+                                <i class="bi bi-basket2-fill me-1"></i> Proceed
+                            </button>
+                            </a>
                         </div>
                     </div> <!-- end col -->
                 </div> <!-- end row-->
+            </form>
             </div>
             <div class="col-lg-3"  >
                 <div class="card" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);position: fixed;width: 25%;">
@@ -244,5 +257,54 @@
         }).showToast();
     </script>
 <% } %>
+<script>
+    function showButton(buttonId) {
+        var buttons = document.querySelectorAll('.btn-deliv'); // Get all "Deliver Here" buttons
+        buttons.forEach(function(button) {
+            button.classList.add('d-none'); // Hide all buttons
+        });
+        var button = document.getElementById(buttonId);
+        if (button) {
+            button.classList.remove('d-none'); // Show the clicked button
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('proceedButton').addEventListener('click', function(event) {
+        // Prevent default action of the anchor tag (preventing navigation)
+        event.preventDefault();
+
+        // Get the selected payment method
+        var paymentMethod = '';
+        var paymentMethodInputs = document.getElementsByName('pay-method');
+        for (var i = 0; i < paymentMethodInputs.length; i++) {
+            if (paymentMethodInputs[i].checked) {
+                paymentMethod = paymentMethodInputs[i].value;
+                break; // Stop looping once we find the checked radio input
+            }
+        }
+
+        if (paymentMethod === '') {
+            // Display a Toast message to the user
+            Toastify({
+                text: "Please select a payment method.",
+                duration: 3000, // Duration in milliseconds
+                close: true, // Whether to show the close button
+                gravity: "top", // toast position: 'top', 'bottom', 'center'
+                position: "center", // toast position: 'left', 'center', 'right'
+                backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
+            }).showToast();
+            return;
+        }
+        
+        // Update the form action with the selected payment method
+        var form = document.getElementById('placeOrderForm');
+        form.action = '/placeorder/' + encodeURIComponent(paymentMethod);
+
+        // Submit the form
+        form.submit();
+    });
+</script>
 
 <%-include("../layout/userfooter.ejs")-%>

@@ -12,6 +12,7 @@ const {userVerify,userExists}=require("../middleware/session")
 // Home page
 router.get("/guest",userExists,usercontoller.guestpage)
 router.get("/",userVerify,CountOfCart,usercontoller.homepage)
+router.get("/home",userExists,userVerify)
 
 // Login page
 
@@ -35,11 +36,15 @@ router.get("/invalid_otp",userExists,usercontoller.invalidotp)
 
 router.get("/addtocart/:id/:change",userVerify,cartcontroller.addcart)
 router.get("/cart",userVerify,CountOfCart,cartcontroller.cartpage)
-router.delete("/removecart/:id",userVerify,cartcontroller.removeCart)
+router.delete("/removecart/:prdktId",userVerify,cartcontroller.removeCart)
+router.get("/nocart",userVerify,cartcontroller.nocart)
 
 // order
 
 router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder)
+router.get("/getaddress/:id",userVerify,ordercontroller.getaddress)
+router.post("/placeorder/:type",userVerify,ordercontroller.confirmorder)
+router.get("/userorder",userVerify,ordercontroller.getorder)
 
 // product views in user side
 
