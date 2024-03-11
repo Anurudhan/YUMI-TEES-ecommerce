@@ -17,9 +17,9 @@
             <div class="d-flex justify-content-center align-items-center">
                 <select class="" id="category" name="Category"
                     style="width:38%;height: 35px;border-radius: 5px;margin-right: 4%;">
-                    <option value="" selected disabled><%=product.Category%></option>
+                    <option value="" selected disabled><%=product.Category.categoryname%></option>
                     <% category.forEach(x => { %>
-                        <% if (x.categoryname !== product.Category) { %>
+                        <% if (x.categoryname !== product.Category.categoryname) { %>
                             <option><%= x.categoryname %></option>
                         <% } %>
                     <% }) %>

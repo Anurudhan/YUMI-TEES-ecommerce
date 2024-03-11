@@ -1,5 +1,6 @@
 const OTP = require("../model/otpmodel");
 const User=require("../model/usermodel");
+const Product = require("../model/productSchema")
 const { sendOTP } = require("../util/otp");
 const {sendResetEmail}=require("../auth/nodemailerForReset")
 const bcrypt = require('bcrypt');
@@ -23,13 +24,13 @@ module.exports={
             const password=req.body.password;
             const userdata=await User.findOne({email:email})
             const isMatch= await bcrypt.compare(password,userdata.password)
-                if(userdata){
+            if(userdata){
                 if(userdata.status=="1"){
                     if(isMatch){
                         req.session.logged=true;
                         req.session.email=email;
                         req.session.username=userdata.name;
-                        res.redirect(`?email=${email}&name=${userdata.name}`)
+                        res.redirect("/")
                     }
                     else{
                         res.render("user/login",{email_err:null,pass_err:"Your Password is Incorrect",status_err:null,msg:null})
@@ -49,10 +50,16 @@ module.exports={
     },
     homepage:async(req,res)=>{
         try{
+            const products = await Product.find().populate('Category')
+            const mens = products.filter(product => product.Category.categoryname == "MEN");
+            const womens = products.filter(product => product.Category.categoryname == "WOMEN");
+            const kids = products.filter(product => product.Category.categoryname == "KIDS");
             if(req.session.logged){
                 const user = await User.findOne({email:req.session.email})
+                console.log(user);
                 req.session._id = user._id
-                res.render("user/home",{username:req.session.username,cart:req.session.cart})
+                console.log(req.session._id);
+                res.render("user/home",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
             }
             else res.render("user/guesthome")
         }

@@ -57,7 +57,7 @@ button {
                         <div class="card">
                             <div class="order-info">
                                 <span>Orders: <%= order._id %></span>
-                                <span class="order-date">Order Date: <%- order.orderDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
+                                <span class="order-date">Order Date: <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
                             </div>
                         </div>
                         <% order.products.forEach(data => { %>
@@ -73,7 +73,7 @@ button {
                                         <div class="col-lg-2">
                                             <a href="#" class="text-muted px-1">
                                                 <span style="color: #000000;">Qty: <%= data.quantity %></span>
-                                            </a>
+                                                </a>
                                         </div>
                                         <div class="col-lg-4"> <!-- Adjusted the column size to accommodate "order proceed" -->
                                             <% if (data.status != "Cancelled") { %>
@@ -101,7 +101,7 @@ button {
                                     </div>
                                     <hr>
                                     <div class="float-end">
-                                        <a href="/myorderdetails/<%= order._id %>" class="button btn">
+                                        <a href="/vieworderdetails/<%= order._id %>" class="button btn">
                                             View details
                                         </a>
                                     </div>

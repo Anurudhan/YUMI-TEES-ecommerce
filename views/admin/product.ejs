@@ -29,15 +29,21 @@
 </style>
 <%-include("../partials/adminnavbar.ejs")-%>
 <!-- <div class="main"> -->
-<% if(message){ %>
-  <div style="position:fixed;border-radius: 20%; left: 50%;top: 50%;transform: translate(-50%,-50%);background-color: white;width:20%;height: 30%;">
-    <div class="pt-5">
-    <span  style="color: green;"><%=message %></span> <br>
-    <a href="/admin/product"><button style="width: 50px;background-color: green;color: white;">ok</button></a>
-  </div>
-</div>
+  
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <p><%=message %></p>
+        </div>
+        <div class="modal-footer">
 
-<%}%>
+          <a href="/admin/product"><button type="button" class="btn btn-primary">OK</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="container" style="margin-top: 80px;">
     <div class="row">
         <div class="col-md-12">
@@ -52,7 +58,10 @@
           <div id="confirmationMessage" class="confirmation-message" style="display: none;">
             <p>Are you sure you want to list/unlist ?</p>
             <div class="confirmation-message-buttons d-flex justify-content-center">
-                <button class="btn-s" onclick="proceedAction()" style="color: white;background-color: rgb(8, 180, 8);">Sure</button>
+              <button type="button" class="btn-s btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              onclick="proceedAction()" style="color: white;background-color: rgb(8, 180, 8);">
+                Sure
+              </button>
                 <button class="btn-s ms-3" onclick="cancelAction()" style="color: white;background-color: rgb(14, 14, 173);">Cancel</button>
             </div>
         </div>
@@ -111,6 +120,11 @@
     </div>
 <!-- </div> -->
 </div>
+<% if(message){%>
+  <script>
+    document.getElementById("exampleModal").classList("active")
+  </script>
+<% } %> 
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>

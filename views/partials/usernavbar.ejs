@@ -18,25 +18,25 @@
           <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <form class="d-flex me-auto ms-5 ">
-              <input class="form-control me-0" style="border-radius:0;border-start-start-radius: 18px;border-end-start-radius: 18px;width: 100%;" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-success ms-0" style="border-radius: 0 ;border-end-end-radius: 18px;border-start-end-radius: 18px;" type="submit"><i class="bi bi-send"></i></button>
+          <form class="d-flex me-auto ms-5 " action="/searchproduct" method="get">
+              <input class="form-control me-0" style="border-radius:0;border-start-start-radius: 18px;border-end-start-radius: 18px;width: 100%;" name="search" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-success ms-0" id="search-inp-btn" style="border-radius: 0 ;border-end-end-radius: 18px;border-start-end-radius: 18px;" type="submit"><i class="bi bi-send"></i></button>
           </form>
           <div class="d-flex align-items-center float-end">
           <ul class="navbar-nav ms-auto me-5 mb-2 mb-lg-0 ">
               <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/guest">HOME</a>
+                  <a class="nav-link active" aria-current="page" href="/home">HOME</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/login">MEN's</a>
+                  <a class="nav-link active" aria-current="page" href="/">MEN's</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/login">WOMEN's</a>
+                  <a class="nav-link active" aria-current="page" href="/">WOMEN's</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/login">KID's</a>
+                  <a class="nav-link active" aria-current="page" href="/">KID's</a>
               </li>
-              <li class="nav-item "><a class="nav-link active" aria-current="page" href="/login">
+              <li class="nav-item "><a class="nav-link active" aria-current="page" href="/">
                
                     <div class="cart position-relative">
                     <i class="bi bi-bag-heart" style="color: #ffffff;cursor: pointer;font-size: 20px;margin-top: -20px;"></i>

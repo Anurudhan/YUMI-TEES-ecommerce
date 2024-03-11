@@ -65,7 +65,7 @@ module.exports = {
     try {
       const id = req.params.id;
       const category = await Category.find();
-      const Product = await product.findOne({ _id: id });
+      const Product = await product.findOne({ _id: id }).populate('Category');
       res.render("admin/editproduct", { category: category, product: Product });
     } catch (err) {
       console.log(err);

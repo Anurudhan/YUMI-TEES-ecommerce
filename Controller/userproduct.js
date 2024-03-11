@@ -40,6 +40,29 @@ module.exports={
             console.log(err);
         }
     },
+    searchproduct:async(req,res)=>{
+        try{
+            let username=req.session.username;
+            let cart=req.session.cart
+            searchTerm = req.query.search
+            const category= await Category.findOne({ categoryname: { $regex: searchTerm, $options: "i" } })
+            console.log(category);
+            const searchOptions = {
+                $or:[
+                    {productName:{ $regex: searchTerm, $options: "i" }},
+                    {Category:category}
+                ],
+                displayStatus : "Show"
+            }
+            const searchvalues = await Product.find(searchOptions).populate({path: 'Category', model: 'category'})
+            console.log(searchvalues);
+            res.render('user/searcgproducts', {username, searchvalues, searchTerm,cart });
+            
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
     uniqueproduct:async (req,res)=>{
         try{
             const id=req.params.id

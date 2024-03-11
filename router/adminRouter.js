@@ -5,6 +5,8 @@ const admincontroller=require("../Controller/admincontroller")
 const productcontroller=require("../Controller/adminproduct")
 const categorycontroller=require("../Controller/admincategory")
 const customercontroller=require("../Controller/admincustomers")
+const ordercontroller = require("../Controller/adminorder")
+const bannercontroller = require("../Controller/asminbanner")
 const router=express();
 
 // login and home page ------------------------------------------------>
@@ -43,7 +45,13 @@ router.delete("/categories/:id/:name",categorycontroller.deletecategory)
 router.get("/customers",adminVerify,customercontroller.customerpage)
 router.get("/customers/block/:id/:status",adminVerify,customercontroller.customerstatus)
 
+// order maintain--------------------------------------------------------->
 
+router.get("/orders",adminVerify,ordercontroller.getorder)
+
+// banner manage--------------------------------------------------------->
+
+router.get("/banner",adminVerify,bannercontroller.getbanner)
 
 
 

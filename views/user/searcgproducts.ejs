@@ -1,0 +1,54 @@
+<%-include("../layout/userheader.ejs")-%>
+<style>
+    .card img{
+        max-height: 200px;
+    }
+</style>
+<%-include("../layout/usercentre.ejs")-%>
+<%-include("../partials/usernavbar.ejs")-%>
+<section class="" style="padding: 250px;">
+    <div class="container">
+        <div class="row" style="margin: -130px;">
+            <!-- sidebar -->
+
+            <!-- content -->
+            <div class="col-lg-12">
+
+                <% if (searchTerm) { %>
+                    <h3>Search Results for "<%= searchTerm %>"</h3>
+                <% } %>
+
+                <div class="row" id="gridViewSection">
+                    <% searchvalues.forEach(data => { %>
+                        <div class="col-lg-3 col-md-6 col-sm-6 my-2">
+                            <div class="card shadow">
+                                <img src="/productimages/<%= data.images[0] %>" class="card-img-top" />
+                                <div class="card-body">
+                                    <h6 style="font-size: 18px;"><%-data.productName-%></h6>
+                                    <div class="d-flex flex-row">
+                                        <h6 class="mb-1 me-1">₹ <%-data.price-data.discountAmount-%></h6>
+                                        <span class="text-danger"><s>₹ <%-data.price-%></s></span>
+                                    </div>
+
+                                    <p class="card-text">Category: <%= data.Category.categoryname%><span style="margin-left: 10px"> </span></p>
+
+                                    <div class="d-flex justify-content-end" style="margin-top: 5px;">
+                                        <% if (locals.username) { %>
+                                            <a href="/uniqueproduct/<%-data._id-%>" class="btn btn-outline-primary shadow-0 me-1" >View</a>
+                                        <% } else { %>
+                                            <a href="/singleproductnouser/<%-data._id-%>" class="btn btn-outline-primary shadow-0 me-1" >View</a>
+                                        <% } %>
+                                        <a class="btn btn-light border  icon-hover px-2 pt-2" onclick="addToWishlist('<%-data._id-%>')"><i class="bi bi-heart text-secondary px-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<%-include("../layout/userfooter.ejs")-%>
+

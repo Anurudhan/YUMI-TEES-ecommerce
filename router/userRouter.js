@@ -44,12 +44,12 @@ router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder)
 router.get("/getaddress/:id",userVerify,ordercontroller.getaddress)
 router.post("/placeorder/:type",userVerify,ordercontroller.confirmorder)
 router.get("/userorder",userVerify,ordercontroller.getorder)
-
+router.get("/vieworderdetails/:id",userVerify,ordercontroller.getorderdetails)
 // product views in user side
 
 router.get("/allproduct",userVerify,CountOfCart,productcontroller.getallproduct)
 router.get("/uniqueproduct/:id",userVerify,CountOfCart,productcontroller.uniqueproduct)
-
+router.get("/searchproduct",productcontroller.searchproduct)
 // user-profile 
 router.get("/profile",userVerify,CountOfCart,profilecontroller.profilepage)
 router.get("/addaddress",userVerify,profilecontroller.getaddress)

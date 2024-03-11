@@ -11,20 +11,29 @@ module.exports={
             const user = await User.findOne({email:useremail})
             const kart = await Cart.findOne({ userid: user._id }).populate(
                 { path: "products.productid", populate: { path: 'Category', model: 'category' } });
-            const carts = kart.products;
-            let grandtotal = 0
-            let disctotal = 0
-            carts.forEach((cur)=>{
-                grandtotal += cur.productid.price*cur.quantity;
-                disctotal += cur.productid.discountAmount*cur.quantity;
-            }) 
-            req.session.grandtotal = grandtotal
-            req.session.disctotal = disctotal
-            totalprice = grandtotal-disctotal;  
-            console.log(totalprice);
-            if(carts.length>0){
-                res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
-            }  
+                console.log(kart);
+            
+            if(kart!=null && kart != undefined){
+                const carts = kart.products;
+                console.log(carts);
+                let grandtotal = 0
+                let disctotal = 0
+                carts.forEach((cur)=>{
+                    grandtotal += cur.productid.price*cur.quantity;
+                    disctotal += cur.productid.discountAmount*cur.quantity;
+                }) 
+        
+                req.session.grandtotal = grandtotal
+                req.session.disctotal = disctotal
+                totalprice = grandtotal-disctotal;  
+                console.log(totalprice);
+                if(carts.length>0){
+                    res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
+                } 
+                else{
+                    res.redirect("/nocart")
+                }  
+            } 
             else{
                 res.redirect("/nocart")
             }       

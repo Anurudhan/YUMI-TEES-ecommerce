@@ -4,6 +4,7 @@ const Order = require('../model/order');
 const User = require("../model/usermodel");
 const Product = require("../model/productSchema");
 const session = require('express-session');
+const { resetpassword } = require('./controller');
 module.exports = {
     getorder:async(req,res)=>{
         try{
@@ -15,14 +16,14 @@ module.exports = {
             const skip = (page - 1) * perPage;
             const [orders, orderCount] = await Promise.all([
                 Order.find({ userid: req.session._id}).populate(
-                    { path: "products.productid", populate: 
-                    { path: 'category_id', model: 'category' } })
+                    { path: "products.productid", model:'product', populate: 
+                    { path: 'Category', model: 'category' } })
                     .sort({ orderdate: -1 }).skip(skip).limit(perPage),
                     
                 Order.find({ userid: req.session._id }).count()
             ]);
             console.log(orders);
-            console.log(orderCount)
+            console.log(orderCount,req.session._id)
             const totalPages = Math.ceil(orderCount / perPage);
             res.render("user/Orderlist",{username,cart,orders,orderCount})
         }
@@ -47,6 +48,7 @@ module.exports = {
                 Cart.findOne({userid:req.session._id}),
                 Order.findOne({userid:req.session._id})
             ])
+            console.log(orders);
             if(carts){
                 res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,username,cart,grandtotal,disctotal,totalprice})
             }
@@ -104,7 +106,7 @@ module.exports = {
                 ).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
 
                 let myOrders = {
-                    userid: user._id,
+                    userid: req.session._id,
                     products: carts.products,
                     address: {
                         name: address.name,
@@ -143,6 +145,16 @@ module.exports = {
                 console.log("sucess------------------------------------> ");
                 res.render("user/paymentsuccess")
             }
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    getorderdetails:async (req,res)=>{
+        try{
+            const cart=req.session.cart
+            const username = req.session.username
+            res.render("user/Orderdetails",{cart,username})
         }
         catch(err){
             console.log(err);
