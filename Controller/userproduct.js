@@ -4,10 +4,31 @@ const Cart = require("../model/cartmodel")
 module.exports={
     getallproduct: async (req,res)=>{
         try{
+            const existingQueryString = req.originalUrl.split('?')[1] ? `&${req.originalUrl.split('?')[1]}` : ''
+            const { Category, min, max} = req.query
+            console.log(Category);
             const pageSize = 6; // Set your desired page size
             const currentPage = parseInt(req.query.page) || 1;
-            const [product,count,categories] = await Promise.all([
-                Product.find({displayStatus:"Show"}).skip((currentPage-1)*pageSize).limit(pageSize),
+            let username=req.session.username;
+            let cart=req.session.cart;
+            let product;
+            let flag;
+            if(Category == undefined && min == undefined && max==undefined){
+                flag=0
+                product = await Product.find({displayStatus:"Show"}).skip((currentPage-1)*pageSize).limit(pageSize)
+                 
+            }
+            else if(Category == undefined ){
+                flag=1
+                product = await Product.find({grandprice: { $gte: min, $lte: max},displayStatus: "Show"}).skip((currentPage-1)*pageSize).limit(pageSize).populate({path: 'Category', model: 'category'});
+            }
+            else{
+                flag=1;
+                product = await Product.find({Category: { $in : Category},
+                    grandprice: { $gte: min, $lte: max},
+                    displayStatus: "Show"}).skip((currentPage-1)*pageSize).limit(pageSize).populate({path: 'Category', model: 'category'});
+            } 
+            const [count,categories] = await Promise.all([
                 Product.find({displayStatus:"Show"}).count(),
                 Product.aggregate([{
                     $lookup:{
@@ -30,11 +51,9 @@ module.exports={
                     }
                 }])
             ])
-            console.log(categories);
-            const totalpages = Math.ceil(count/pageSize);
-            let username=req.session.username;
-            let cart=req.session.cart
-            res.render("user/allproduct",{product,categories,count,totalpages,currentPage,username,cart})
+            const totalpages = Math.ceil(count/pageSize);   
+            res.render("user/allproduct",{product,categories,count,totalpages,currentPage,username,cart,flag,existingQueryString})
+            
         }
         catch(err){
             console.log(err);

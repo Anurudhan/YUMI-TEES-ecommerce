@@ -9,7 +9,7 @@ module.exports={
             delete req.session.successMessage
             delete req.session.errorMessage
             
-            const address = await Addres.find()
+            const address = await Addres.find({userid:req.session._id})
             res.render("user/profile",{successMessage,errorMessage,username:req.session.username,email:req.session.email,cart:req.session.cart,address})
         }
         catch(err){

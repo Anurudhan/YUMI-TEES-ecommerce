@@ -26,6 +26,7 @@ module.exports = {
     try {
       const fieldsfile = req?.files;
       const productdetails = req.body;
+      productdetails['grandprice']=req.body.price-req.body.discountAmount
       let images = [
         fieldsfile.image1[0].filename,
         fieldsfile.image2[0].filename,
@@ -122,6 +123,7 @@ module.exports = {
       // end image ------------------------------------
 
       const UpdatedProducts = req.body;
+      UpdatedProducts['grandprice']=req.body.price-req.body.discountAmount
       console.log(UpdatedProducts);
       console.log("stop------------------------------------------->");
 

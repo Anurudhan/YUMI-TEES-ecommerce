@@ -9,14 +9,20 @@
     .accordion-button{
       background-color: white !important;
     }
- 
+    .card-img-top{
+      transition: transform 0.3s ease-in-out;
+    }
+    .card-img-top:hover{
+      transform: scale(1.1);
+    }
+    
   </style>
   <!-- sidebar + content -->
   <section style="margin-top: 100px;">
-    <div class="container p-2">
+    <!-- <div class="container p-2"> -->
       <div class="row">
         <!-- sidebar -->
-        <div class="col-lg-3">
+        <div class="col-lg-3" style="max-width: 300px;">
           <!-- Toggle button -->
           <form action="\filter" method="post" id="filterForm">
           <button
@@ -198,16 +204,18 @@
           <div class="row p-3" id="proview">
             <span id="inside" class="row">
             <% product.forEach(el => { %>
-            <div class="col-lg-4 col-md-4 col-sm-6 d-flex">
-              <div class="card w-100 my-1 shadow " style="border: none; ">
-                
+            <div class="col-lg-4 col-md-4 col-sm-6 d-flex" style="margin-bottom: 5%;">
+              <div class="card w-100 my-1 shadow" style="border: none;max-width: 80%;">
+                <div class="card" style="max-width: 100%;">
+                  <span style="color: white;font-size: 10px;background-color: red;max-width: 20%;height: 20px;margin-bottom: -20px;position: relative;padding-left: 4px;padding-top: 4px;">
+                    <%= Math.round((el.discountAmount/el.price)*100) %>% off</span>
                 <a href="/uniqueproduct/<%-el._id-%>">
-                <img src="/productimages/<%-el.images[0]-%>" class="card-img-top w-100" style=" max-width: 100%;
+                <img src="/productimages/<%-el.images[0]-%>" class="card-img-top w-100 " style=" max-width: 100%;
                 max-height: 200px;
                  "/>
                  
               </a>
-             
+            </div>
                 <div class="card-body d-flex flex-column" style="margin-top: -10px;">
                   <div class="d-flex flex-row">
                     <% if (el.stockQuantity<0) { %>
@@ -221,8 +229,8 @@
 
                    
                   </div>
-                  <p style="color: red;font-size: 10px;">discount of <%= Math.round((el.discountAmount/el.price)*100) %>%</p>
-                  <p class="card-text" style="margin-top: -15px;"> <small><%=el.productName-%></small></p>
+                  <!-- <p style="color: red;font-size: 10px;">discount of <%= Math.round((el.discountAmount/el.price)*100) %>%</p> -->
+                  <p class="card-text mt-1" style="margin-top: -15px;"> <small><%=el.productName-%></small></p>
                   
                   <div class="card-footer d-flex align-items-end pt-0 px-0 pb-0 mt-auto" style="background-color: white;">
 
@@ -238,7 +246,7 @@
           </span>
             
           <hr class="mt-3" />
-  
+          <% if (flag==0) { %>
           <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
             <ul class="pagination">
               <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
@@ -260,11 +268,34 @@
               </li>
             </ul>
           </nav>
+          <%} else { %>
+            <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+              <ul class="pagination">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage - 1 %><%= existingQueryString %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+              
+                <% for (let i = 1; i <= totalpages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %><%= existingQueryString %>"><%= i %></a>
+                  </li>
+                <% } %>
+              
+                <li class="page-item <%= currentPage === totalpages ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage + 1 %><%= existingQueryString %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <% } %>
           
           <!-- Pagination -->
         </div>
       </div>
-    </div>            
+    <!-- </div>             -->
   </section>
   <!-- sidebar + content -->
   
@@ -282,6 +313,31 @@
       const label = document.querySelector(`[for="${input.id}"]`);
       label.textContent = `₹ ${input.value}`;
     }
+
+    function filter(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+
+      // Get the values from the form inputs
+      var categoryCheckboxes = document.querySelectorAll('input[name="Category"]:checked');
+
+      var minPrice = document.getElementById('minPrice').value;
+      var maxPrice = document.getElementById('maxPrice').value;
+      // Construct the query string
+       
+      var queryString = '';
+
+      // Add selected categories to the query string
+      categoryCheckboxes.forEach(function(checkbox) {
+          queryString += 'Category=' + checkbox.value + '&';
+       });
+      queryString += 'min=' + minPrice + '&max=' + maxPrice;
+      // Update the form action with the new query string
+      document.getElementById('filterForm').action = '/filter?'+ queryString;
+      // Submit the form
+      document.getElementById('filterForm').submit();
+    }
+    
     </script>
   <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/adminfooter.ejs")-%>
+

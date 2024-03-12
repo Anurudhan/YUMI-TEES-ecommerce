@@ -15,7 +15,7 @@ body {
     -webkit-flex-direction: column;
         -ms-flex-direction: column;
             flex-direction: column; }
-    @media screen and (max-width: 996px) {
+    @media screen and (max-width: 700px) {
       .preview {
         margin-bottom: 20px; } }
   
@@ -51,7 +51,7 @@ body {
   
   .card {
     margin-top: 50px;
-    background: #eee;
+    background: white;
     padding: 3em;
     line-height: 1.5em; }
   
@@ -107,17 +107,19 @@ body {
     .color:first-of-type {
       margin-left: 20px; }
   .buynow{
-    background: #f12929;
+    background: rgb(6, 146, 6);
+    height: 3em;
     padding: .8em 1em;
     border: none;
     text-transform: UPPERCASE;
     font-weight: bold;
-    color: black;
+    color: white;
     -webkit-transition: background .3s ease;
             transition: background .3s ease;
   }
   .go-to-cart{
     background-color: rgb(233, 218, 12);
+    height: 3em;
     padding: .8em 1em;
     border: none;
     text-transform: UPPERCASE;
@@ -128,28 +130,30 @@ body {
             transition: background .3s ease;
   }
   .add-to-cart {
-    background: #2213f8;
-    padding: .8em 1em;
+    background: #0e4aee;
+    height: 3em;
+    padding: .5em 1em;
     border: none;
     text-transform: UPPERCASE;
     font-weight: bold;
     margin-left: 10px;
-    color:black;
+    color:white;
     -webkit-transition: background .3s ease;
             transition: background .3s ease; }
    .like{
-    background: #73ee0e;
+    background: rgb(235, 51, 82);
+    height: 3em;
     padding: .8em 1em;
     border: none;
     text-transform: UPPERCASE;
     font-weight: bold;
     margin-left: 10px;
-    color: black;
+    color: white;
     -webkit-transition: background .3s ease;
             transition: background .3s ease;
    }
     .add-to-cart:hover, .like:hover ,.buynow:hover,.go-to-cart:hover{
-      background: #b36800;
+      background: #ecb82a;
       color: #fff; }
   .not-available {
     text-align: center;

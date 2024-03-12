@@ -49,7 +49,9 @@ router.get("/vieworderdetails/:id",userVerify,ordercontroller.getorderdetails)
 
 router.get("/allproduct",userVerify,CountOfCart,productcontroller.getallproduct)
 router.get("/uniqueproduct/:id",userVerify,CountOfCart,productcontroller.uniqueproduct)
-router.get("/searchproduct",productcontroller.searchproduct)
+router.get("/searchproduct",userVerify,productcontroller.searchproduct)
+router.post("/filter",userVerify,productcontroller.getallproduct)
+router.get("/filter",userVerify,productcontroller.getallproduct)
 // user-profile 
 router.get("/profile",userVerify,CountOfCart,profilecontroller.profilepage)
 router.get("/addaddress",userVerify,profilecontroller.getaddress)

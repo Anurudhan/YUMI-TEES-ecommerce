@@ -9,7 +9,9 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-
+    grandprice:{
+        type:Number
+    },
     Description: {
         type: String,
     },
