@@ -45,74 +45,106 @@ button {
 </style>
 <%-include("../partials/usernavbar.ejs")-%>
 <% if (orders.length > 0) { %>
-    <div class="card-header" style="margin-top: 100px;padding-left: 15%;">
-        <h4>Order Details</h4>
-        <br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card-header text-center" style="margin-top: 100px;">
+                    <h4>Order Details</h4>
+                    <br>
+                </div>
+                <div class="card">
+                    <table id="ordersTable" class="display" style="width: 100%;">
+                        <tbody>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <th>
+                                        <div class="card">
+                                            <div class="order-info">
+                                                <span>Orders: <%= order._id %></span>
+                                                <span class="order-date">Order Date: <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
+                                            </div>
+                                        </div>
+                                        <% order.products.forEach(data => { %>
+                                            <div class="container">
+                                                <div class="card-body">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-lg-2">
+                                                            <img src="/productimages/<%= data?.productid?.images[0] %>" alt="" class="avatar-lg rounded">
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <h5 class="text-truncate font-size-18"><a href="#" class="text-dark"><%= data?.productid?.productName %></a></h5>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <a href="#" class="text-muted px-1">
+                                                                <span style="color: #000000;">Qty: <%= data.quantity %></span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <% if (data.status != "Cancelled") { %>
+                                                                <a class="text-muted px-1">
+                                                                    <% if (order.orderStatus === 'Order Processed') { %>
+                                                                        <span class="badge rounded-pill bg-warning" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } else if (order.orderStatus === 'Order Confirmed') { %>
+                                                                        <span class="badge rounded-pill bg-primary" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } else if (order.orderStatus === 'Order Shipped') { %>
+                                                                        <span class="badge rounded-pill bg-info" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } else if (order.orderStatus === 'Order Delivered') { %>
+                                                                        <span class="badge rounded-pill bg-success" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } else if (order.orderStatus === 'Order Rejected'){ %>
+                                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } else if (order.orderStatus === "Cancelled"){ %>
+                                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                                                    <% } %>
+                                                                </a>
+                                                            <% } else { %>
+                                                                <a class="text-muted px-1">
+                                                                    <span class="badge rounded-pill bg-danger" style="font-weight: 400;margin-left: 20px;"><%= data.status %></span>
+                                                                </a>
+                                                            <% } %>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                        <div class="card-footer text-center">
+                                            <a href="/vieworderdetails/<%= order._id %>"  class="btn btn-light" style="background-color: #d3f2f0;">View details</a>
+                                        </div>
+                                    </th>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <!-- Pagination Links -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <% if (page > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<%= page - 1 %>" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= i === page ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                            <% if (page < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<%= page + 1 %>" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
     </div>
-    <table id="ordersTable" class="display" style="width: 80%;margin-left: 10%;">
-        <tbody>
-            <% orders.forEach(order => { %>
-                <tr>
-                    <th>
-                        <div class="card">
-                            <div class="order-info">
-                                <span>Orders: <%= order._id %></span>
-                                <span class="order-date">Order Date: <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
-                            </div>
-                        </div>
-                        <% order.products.forEach(data => { %>
-                            <div class="container">
-                                <div class="card-body">
-                                    <div class="row align-items-center"> <!-- Added align-items-center class to vertically center content -->
-                                        <div class="col-lg-2">
-                                            <img src="/productimages/<%= data?.productid?.images[0] %>" alt="" class="avatar-lg rounded">
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <h5 class="text-truncate font-size-18"><a href="#" class="text-dark"><%= data?.productid?.productName %></a></h5>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <a href="#" class="text-muted px-1">
-                                                <span style="color: #000000;">Qty: <%= data.quantity %></span>
-                                                </a>
-                                        </div>
-                                        <div class="col-lg-4"> <!-- Adjusted the column size to accommodate "order proceed" -->
-                                            <% if (data.status != "Cancelled") { %>
-                                                <a class="text-muted px-1">
-                                                    <% if (order.orderStatus === 'Order Processed') { %>
-                                                        <span class="badge rounded-pill bg-warning" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } else if (order.orderStatus === 'Order Confirmed') { %>
-                                                        <span class="badge rounded-pill bg-primary" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } else if (order.orderStatus === 'Order Shipped') { %>
-                                                        <span class="badge rounded-pill bg-info" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } else if (order.orderStatus === 'Order Delivered') { %>
-                                                        <span class="badge rounded-pill bg-success" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } else if (order.orderStatus === 'Order Rejected'){ %>
-                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } else if (order.orderStatus === "Cancelled"){ %>
-                                                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
-                                                    <% } %>
-                                                </a>
-                                            <% } else { %>
-                                                <a class="text-muted px-1">
-                                                    <span class="badge rounded-pill bg-danger" style="font-weight: 400;margin-left: 20px;"><%= data.status %></span>
-                                                </a>
-                                            <% } %>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="float-end">
-                                        <a href="/vieworderdetails/<%= order._id %>" class="button btn">
-                                            View details
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </th>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    
+    
 <% } %>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 <script>

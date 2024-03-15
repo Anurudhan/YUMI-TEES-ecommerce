@@ -2,128 +2,152 @@
 <%-include("../layout/admincentre.ejs")-%>
 
 <%-include("../partials/adminnavbar.ejs")-%>
-<form action="/admin/editProducts/<%=product._id%>" method="post" enctype="multipart/form-data">
-    <div class="container" style="margin-top: 90px;">
-        <div class="row p-3 d-flex justify-content-center align-items-center shadow-lg mt-4" style="border-radius: 15px;height: 80vh;">
-        <div class="col-12 col-md-6 "
-            style="border-radius: 15px;">
-            <div class="d-flex justify-content-center align-items-center" style="background-color: rgb(25, 27, 36); border-radius: 10px 10px 0 0 ;">
-                <h1 style="color: rgb(255, 255, 255);">Edit Product</h1>
-            </div>
-            <div class="d-flex mt-4 justify-content-center align-items-center">
-                <input type="text" name="productName" placeholder="Product Name" value="<%=product.productName%>"
-                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
-            </div><br>
-            <div class="d-flex justify-content-center align-items-center">
-                <select class="" id="category" name="Category"
-                    style="width:38%;height: 35px;border-radius: 5px;margin-right: 4%;">
-                    <option value="" selected disabled><%=product.Category.categoryname%></option>
-                    <% category.forEach(x => { %>
-                        <% if (x.categoryname !== product.Category.categoryname) { %>
-                            <option><%= x.categoryname %></option>
-                        <% } %>
-                    <% }) %>
-                </select>
-            </div>
-            <br>
-            <div class="d-flex">
-
-            </div>
-
-            <div class="d-flex justify-content-center">
-                <textarea name="Specification1" id="spec1" placeholder="Specification1"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
-                <textarea name="Specification2" id="spec2" placeholder="Specification2"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
-            </div>
-            <br>
-            <div class="d-flex justify-content-center">
-                <textarea name="Specification3" id="spec3" placeholder="Specification3"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
-                <textarea name="Specification4" id="spec4" placeholder="Specification4"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
-            </div>
-            <input type="hidden" value="false" name="inWish">
-            <br>
-            <div class="d-flex justify-content-center align-items-center">
-                <textarea name="Description" id="desc" placeholder="Description"
-                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
-            </div>
-            <br>
-            <div class="d-flex justify-content-center align-items-center">
-                <input type="number" name="price" placeholder="Enter the price" value="<%=product.price%>" id="price"
-                    style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
-                <input type="number" name="discountAmount" placeholder="Discount Amount" value="<%=product.discountAmount%>"
-                    id="discountAmount" style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
-                <input type="number" name="stockQuantity" placeholder="Stock" value="<%=product.stockQuantity%>"
-                    id="stockquantity" style="width: 20%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
-            </div>
-        </div>
-        
-            <div class="col-12 col-md-6 pt-3  "
-            style="border-radius: 15px;">
-            
-            <div class="d-flex justify-content-center align-items-center">
-                <input type="file" name="image1" id="imageInput1" accept="image/*"
-                    value="/productimages/<%=product?.images[0]?.filename%>"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;">
-                <input type="file" name="image2" id="imageInput2" accept="image/* "
-                    value="/productimages/<%=product?.images[1]?.filename%>"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;">
-            </div>
-            <br>
-            <div class="d-flex justify-content-center align-items-center">
-                <input type="file" name="image3" id="imageInput3" accept="image/*"
-                    value="/productimages/<%=product?.images[2]?.filename%>"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;">
-                <input type="file" name="image4" id="imageInput4" accept="image/*"
-                    value="/productimages/<%=product?.images[3]?.filename %>"
-                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;">
-            </div>
-            <br>
-            <div class="d-flex justify-content-center">
-                <div style="width: 100px;height: 100px;margin-right: 4%;margin-left: 4%;">
-                    <img id="imagePreview1" src="/productimages/<%=product.images[0]%>" alt="Image Preview 1"
-                        style="max-width: 100px; max-height: 100px;">
-                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[0]%>')"
-                        class="btn btn-danger text-white">Delete</button>
-                </div>
-                <div style="width: 100px;height: 100px;margin-right: 4%;">
-                    <img id="imagePreview2" src="/productimages/<%=product.images[1]%>" alt="Image Preview 2"
-                        style="max-width: 100px; max-height: 100px;">
-                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[1]%>')" class="btn btn-danger text-white">Delete</button>
-                </div>
-                <div style="width: 100px;height: 100px;margin-right: 4%;">
-                    <img id="imagePreview3" src="/productimages/<%=product.images[2]%>" alt="Image Preview 3"
-                        style="max-width: 100px; max-height: 100px;">
-                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[2]%>')" class="btn btn-danger text-white">Delete</button>
-                </div>
-                <div style="width: 100px;height: 100px;">
-                    <img id="imagePreview4" src="/productimages/<%=product.images[3]%>" alt="Image Preview 4"
-                        style="max-width: 100px; max-height: 100px;">
-                    <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[3]%>')" class="btn btn-danger text-white">Delete</button>
-                </div>
-            </div>
-            <br>
-            <br>
-            <div class="d-flex justify-content-center align-items-center ">
-                <input name="tags" placeholder="Tags" value="<%=product.tags%>"
-                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></input>
-            </div>
-            <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn" style="background-color: rgb(48, 194, 48);color: white;">Edit Product</button>
-            </div>
+<div class="container" style="margin-top: 90px;">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Edit Product</h1>
         </div>
     </div>
+    <form action="/admin/editProducts/<%=product._id%>" method="post" enctype="multipart/form-data">
+        <div class="row p-3 d-flex justify-content-center align-items-center shadow-lg mt-4" style="border-radius: 15px;">
+            <div class="col-md-6">
+                <div class="p-4">
+                    <div class="mb-3">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" name="productName" class="form-control" placeholder="Product Name" value="<%=product.productName%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Category">Category</label>
+                        <select class="form-select" id="Category" name="Category" >
+                            <option value="<%=product.Category.categoryname%>" selected disabled><%=product.Category.categoryname%></option>
+                            <% category.forEach(x => { %>
+                                <% if (x.categoryname !== product.Category.categoryname) { %>
+                                    <option value="<%= x._id%>"><%= x.categoryname %></option>
+                                <% } %>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="spec1">Specification 1</label>
+                        <textarea name="Specification1" id="spec1" class="form-control" placeholder="Specification1" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="spec2">Specification 2</label>
+                        <textarea name="Specification2" id="spec2" class="form-control" placeholder="Specification2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="spec3">Specification 3</label>
+                        <textarea name="Specification3" id="spec3" class="form-control" placeholder="Specification3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="spec4">Specification 4</label>
+                        <textarea name="Specification4" id="spec4" class="form-control" placeholder="Specification4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="desc">Description</label>
+                        <textarea name="Description" id="desc" class="form-control" placeholder="Description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price">Price</label>
+                        <input type="number" name="price" id="price" class="form-control" placeholder="Enter the price" value="<%=product.price%>" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4">
+                    
+                    <div class="mb-3">
+                        <label for="discountAmount">Discount Amount</label>
+                        <input type="number" name="discountAmount" id="discountAmount" class="form-control" placeholder="Discount Amount" value="<%=product.discountAmount%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stockquantity">Stock</label>
+                        <input type="number" name="stockQuantity" id="stockquantity" class="form-control" placeholder="Stock" value="<%=product.stockQuantity%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tags">Tags</label>
+                        <input name="tags" id="tags" class="form-control" placeholder="Tags" value="<%=product.tags%>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageInput1">Upload Image 1</label>
+                        <div class="input-group">
+                            <input type="file" name="image1" id="imageInput1" class="form-control" accept="image/*" onchange="change(event,0)" value="/productimages/<%=product?.images[0]?.filename%>">
+                            
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageInput2">Upload Image 2</label>
+                        <div class="input-group">
+                            <input type="file" name="image2" id="imageInput2" class="form-control" accept="image/*" onchange="change(event,1)">
+                           
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageInput3">Upload Image 3</label>
+                        <div class="input-group">
+                            <input type="file" name="image3" id="imageInput3" class="form-control" accept="image/*" onchange="change(event,2)">
+                            
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageInput4">Upload Image 4</label>
+                        <div class="input-group">
+                            <input type="file" name="image4" id="imageInput4" class="form-control" accept="image/*" onchange="change(event,3)">
+                            
+                        </div>
+                    </div>
+                    
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <div style="width: 100px;height: 100px;margin-right: 4%;margin-left: 4%;">
+                            <img id="imagePreview1" src="/productimages/<%=product.images[0]%>" alt="Image Preview 1" style="max-width: 100px; max-height: 100px;">
+                            <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[0]%>')" class="btn btn-danger text-white">Delete</button>
+                        </div>
+                        <div style="width: 100px;height: 100px;margin-right: 4%;">
+                            <img id="imagePreview2" src="/productimages/<%=product.images[1]%>" alt="Image Preview 2" style="max-width: 100px; max-height: 100px;">
+                            <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[1]%>')" class="btn btn-danger text-white">Delete</button>
+                        </div>
+                        <div style="width: 100px;height: 100px;margin-right: 4%;">
+                            <img id="imagePreview3" src="/productimages/<%=product.images[2]%>" alt="Image Preview 3" style="max-width: 100px; max-height: 100px;">
+                            <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[2]%>')" class="btn btn-danger text-white">Delete</button>
+                        </div>
+                        <div style="width: 100px;height: 100px;">
+                            <img id="imagePreview4" src="/productimages/<%=product.images[3]%>" alt="Image Preview 4" style="max-width: 100px; max-height: 100px;">
+                            <button type="button" onclick="deleteImage('<%=product._id%>','<%=product.images[3]%>')" class="btn btn-danger text-white">Delete</button>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary">Edit Product</button>
+            </div>
+        </div>
+    </form>
 </div>
-</div>
-</form>
+
 <script>
-     function change(event,no){
-        console.log("ok da")
-        document.getElementById(`imagePreview${no}`).src=URL.createObjectURL(event.target.files[0])
-      
-     }
+
+function change(event, no) {
+    console.log("ok da");
+    var fileInput = event.target;
+    const filename = fileInput.files[0].name;
+    const filenameInput = document.getElementById(`imageInput${no}Filename`);
+    filenameInput.value = filename;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!allowedExtensions.exec(fileInput.value)) {
+        alert('Please upload only image files (jpg, jpeg, png, gif).');
+        fileInput.value = '';
+        return false;
+    }
+
+    document.getElementById(`imagePreview${no}`).src = URL.createObjectURL(fileInput.files[0]);
+    return true;
+}
+
 
     let spec1 = document.getElementById('spec1');
     spec1.value = '<%=product.Specification1%>'
@@ -139,10 +163,23 @@
     const priceInput = document.getElementById('price');
     const discountInput = document.getElementById('discountAmount');
     const stockInput = document.getElementById("stockquantity")
+    const nameInput = document.getElementById("name")
+    const spec1Input = document.getElementById('spec1')
+    const spec2Input = document.getElementById('spec2')
+    const spec3Input = document.getElementById('spec3')
+    const spec4Input = document.getElementById('spec4')
+    const descInput = document.getElementById('desc')
 
     priceInput.addEventListener('input', validatePrice);
     discountInput.addEventListener('input', validatePrice);
     stockInput.addEventListener('input', validatestock)
+    nameInput.addEventListener('input',validateTrim)
+    spec1Input.addEventListener('input',validateTrim)
+    spec2Input.addEventListener('input',validateTrim)
+    spec3Input.addEventListener('input',validateTrim)
+    spec4Input.addEventListener('input',validateTrim)
+    descInput.addEventListener('input',validateTrim)
+
 
     function validatePrice() {
         const price = parseFloat(priceInput.value);
@@ -154,6 +191,7 @@
             discountInput.setCustomValidity('discount must be more than or equal to zero')
         }else {
             priceInput.setCustomValidity('');
+            discountInput.setCustomValidity('');
         }
     }
     function validatestock() {
@@ -161,7 +199,37 @@
         if(stock < 0) stockInput.setCustomValidity('Stock must be more than or equal to zero');
         else stockInput.setCustomValidity('');
     }
-    
+    function validateTrim(){
+        const name = nameInput.value
+        if(name.trim()===""){
+            nameInput.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        } else if(!/^[a-zA-Z\s]+$/.test(name)){
+            nameInput.setCustomValidity("Fields cannot contain numbers.")
+        }
+        else if(spec1.value.trim()===""){
+            spec1Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec2.value.trim()===""){
+            spec2Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec3.value.trim()===""){
+            spec3Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec4.value.trim()===""){
+            spec4Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if (desc.value.trim()===""){
+            descInput.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else{
+            nameInput.setCustomValidity("")
+            spec1Input.setCustomValidity("")
+            spec2Input.setCustomValidity("")
+            spec3Input.setCustomValidity("")
+            spec4Input.setCustomValidity("")
+            descInput.setCustomValidity("")
+        }
+    }
 
 function deleteImage(productId, Index) {
 fetch(`/admin/deleteImage/${productId}/${Index}`, {

@@ -1,6 +1,7 @@
 const OTP = require("../model/otpmodel");
 const User=require("../model/usermodel");
 const Product = require("../model/productSchema")
+const Category = require("../model/category")
 const { sendOTP } = require("../util/otp");
 const {sendResetEmail}=require("../auth/nodemailerForReset")
 const bcrypt = require('bcrypt');
@@ -10,9 +11,15 @@ const JWT_SECRET = "I AM THE SECRET"
 module.exports={
     loginpage:async(req,res)=>{
         try{
+            const email_err = req.session.email_err
+            const status_err = req.session.status_err
+            const pass_err = req.session.pass_err
             const msg=req.session.msg
             delete req.session.msg
-            res.render("user/login",{pass_err:null,status_err:null,email_err:null,msg})
+            delete req.session.status_err
+            delete req.session.pass_err
+            delete req.session.email_err
+            res.render("user/login",{pass_err,status_err,email_err,msg})
         }
         catch(err){
             console.log(err);
@@ -23,8 +30,8 @@ module.exports={
             const email=req.body.email;
             const password=req.body.password;
             const userdata=await User.findOne({email:email})
-            const isMatch= await bcrypt.compare(password,userdata.password)
             if(userdata){
+                const isMatch= await bcrypt.compare(password,userdata.password)
                 if(userdata.status=="1"){
                     if(isMatch){
                         req.session.logged=true;
@@ -33,15 +40,18 @@ module.exports={
                         res.redirect("/")
                     }
                     else{
-                        res.render("user/login",{email_err:null,pass_err:"Your Password is Incorrect",status_err:null,msg:null})
+                        req.session.pass_err = "Your Password is Incorrect"
+                        res.redirect("/login")
                     }
                 }
                 else{
-                    res.render("user/login",{email_err:null,pass_err:null,status_err:"Your account is access deniedd for some issues",msg:null})
+                    req.session.status_err = "Your account is access deniedd for some issues"
+                    res.redirect("/login")
                 }
             }
            else{
-            res.render('user/login', { email_err: 'Your never signup in this email ID',pass_err:null,status_err:null,msg:null });
+            req.session.email_err = 'Your never signup in this email ID'
+            res.redirect("/login")
         }
         }
         catch(err){
@@ -51,9 +61,10 @@ module.exports={
     homepage:async(req,res)=>{
         try{
             const products = await Product.find().populate('Category')
-            const mens = products.filter(product => product.Category.categoryname == "MEN");
-            const womens = products.filter(product => product.Category.categoryname == "WOMEN");
-            const kids = products.filter(product => product.Category.categoryname == "KIDS");
+            const categories = await Category.find()
+            const mens = products.filter(product => product.Category.categoryname==categories[0].categoryname);
+            const womens = products.filter(product => product.Category.categoryname ==categories[1].categoryname );
+            const kids = products.filter(product => product.Category.categoryname == categories[2].categoryname);
             if(req.session.logged){
                 const user = await User.findOne({email:req.session.email})
                 console.log(user);
@@ -61,7 +72,7 @@ module.exports={
                 console.log(req.session._id);
                 res.render("user/home",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
             }
-            else res.render("user/guesthome")
+            else res.render("user/guesthome",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
         }
         catch(err){
             console.log(err);

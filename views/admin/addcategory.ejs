@@ -19,5 +19,26 @@
         </form>
     </section>
 </div>
-
+<% if(successMessage){ %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+          title: "Good job!",
+          text: "<%= successMessage %>",
+          icon: "success"
+        });
+      });
+    </script>
+  <% } else if(errorMessage) { %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+          title: "Error!",
+          text: "<%= errorMessage %>",
+          icon: "error"
+        });
+      });
+    </script>
+  <% } %>
+  
 <%-include("../layout/adminfooter.ejs")-%>

@@ -54,6 +54,7 @@ router.post("/filter",userVerify,productcontroller.getallproduct)
 router.get("/filter",userVerify,productcontroller.getallproduct)
 // user-profile 
 router.get("/profile",userVerify,CountOfCart,profilecontroller.profilepage)
+router.post("/resetuserdetails",userVerify,profilecontroller.resetuserdetails)
 router.get("/addaddress",userVerify,profilecontroller.getaddress)
 router.post("/addaddress",userVerify,profilecontroller.postaddress)
 router.delete("/deleteAddress/:id",userVerify,profilecontroller.deleteaddress)

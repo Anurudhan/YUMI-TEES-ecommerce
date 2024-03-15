@@ -42,18 +42,12 @@ u{
               <div class="form-outline mb-4">
                 <label class="form-label" for="form3Example1cg">Your Email</label>
                 <input type="email" id="form3Example3cg" name="email" placeholder="Enter your E-mail" class="form-control form-control-lg" />
-                <% if (email_err) { %>
-                <span><%= email_err %></span>
-                <% } %>
 
             </div>
             <div class="form-outline mb-4">
               <label class="form-label" for="form3Example1cg">Password</label>
             <input type="password" id="form3Example4cg" name="password" placeholder="Enter your password" class="form-control form-control-lg" />
-            <%if(pass_err){%>
-              <span><%= pass_err %></span>
-              <%
-            }%>
+            
           </div>
           <a href="/verifyemail" style="text-decoration: none;color: red;">forgot password?</a>
           <div class="d-flex justify-content-center">
@@ -67,10 +61,7 @@ u{
           <div class="go"><i class="bi bi-google"></i> Google</div>
           <div class="fb ps-3"><i class="bi bi-facebook"></i> Facebook</div>
         </div>
-        <%if(status_err){%>
-          <span><%= status_err %></span>
-          <%
-        }%>
+        
     </form>
 
   </div>
@@ -80,5 +71,66 @@ u{
 </div>
 </div>
 </section>
+ <!-- Add this script tag below your HTML content -->
+ <% if (email_err) { %>
+<script>
+  // Check if there's an email error
+  
+    // Display a toast message for the email error
+    Toastify({
+      text: '<%= email_err %>',
+      duration: 3000, // Duration in milliseconds
+      gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
+      backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
+      stopOnFocus: true // Stop the toast message when user focuses on the window/tab
+    }).showToast(); // Show the toast message
+</script>
+<% } else if (status_err) { %>
+  <script>
+    // Check if there's an email error
     
+      // Display a toast message for the email error
+      Toastify({
+        text: '<%= status_err %>',
+        duration: 3000, // Duration in milliseconds
+        gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
+        backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
+        stopOnFocus: true // Stop the toast message when user focuses on the window/tab
+      }).showToast(); // Show the toast message
+  </script>
+<% } else if (pass_err) { %>
+  <script>
+    // Check if there's an email error
+    
+      // Display a toast message for the email error
+      Toastify({
+        text: '<%= pass_err %>',
+        duration: 3000, // Duration in milliseconds
+        gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
+        backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
+        stopOnFocus: true // Stop the toast message when user focuses on the window/tab
+      }).showToast(); // Show the toast message
+  </script>
+<% } %>
+<script>
+  const email = document.getElementById('form3Example3cg')
+  const password = document.getElementById('form3Example4cg')
+
+  email.addEventListener('input', validateform);
+  password.addEventListener('input', validateform);
+
+  function validateform(){
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(password.value.length<8){
+      password.setCustomValidity('Password must be at least 8 characters')
+    }
+    else if(!emailPattern.test(email.value)){
+      email.setCustomValidity('Please enter a valid email address')
+    }
+    else{
+      email.setCustomValidity('')
+      password.setCustomValidity('')
+    }
+  }
+</script>   
 <%-include("../layout/userfooter.ejs")-%> 

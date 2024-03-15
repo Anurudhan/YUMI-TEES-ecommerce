@@ -76,7 +76,6 @@
                     <th scope="col">STOCK</th>
                     <th scope="col">LIST/UNLIST</th>
                     <th scope="col">EDIT</th>
-                    <th scope="col">DELETE</th>
                    
                   </tr>
                 </thead>
@@ -110,7 +109,6 @@
                         <% } %>
                           
                           <td><a href="/admin/editproduct/<%= ele._id-%>"><i class="bi bi-pencil-square" style="color:blue; padding:10px;font-size: 20px;"></i></a></td>
-                          <td><a><i class="bi bi-trash3-fill" style="color: red;font-size: 20px;" onclick="confirmDelete('<%-ele._id-%>')"></i></a></td>
                         </tr> 
                          <% }) %>
                 
@@ -120,6 +118,28 @@
     </div>
 <!-- </div> -->
 </div>
+<% if(successMessage){ %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      Swal.fire({
+        title: "Good job!",
+        text: "<%= successMessage %>",
+        icon: "success"
+      });
+    });
+  </script>
+<% } else if(errorMessage) { %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      Swal.fire({
+        title: "Error!",
+        text: "<%= errorMessage %>",
+        icon: "error"
+      });
+    });
+  </script>
+<% } %>
+
 <% if(message){%>
   <script>
     document.getElementById("exampleModal").classList("active")
@@ -133,34 +153,7 @@
           let table = new DataTable('#example');
         });
   </script>
-  <script>
-    function confirmDelete(productId) {
-    if (confirm("Are you sure you want to delete this product?")) {
-        deleteProduct(productId);
-    } else {
-        // Cancelled, do nothing
-    }
-}
-
-function deleteProduct(productId) {
-    // AJAX request to delete the product
-    $.ajax({
-        url: `/admin/product/${productId}`,
-        method: 'DELETE',
-        data: { id: productId },
-        success: function(response) {
-            // Handle success response
-            console.log("Product deleted successfully");
-            // Optionally, you can update the UI here
-        },
-        error: function(xhr, status, error) {
-            // Handle error response
-            console.error("Error deleting product:", error);
-            // Optionally, you can display an error message to the user
-        }
-    });
-}
-  </script>
+  
   <script>
      function confirmAction(event, url) {
         event.preventDefault();
@@ -180,5 +173,7 @@ function deleteProduct(productId) {
         document.getElementById('confirmationMessage').style.display = 'none';
     }
 </script>
+
+
 
 <%-include("../layout/adminfooter.ejs")-%>

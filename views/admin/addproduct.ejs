@@ -11,7 +11,7 @@
                 <h1 style="color: rgb(255, 255, 255);">Add Product</h1>
             </div>
             <div class="d-flex mt-4 justify-content-center align-items-center">
-                <input type="text" name="productName" placeholder="Product Name"
+                <input type="text" name="productName" placeholder="Product Name" id="name"
                     style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
             </div><br>
             <div class="d-flex justify-content-center align-items-center">
@@ -29,22 +29,22 @@
             </div>
 
             <div class="d-flex justify-content-center">
-                <textarea name="Specification1" placeholder="Specification1"
+                <textarea name="Specification1" placeholder="Specification1" id="spec1"
                     style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
-                <textarea name="Specification2" placeholder="Specification2"
+                <textarea name="Specification2" placeholder="Specification2" id="spec2"
                     style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
             </div>
             <br>
             <div class="d-flex justify-content-center">
-                <textarea name="Specification3" placeholder="Specification3"
+                <textarea name="Specification3" placeholder="Specification3" id="spec3"
                     style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
-                <textarea name="Specification4" placeholder="Specification4"
+                <textarea name="Specification4" placeholder="Specification4" id="spec4"
                     style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
             </div>
             <input type="hidden" value="false" name="inWish">
             <br>
             <div class="d-flex justify-content-center align-items-center">
-                <textarea name="Description" placeholder="Description"
+                <textarea name="Description" placeholder="Description" id="desc"
                     style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
             </div>
             </div>
@@ -108,7 +108,16 @@
 <script>
      function change(event,no){
         console.log("ok da")
-        document.getElementById(`imagePreview${no}`).src=URL.createObjectURL(event.target.files[0])
+        var fileInput = event.target;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedExtensions.exec(fileInput.value)){
+            alert('!Please upload only image files (jpg, jpeg, png, gif).');
+            fileInput.value = '';
+            return false;
+        }
+
+        document.getElementById(`imagePreview${no}`).src=URL.createObjectURL(fileInput.files[0])
+        return true;
       
      }
 </script>
@@ -116,10 +125,23 @@
     const priceInput = document.getElementById('price');
     const discountInput = document.getElementById('discountAmount');
     const stockInput = document.getElementById("stockquantity")
+    const nameInput = document.getElementById("name")
+    const spec1Input = document.getElementById('spec1')
+    const spec2Input = document.getElementById('spec2')
+    const spec3Input = document.getElementById('spec3')
+    const spec4Input = document.getElementById('spec4')
+    const descInput = document.getElementById('desc')
 
     priceInput.addEventListener('input', validatePrice);
     discountInput.addEventListener('input', validatePrice);
-    stockInput.addEventListener('input', validatestock)
+    stockInput.addEventListener('input', validatestock);
+    nameInput.addEventListener('input',validateTrim)
+    spec1Input.addEventListener('input',validateTrim)
+    spec2Input.addEventListener('input',validateTrim)
+    spec3Input.addEventListener('input',validateTrim)
+    spec4Input.addEventListener('input',validateTrim)
+    descInput.addEventListener('input',validateTrim)
+
 
     function validatePrice() {
         const price = parseFloat(priceInput.value);
@@ -127,17 +149,52 @@
 
         if (price <= discount) {
             priceInput.setCustomValidity('Price must be greater than discount amount.');
-        }else if(price<0 || discount<0){
-            priceInput.setCustomValidity('Price must be more than zero')
+        }else if(price<0){
+            priceInput.setCustomValidity('Price must be more than zero') 
+        }else if(discount<0){
             discountInput.setCustomValidity('discount must be more than or equal to zero')
-        }else {
+        }
+        else {
             priceInput.setCustomValidity('');
+            discountInput.setCustomValidity('');
         }
     }
     function validatestock() {
         const stock = parseFloat(stockInput.value)
         if(stock < 0) stockInput.setCustomValidity('Stock must be more than or equal to zero');
         else stockInput.setCustomValidity('');
+    }
+    function validateTrim(){
+        const name = nameInput.value
+        if(name.trim()===""){
+            nameInput.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(!/^[a-zA-Z\s]+$/.test(name)){
+            nameInput.setCustomValidity("Fields cannot contain numbers.")
+        }
+        else if(spec1Input.value.trim()===""){
+            spec1Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec2Input.value.trim()===""){
+            spec2Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec3Input.value.trim()===""){
+            spec3Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if(spec4Input.value.trim()===""){
+            spec4Input.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else if (descInput.value.trim()===""){
+            descInput.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
+        }
+        else{
+            nameInput.setCustomValidity("")
+            spec1Input.setCustomValidity("")
+            spec2Input.setCustomValidity("")
+            spec3Input.setCustomValidity("")
+            spec4Input.setCustomValidity("")
+            descInput.setCustomValidity("")
+        }
     }
 </script>
 <%-include("../layout/adminfooter.ejs")-%>

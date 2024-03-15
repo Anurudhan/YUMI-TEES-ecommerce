@@ -38,7 +38,9 @@ router.delete("/product/:id",productcontroller.deleteproduct)
 router.get("/category",adminVerify,categorycontroller.categorypage)
 router.get("/addcategory",adminVerify,categorycontroller.addcategory)
 router.post("/addcatagory",categorycontroller.postaddcategory)
-router.delete("/categories/:id/:name",categorycontroller.deletecategory)
+router.get("/editcategory/:id",categorycontroller.editcategory)
+router.post("/editcatagory/:id",categorycontroller.posteditcategory)
+router.post("/blockcategory/:id/:status",categorycontroller.ChangeStatusOfcategory)
 
 // customer maintain----------------------------------------------------->
 
@@ -48,6 +50,7 @@ router.get("/customers/block/:id/:status",adminVerify,customercontroller.custome
 // order maintain--------------------------------------------------------->
 
 router.get("/orders",adminVerify,ordercontroller.getorder)
+router.get("/orderdetails/:id",adminVerify,ordercontroller.getorderdetails)
 
 // banner manage--------------------------------------------------------->
 

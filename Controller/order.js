@@ -7,29 +7,38 @@ const session = require('express-session');
 const { resetpassword } = require('./controller');
 module.exports = {
     getorder:async(req,res)=>{
-        try{
-            const cart=req.session.cart
-            const username = req.session.username
-            const perPage = 6; // Set the number of orders per page
-    
-            const page = parseInt(req.query.page) || 1;
-            const skip = (page - 1) * perPage;
+        const cart = req.session.cart;
+        const username = req.session.username;
+        const perPage = 6; // Set the number of orders per page
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * perPage;
+
+        try {
             const [orders, orderCount] = await Promise.all([
-                Order.find({ userid: req.session._id}).populate(
-                    { path: "products.productid", model:'product', populate: 
-                    { path: 'Category', model: 'category' } })
-                    .sort({ orderdate: -1 }).skip(skip).limit(perPage),
-                    
-                Order.find({ userid: req.session._id }).count()
-            ]);
-            console.log(orders);
-            console.log(orderCount,req.session._id)
-            const totalPages = Math.ceil(orderCount / perPage);
-            res.render("user/Orderlist",{username,cart,orders,orderCount})
-        }
-        catch(err){
-            console.log(err);
-        }
+            Order.find({ userid: req.session._id })
+                .populate({
+                    path: "products.productid",
+                    model: 'product',
+                    populate: {
+                        path: 'Category',
+                        model: 'category'
+                    }
+                })
+                .sort({ orderdate: -1 })
+                .skip(skip)
+                .limit(perPage),
+            Order.countDocuments({ userid: req.session._id })
+        ]);
+
+        const totalPages = Math.ceil(orderCount / perPage);
+
+        res.render("user/Orderlist", { username, cart, orders, orderCount, totalPages, page });
+    } catch (error) {
+        // Handle error
+        console.error("Error fetching orders:", error);
+        res.status(500).send("Error fetching orders. Please try again later.");
+    }
+
     },
     getplaceorder:async(req,res)=>{
         try{
@@ -116,6 +125,7 @@ module.exports = {
                         district: address.district,
                         state: address.state,
                         pincode: address.pincode,
+                        mobile:address.mobile
                     },
                     orderdate: currentDate,
                     expectedDeliveryDate: deliveryDate,
@@ -152,9 +162,14 @@ module.exports = {
     },
     getorderdetails:async (req,res)=>{
         try{
+            const id = req.params.id
+            const order = await Order.findOne({ _id: id}).populate(
+                { path: "products.productid", model:'product', populate: 
+                { path: 'Category', model: 'category' } })
             const cart=req.session.cart
             const username = req.session.username
-            res.render("user/Orderdetails",{cart,username})
+            console.log(order);
+            res.render("user/Orderdetails",{cart,username,order})
         }
         catch(err){
             console.log(err);

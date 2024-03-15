@@ -4,14 +4,14 @@
 <div class="container" style="margin-top: 80px;">
     <div class="row">
         <div class="col-md-12">
-            <a href="/admin/orders" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold;">CUSTOMERS</a>
+            <a href="/admin/orders" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold; padding-left: 12%;">ORDERS</a>
         </div>
     </div>
 </div>
-<div class="container mt-5">
+<div class="container ">
     <div class="row">
       <div class="col-md-12">
-      <table  id="example" class="table  mt-5">
+      <table  id="example" class="table">
         <thead class="thead-dark">
           <tr>
             <th class="text-center" scope="col">Si.No</th>
@@ -31,11 +31,11 @@
                     
                 <tr>
                   <td class="text-center" scope="row"><%= index + 1%></td>
-                  <td class="text-center"><%-data.username-%></td>
+                  <td class="text-center" style="white-space: nowrap;"><%-data.username-%></td>
                   <td class="text-center"><%-data._id-%></td>
                   <td class="text-center"><%- data.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></td>
                   <td class="text-center"><%-data.paymentMethod-%></td>
-                  <td class="text-center">₹  <%-data.totalAmount-%></td>
+                  <td class="text-center" style="white-space: nowrap;" >₹  <%-data.totalAmount-%></td>
                   
 
                   <td class="text-center">
@@ -106,7 +106,7 @@
 
                   <td>
 
-                      <a href="/orderlist1/<%-data._id-%>/<%-data._id-%>" class="btn btn-success">view</a>                                                                                 
+                      <a href="/admin/orderdetails/<%-data._id-%>" class="btn btn-success">view</a>                                                                                 
 
                     <!-- <a href=""><i class="fa-solid fa-trash fa-lg mx-1 text-danger" onclick=""></i></a> -->
                   </td>

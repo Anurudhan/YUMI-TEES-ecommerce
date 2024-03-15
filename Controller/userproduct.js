@@ -45,7 +45,8 @@ module.exports={
                     $group: {
                         _id: {
                             categoryId: '$categoryInfo._id',
-                            categoryName: '$categoryInfo.categoryname'
+                            categoryName: '$categoryInfo.categoryname',
+                            Status:'$categoryInfo.Status'
                         },
                         count: { $sum: 1 }
                     }

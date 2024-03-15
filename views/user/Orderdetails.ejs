@@ -1,58 +1,287 @@
 <%-include("../layout/userheader.ejs")-%>
+<style>
+  body {
+      color: #000;
+      overflow-x: hidden;
+      height: 100%;
+      background-color: #ECEFF1;
+      background-repeat: no-repeat;
+  }
+
+  .card {
+      z-index: 0;
+      background-color: #ECEFF1;
+      margin-top: 50px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+  }
+  .steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 80px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0;
+    transform: translateY(-50%); /* Added to center vertically */
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0;
+    transform: translateY(-50%); /* Added to center vertically */
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 60x;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 21px;
+    line-height: 61px;
+    z-index: 5
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #48cf12
+}
+
+.steps .step.completed .step-icon {
+    border-color: #48cf12;
+    background-color: #48cf12;
+    color: #fff
+}
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+.bg-faded, .bg-secondary {
+    background-color: #f5f5f5 !important;
+}
+.card.button:hover{
+  background-color: rgb(112, 29, 29);
+}
+.custom-btn {
+        background-color:  #ECEFF1;
+        color: blue;
+        border: 1px solid black;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+.custom-btn:hover {
+        background-color: blue;
+        color: white;
+        border: none;
+    }
+</style>
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/usernavbar.ejs")-%>
-<section class="vh-100 gradient-custom-2">
+<section class="h-100 gradient-custom">
   <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-md-10 col-lg-8 col-xl-6">
-        <div class="card card-stepper" style="border-radius: 16px;">
-          <div class="card-header p-4">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <p class="text-muted mb-2"> Order ID <span class="fw-bold text-body">1222528743</span></p>
-                <p class="text-muted mb-0"> Place On <span class="fw-bold text-body">12,March 2019</span> </p>
+      <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-lg-10 col-xl-8">
+              <div class="card shadow" style="border-radius: 10px;">
+                  <div class="card-header px-4 py-5">
+                      <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;"><%=username%></span>!</h5>
+                  </div>
+                  <div class="card-body p-4">
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                          <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+                          <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
+                      </div>
+
+                      <div class="card d-flex justify-content-center shadow-0 border mb-4">
+                          <div class="card-body">
+                              <% order.products.forEach(data => { %>
+                              <div class="row">
+                                  <div class="col-md-2">
+                                      <div class="circle"> <!-- Add circle class here -->
+                                          <img src="/productimages/<%= data?.productid?.images[0] %>" style="max-height: 100px;width: 100px;" class="img-fluid" alt="Phone">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <div class="row">
+                                          <div class="col-md-3 text-center d-flex justify-content-center align-items-center">
+                                              <p class="text-muted mb-0"><%=data?.productid?.productName%></p>
+                                          </div>
+                                          <div class="col-md-3 text-center d-flex justify-content-center align-items-center" style="margin-left: -10px;">
+                                            <p class="text-muted mb-0 small">Qty: <%=data?.quantity%></p>
+                                          </div>
+                                          <div class="col-md-3 text-center d-flex justify-content-center align-items-center" style="margin-left: -20px;">
+                                              <p class="text-muted mb-0 small">Category: <%=data?.productid?.Category?.categoryname%></p>
+                                          </div>
+                                          <div class="col-md-3 text-center d-flex justify-content-center align-items-center">
+                                            <button class="btn custom-btn" style="margin-right: 5px;" >BuyAgain</button>
+                                              <% if (order.orderstatus === "Cancelled") { %>
+                                                <!-- No button here if order is cancelled -->
+                                            <% } else if (order.orderstatus === "Order Delivered") { %>
+                                                <button class="btn custom-btn">Return</button>
+                                            <% } else { %>
+                                                <button class="btn custom-btn" >Cancel</button>
+                                            <% } %>
+                                            
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                              <% }); %>
+                          </div>
+                      </div>
+
+                      <div class="container px-md-4 mx-auto">
+                        <div class="card mb-3">
+                          <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">Tracking Order Id - </span><span class="text-medium"><%=order._id%></span></div>
+                          <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
+                            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Shipped Via:</span> UPS Ground</div>
+                            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Status:</span> <%=order.orderStatus%></div>
+                            <div class="w-100 text-center py-1 px-2">
+                              <span class="text-medium">Expected Date:</span>
+                              <%= new Date(order.orderdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                          </div>
+                                                 
+                        </div>
+                          <div class="card-body">
+                            <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                              
+                              <div class="step <%= ['Order Confirmed', 'Order Processed', 'Order Shipped','Order Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
+                                <div class="step-icon-wrap">
+                                  <div class="step-icon"><i class="bi bi-gear"></i></div>
+                                </div>
+                                <h4 class="step-title">Processing Order</h4>
+                              </div>
+                              <div class="step <%= ['Order Confirmed','Order Shipped','Order Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
+                                <div class="step-icon-wrap">
+                                  <div class="step-icon"><i class="bi bi-cart3"></i></div>
+                                </div>
+                                <h4 class="step-title">Confirmed Order</h4>
+                              </div>
+                              <div class="step <%= ['Order Shipped','Order Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
+                                <div class="step-icon-wrap">
+                                  <div class="step-icon"><i class="bi bi-postage"></i></div>
+                                </div>
+                                <h4 class="step-title">Order Shipped</h4>
+                              </div>
+                              <div class="step <%= order.orderStatus === 'Order Delivered' ? 'completed' : '' %>">
+                                <div class="step-icon-wrap">
+                                  <% if (order.orderStatus=="Order Delivered") { %>
+                                  <div class="step-icon"><i class="bi bi-house-check"></i></div>
+                                  <% } else if (order.orderStatus=="Cancelled") { %>
+                                    <div class="step-icon"><i class="bi bi-house-x"></i></div>        
+                                  <% } else { %>
+                                    <div class="step-icon"><i class="bi bi-house"></i></div>
+                                    <% } %>
+                                </div>
+                                <h4 class="step-title">Product Delivered</h4>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-between pt-2">
+                          <p class="fw-bold mb-0">Order Details</p>
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> ₹<%- order.totalAmount+order.discountAmount %></p>
+                      </div>
+
+                      <div class="d-flex justify-content-between pt-2">
+                          <p class="text-muted mb-0">Order Date : <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></p>
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> ₹<%- order.discountAmount %></p>
+                      </div>
+
+                      <div class="d-flex justify-content-between">
+                          <p class="text-muted mb-0">delivary Date : <%- order.expectedDeliveryDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></p>
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
+                      </div>
+
+                      <div class="d-flex justify-content-between mb-5">
+                          <p class="text-muted mb-0">payment Method : <%- order.paymentMethod %> </p>
+                      </div>
+                  </div>
+                  <div class="card-footer border-0 px-4 py-5 d-flex justify-content-between align-items-center" style="background-color: #e1e7ec; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                    <div style="margin-left: 8%;">
+                        <% if (order.orderstatus === "Cancelled") { %>
+                            <!-- No button here if order is cancelled -->
+                        <% } else if (order.orderstatus === "Order Delivered") { %>
+                            <button class="btn custom-btn" >Return All</button>
+                        <% } else { %>
+                            <button class="btn custom-btn" >Cancel All</button>
+                        <% } %>
+                    </div>
+                    <h5 class="text-dark text-uppercase mb-0">Total price: <span class="h2 ms-2">₹<%- order.totalAmount %></span></h5>
+                </div>
+                
               </div>
-              <div>
-                <h6 class="mb-0"> <a href="#">View Details</a> </h6>
-              </div>
-            </div>
           </div>
-          <div class="card-body p-4">
-            <div class="d-flex flex-row mb-4 pb-2">
-              <div class="flex-fill">
-                <h5 class="bold">Headphones Bose 35 II</h5>
-                <p class="text-muted"> Qt: 1 item</p>
-                <h4 class="mb-3"> $ 299 <span class="small text-muted"> via (COD) </span></h4>
-                <p class="text-muted">Tracking Status on: <span class="text-body">11:30pm, Today</span></p>
-              </div>
-              <div>
-                <img class="align-self-center img-fluid"
-                  src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/6.webp" width="250">
-              </div>
-            </div>
-            <ul id="progressbar-1" class="mx-0 mt-0 mb-5 px-0 pt-0 pb-4">
-              <li class="step0 active" id="step1"><span
-                  style="margin-left: 22px; margin-top: 12px;">PLACED</span></li>
-              <li class="step0 active text-center" id="step2"><span>SHIPPED</span></li>
-              <li class="step0 text-muted text-end" id="step3"><span
-                  style="margin-right: 22px;">DELIVERED</span></li>
-            </ul>
-          </div>
-          <div class="card-footer p-4">
-            <div class="d-flex justify-content-between">
-              <h5 class="fw-normal mb-0"><a href="#!">Track</a></h5>
-              <div class="border-start h-100"></div>
-              <h5 class="fw-normal mb-0"><a href="#!">Cancel</a></h5>
-              <div class="border-start h-100"></div>
-              <h5 class="fw-normal mb-0"><a href="#!">Pre-pay</a></h5>
-              <div class="border-start h-100"></div>
-              <h5 class="fw-normal mb-0"><a href="#!" class="text-muted"><i class="fas fa-ellipsis-v"></i></a>
-              </h5>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
   </div>
 </section>
+
 <%-include("../layout/userfooter.ejs")-%>

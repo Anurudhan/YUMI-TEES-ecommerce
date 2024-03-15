@@ -16,6 +16,29 @@ module.exports={
             console.log(err);
         }
     },
+    resetuserdetails:async (req,res)=>{
+        try{
+            console.log(req.body);
+            const {username,email} = req.body
+            console.log(username);
+            if(username.trim()===''){
+                req.session.errorMessage="username cannot contain only  spaces "
+                res.redirect("/profile")
+            }
+            else if(!/^[a-zA-Z\s]+$/.test(username)){
+                req.session.errorMessage="username cannot contain numbers and symbols. Please enter valid values"
+                res.redirect("/profile")
+            }
+            else{
+                await User.updateOne({_id:req.session._id},{$set:{name:username,email:email}})
+                req.session.successMessage = "successfully modified the your profile"
+                res.redirect("/profile")
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
     getaddress:async (req,res)=>{
         try{
             res.render("user/addaddress")

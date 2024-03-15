@@ -1,0 +1,66 @@
+<%-include("../layout/adminheader.ejs")-%>
+<%-include("../layout/admincentre.ejs")-%>
+<%-include("../partials/adminnavbar.ejs")-%>
+
+    <div class="details" style="padding-top: 80px;background-color: white;height: 100vh;">
+        <div class="container-fluid">
+            <div class="cardHeader d-flex justify-content-center">
+                <h1>Order List</h1>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-lg-8">
+                    <div class="main-content shadow" style="background-color: white;">
+                        <div class="row p-3" id="proview">
+                            <% orderedProducts.forEach((product, index) => { %>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="product-card-wrapper d-flex flex-column justify-content-center align-items-center">
+                                    <div class="card">
+                                        <div class="product-card-img" style="padding: 30px;">
+                                            <img src="/productimages/<%= product?.productid.images[0] %>"  alt="Image Deleted" style="height: 200PX;">
+                                        </div>
+                                        <div class="product-card-body d-flex flex-column justify-content-center align-items-center">
+                                            <h5 class="product-name"><%= product.productid.productName %></h5>
+                                            <p class="product-brand">Quantity: <%= product.quantity %></p>                        
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <% if ((index + 1) % 3 === 0) { %>
+                                </div><div class="row p-3" id="proview">
+                            <% } %>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="side-content">
+                        <div class="card shadow p-5 m-2" style="position: static; height: 400px;">
+                            <div class="order-details" style="height: 100%;">
+                                <h2>Customer Information</h2>
+                                <p style="font-weight: 600;margin-top: 6%;">Name : <%= customerName %></p>
+                                <p style="font-weight: 600;">Address : <%= customerAddress.address %>, <%= customerAddress.city %>, <%= customerAddress.state %>, <%= customerAddress.pincode %></p>
+                                <p style="font-weight: 600;">Mobile NO : <%= customerAddress.mobile %></p>
+                            </div>
+                            <div class="order-total">
+                                <h5 style="font-weight: 600;">Total Order Price: Rs. <%= customerOrderTotal %> </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="position: absolute; bottom: 20px; right: 20px;">
+            <div class="row justify-content-center">
+    
+                    <a href="/admin/orders" class="btn btn-primary btn-lg" style="width: 9%;">Back</a>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+
+<%-include("../layout/adminfooter.ejs")-%>

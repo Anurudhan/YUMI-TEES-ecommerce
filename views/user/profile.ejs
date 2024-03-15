@@ -94,7 +94,7 @@
 
 
                             <div class="card-body-main ps-2" id="div1">
-                                <form action="/resetusername" method="post">
+                                <form action="/resetuserdetails" method="post">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group">
@@ -119,7 +119,7 @@
                                                 <label for="inputEmail" style="font-weight: bold;">Email</label><br><br>
                                                 <div class="col-md-9 text-right d-flex" >
                                                     <input type="email" class="form-control" id="inputEmail" placeholder="Email" value="<%=email%>" 
-                                                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required disabled>
+                                                     name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required disabled>
 
                                                 </div>
                                             </div>
@@ -294,6 +294,16 @@
         // Toggle the visibility of the save button
         saveButton.style.display = (saveButton.style.display === 'none') ? 'inline-block' : 'none';
     });
+    inputEmail.addEventListener('input',function(){
+        inputEmail.setCustomValidity('')
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailPattern.test(inputEmail.value)){
+            inputEmail.setCustomValidity('Please enter a valid email address')
+        }
+        else{
+            inputEmail.setCustomValidity('')
+        }
+    })
 </script>
 <% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
     <script>

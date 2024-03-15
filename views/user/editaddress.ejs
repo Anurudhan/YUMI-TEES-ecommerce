@@ -121,73 +121,183 @@ input[type=number]::-webkit-outer-spin-button {
     
 </div>
 <script>
-    function disableArrowKeys(event) {
-    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        event.preventDefault();
+  // Function to disable arrow keys
+  function disableArrowKeys(event) {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+          event.preventDefault();
+      }
+  }
+
+  // Function to validate mobile number
+  function validateMobile() {
+      const mobile = document.getElementById('recipient-phone').value.trim();
+      const mobileRegex = /^\d{10}$/;
+
+      if (!mobileRegex.test(mobile)) {
+          document.getElementById('recipient-phone').style.color = 'red';
+          document.getElementById('recipient-phone').style.borderColor = 'red';
+          document.getElementById('phoneError').innerText = 'Mobile number must be 10 digits';
+          return false;
+      } else {
+          document.getElementById('recipient-phone').style.color = '';
+          document.getElementById('recipient-phone').style.borderColor = '';
+          document.getElementById('phoneError').innerText = '';
+          return true;
+      }
+  }
+
+  // Function to validate pincode
+  function validatePincode() {
+      const pincode = document.getElementById('recipient-pincode').value.trim();
+      const pincodeRegex = /^\d{6}$/;
+
+      if (!pincodeRegex.test(pincode)) {
+          document.getElementById('recipient-pincode').style.color = 'red';
+          document.getElementById('recipient-pincode').style.borderColor = 'red';
+          document.getElementById('pincodeError').innerText = 'Pincode must be 6 digits';
+          return false;
+      } else {
+          document.getElementById('recipient-pincode').style.color = '';
+          document.getElementById('recipient-pincode').style.borderColor = '';
+          document.getElementById('pincodeError').innerText = '';
+          return true;
+      }
+  }
+
+  // Function to validate the entire form
+  function validateForm() {
+    const name = document.getElementById('recipient-name').value.trim();
+    const address = document.getElementById('message-text').value.trim();
+    const locality = document.getElementById('recipient-locality').value.trim();
+    const city = document.getElementById('recipient-city').value.trim();
+    const district = document.getElementById('recipient-district').value.trim();
+    const state = document.getElementById('recipient-state').value.trim();
+    const mobile = document.getElementById('recipient-phone').value.trim();
+    const pincode = document.getElementById('recipient-pincode').value.trim();
+
+    let isValid = true;
+
+    // Validate name
+    if (!name) {
+        document.getElementById('nameError').innerText = 'Name is required';
+        isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(name)) {
+        document.getElementById('nameError').innerText = 'Name should only contain alphabets and spaces';
+        isValid = false;
+    } else {
+        document.getElementById('nameError').innerText = '';
+    }
+
+    // Validate address
+    if (!address) {
+        document.getElementById('addressError').innerText = 'Address is required';
+        isValid = false;
+    } else if (!/^[^0-9\W]\w*/.test(address)) {
+        document.getElementById('addressError').innerText = 'Address should not start with a number or symbol';
+        isValid = false;
+    } else {
+        document.getElementById('addressError').innerText = '';
+    }
+
+    // Validate locality
+    if (!locality) {
+        document.getElementById('localityError').innerText = 'Locality is required';
+        isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(locality)) {
+        document.getElementById('localityError').innerText = 'Locality should only contain alphabets and spaces';
+        isValid = false;
+    } else {
+        document.getElementById('localityError').innerText = '';
+    }
+
+    // Validate city
+    if (!city) {
+        document.getElementById('cityError').innerText = 'City is required';
+        isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(city)) {
+        document.getElementById('cityError').innerText = 'City should only contain alphabets and spaces';
+        isValid = false;
+    } else {
+        document.getElementById('cityError').innerText = '';
+    }
+
+    // Validate district
+    if (!district) {
+        document.getElementById('districtError').innerText = 'District is required';
+        isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(district)) {
+        document.getElementById('districtError').innerText = 'District should only contain alphabets and spaces';
+        isValid = false;
+    } else {
+        document.getElementById('districtError').innerText = '';
+    }
+
+    // Validate state
+    if (!state) {
+        document.getElementById('stateError').innerText = 'State is required';
+        isValid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(state)) {
+        document.getElementById('stateError').innerText = 'State should only contain alphabets and spaces';
+        isValid = false;
+    } else {
+        document.getElementById('stateError').innerText = '';
+    }
+
+    // Validate mobile number only if it's not empty
+    if (mobile.trim() !== '') {
+        if (!validateMobile()) {
+            isValid = false;
+        }
+    }
+
+    // Validate pincode only if it's not empty
+    if (pincode.trim() !== '') {
+        if (!validatePincode()) {
+            isValid = false;
+        }
+    }
+
+    // Update submit button state based on form validity
+    document.getElementById('submitBtn').disabled = !isValid;
+
+    return isValid;
+}
+// Function to validate email
+function validateEmail() {
+    const email = document.getElementById('recipient-email').value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        document.getElementById('recipient-email').style.color = 'red';
+        document.getElementById('recipient-email').style.borderColor = 'red';
+        document.getElementById('emailError').innerText = 'Invalid email format';
+        return false;
+    } else {
+        document.getElementById('recipient-email').style.color = '';
+        document.getElementById('recipient-email').style.borderColor = '';
+        document.getElementById('emailError').innerText = '';
+        return true;
     }
 }
 
-    // Validate mobile number while typing
-    document.getElementById('recipient-phone').addEventListener('input', function() {
-        const mobile = this.value.trim();
-        const mobileRegex = /^\d{10}$/;
+// Add event listener for email input
+document.getElementById('recipient-email').addEventListener('input', validateEmail);
 
-        if (!mobileRegex.test(mobile)) {
-            document.getElementById('recipient-phone').style.color = 'red';
-            this.style.borderColor = 'red';
-        } else {
-            document.getElementById('recipient-phone').style.color = '';
-            this.style.borderColor = '';
-        }
-    });
 
-    // Validate pincode while typing
-    document.getElementById('recipient-pincode').addEventListener('input', function() {
-        const pincode = this.value.trim();
-        const pincodeRegex = /^\d{6}$/;
 
-        if (!pincodeRegex.test(pincode)) {
-            document.getElementById('recipient-pincode').style.color = 'red';
-            this.style.borderColor = 'red';
-        } else {
-            document.getElementById('recipient-pincode').style.color = '';
-            this.style.borderColor = '';
-        }
-    });
-    function validateForm(){
+  // Add event listeners for input elements
+  document.getElementById('recipient-name').addEventListener('input', validateForm);
+  document.getElementById('message-text').addEventListener('input', validateForm);
+  document.getElementById('recipient-locality').addEventListener('input', validateForm);
+  document.getElementById('recipient-city').addEventListener('input', validateForm);
+  document.getElementById('recipient-district').addEventListener('input', validateForm);
+  document.getElementById('recipient-state').addEventListener('input', validateForm);
+  document.getElementById('recipient-phone').addEventListener('input', validateMobile);
+  document.getElementById('recipient-pincode').addEventListener('input', validatePincode);
 
-        const name = document.getElementById('recipient-name').value.trim();
-        const address = document.getElementById('message-text').value.trim();
-        const locality = document.getElementById('recipient-locality').value.trim();
-        const city = document.getElementById('recipient-city').value.trim();
-        const district = document.getElementById('recipient-district').value.trim();
-        const state = document.getElementById('recipient-state').value.trim();
-        const mobile = document.getElementById('recipient-phone').value.trim();
-        const pincode = document.getElementById('recipient-pincode').value.trim();
-
-        const mobileRegex = /^\d{10}$/;
-        const pincodeRegex = /^\d{6}$/;
-
-        if (!name || !address || !locality || !city || !district || !state){
-            // Display an error message
-            alert('Please fill in all the fields.');
-            // Prevent the form from being submitted
-            event.preventDefault();
-        }
-         // Validate mobile number
-         if (!mobileRegex.test(mobile)) {
-            document.getElementById('phoneError').innerText = 'Mobile number is 10 digits';
-            return false;
-        }
-
-        // Validate pincode
-        if (!pincodeRegex.test(pincode)) {
-            document.getElementById('pincodeError').innerText = 'Pincode is 6 digits';
-            return false;
-        }
-
-        return true;
-    }
+  // Prevent arrow key input for mobile and pincode fields
+  document.getElementById('recipient-phone').addEventListener('keydown', disableArrowKeys);
+  document.getElementById('recipient-pincode').addEventListener('keydown', disableArrowKeys);
 </script>
   
 <%-include("../layout/userfooter.ejs")-%>

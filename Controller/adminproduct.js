@@ -1,14 +1,19 @@
+const upload = require("../middleware/multer");
 const Category = require("../model/category");
 const product = require("../model/productSchema");
 module.exports = {
   productlist: async (req, res) => {
     try {
+      const successMessage = req.session.successMessage
+      const errorMessage = req.session.errorMessage
+      delete req.session.successMessage
+      delete req.session.errorMessage
       const data = await product.find().populate('Category');
       console.log(data);
       if (req.query.message) {
         let msg = req.query.message;
-        res.render("admin/product", { data, message: msg });
-      } else res.render("admin/product", { data, message: null });
+        res.render("admin/product", { data, message: msg ,successMessage,errorMessage});
+      } else res.render("admin/product", { data, message: null,successMessage,errorMessage });
     } catch (err) {
       console.log(err);
     }
@@ -35,6 +40,7 @@ module.exports = {
       ];
       const Product = { ...productdetails, images };
       await product.create(Product);
+      req.session.successMessage="you success fully added product"
       res.redirect("/admin/product");
     } catch (err) {
       console.log(err);
@@ -77,8 +83,10 @@ module.exports = {
       const id=req.params.id;
       const result = await product.findByIdAndDelete(id);
       if (!result) {
+        req.session.successMessage="Product not found"
         return res.status(404).send('Category not found');
       }
+      req.session.successMessage="Product deleted successfully"
       res.sendStatus(200);
     }
     catch(err){
@@ -99,6 +107,7 @@ module.exports = {
         { _id: productId },
         { $pull: { images: index } }
       );
+      
       res.json({ success: true });
     } catch (err) {
       console.log(err);
@@ -132,7 +141,13 @@ module.exports = {
         { _id: id },
         { ...UpdatedProducts, images }
       );
+      console.log(uploaded);
       if (uploaded) {
+        req.session.successMessage="you success fully modified product"
+        res.redirect("/admin/product");
+      }
+      else{
+        req.session.errorMessage = "your not modify the product"
         res.redirect("/admin/product");
       }
     } catch (err) {
