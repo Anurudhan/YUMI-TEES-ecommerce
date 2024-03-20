@@ -51,7 +51,10 @@ router.get("/customers/block/:id/:status",adminVerify,customercontroller.custome
 
 router.get("/orders",adminVerify,ordercontroller.getorder)
 router.get("/orderdetails/:id",adminVerify,ordercontroller.getorderdetails)
-
+router.post("/updateorderstatus/:id/:status",adminVerify,ordercontroller.orderstatuschanging)
+router.get("/returndetails/:id",adminVerify,ordercontroller.getreturnrequest)
+router.post("/approveReturn",adminVerify,ordercontroller.returnapproove)
+router.post("/rejectReturn",adminVerify,)
 // banner manage--------------------------------------------------------->
 
 router.get("/banner",adminVerify,bannercontroller.getbanner)

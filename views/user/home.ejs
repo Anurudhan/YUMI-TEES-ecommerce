@@ -1,4 +1,6 @@
 <%-include("../layout/userheader.ejs")-%>
+
+
 <style>
 body{
     margin: 0;
@@ -135,6 +137,27 @@ body{
       <% }) %>
     </div>
   </div>
-  
+  <% if (orderreject == true) { %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Display SweetAlert dialog
+        Swal.fire({
+            title: 'Order Rejected',
+            text: 'Your order has been rejected. Please check your order.',
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'My Order',
+            cancelButtonText: 'Later'
+        }).then((result) => {
+            // Redirect to the user's order page if "My Order" is clicked
+            if (result.isConfirmed) {
+                window.location.href = '/userorder';
+            }
+            else{
+              window.location.reload()
+            }
+        });
+    </script>
+<% } %>
 <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/userfooter.ejs")-%>

@@ -2,6 +2,7 @@ const Addres = require('../model/address');
 const Cart = require("../model/cartmodel");
 const Order = require('../model/order');
 const User = require("../model/usermodel");
+const returns = require('../model/return');
 const Product = require("../model/productSchema");
 const session = require('express-session');
 const { resetpassword } = require('./controller');
@@ -171,6 +172,75 @@ module.exports = {
             console.log(order);
             res.render("user/Orderdetails",{cart,username,order})
         }
+        catch(err){
+            console.log(err);
+        }
+    },
+    cancelallorder:async (req,res)=>{
+        try{
+            const id = req.params.id
+            const ordr = await Order.findOne({ _id: id })
+            ordr.orderStatus = "Cancelled"
+            await ordr.save();
+            await Order.updateOne(
+                { _id: id },
+                { $set: { 'products.$[].status': 'Cancelled' } })
+            ordr.products.forEach(async data => {
+                const prdkt = await Product.findOne({ _id: data.productid })
+                    if (prdkt) {
+                        prdkt.stockQuantity = prdkt.stockQuantity + data.quantity
+                        await prdkt.save()
+                    }
+            });
+            res.status(200).json({ message: 'All orders canceled successfully' });
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    cancelsingleorder: async (req,res)=>{
+        try{
+            const id = req.params.id
+            let index = req.params.index
+            const ordr = await Order.findOne({ _id: id })
+            if(ordr.products.length==1){
+                ordr.orderStatus = "Cancelled"
+                await ordr.save();
+            }
+            await Order.updateOne({ _id: id }, { $set: { [`products.${index}.status`]: "Cancelled" } })
+            const prdkt = await Product.findOne({ _id: ordr.products[index].productid })
+                if (prdkt) {
+                    prdkt.stockQuantity = prdkt.stockQuantity + data.quantity
+                    await prdkt.save()
+                }
+            res.status(200).json({ message: 'All orders canceled successfully' });
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    returnorder : async(req,res)=>{
+        try{
+            console.log(req.body);
+            const { reason, orderId, index, description } = req.body
+            const ordr = await Order.findOne({_id:orderId})
+            console.log(ordr)
+            const returnData = {
+                userid: ordr.userid,
+                orderid: orderId,
+                productid: ordr.products[index].productid,
+                returnReason: reason,
+                description: description,
+            }
+            console.log("return---------------------------------------------------->")
+            await returns.create(returnData)
+            await Order.updateOne(
+                { _id: orderId },
+                { $set: { [`products.${index}.status`]: 'Return Requested' } }
+                );
+                console.log("finished----------------------------------------------->")
+                res.status(200).json({ message: 'Order returned successfully' });
+            }
         catch(err){
             console.log(err);
         }

@@ -68,9 +68,13 @@ module.exports={
             if(req.session.logged){
                 const user = await User.findOne({email:req.session.email})
                 console.log(user);
+                const orderreject = user.orderreject
+                if(orderreject==true){
+                    await User.updateOne({_id:user._id},{$set:{orderreject:false}})
+                }
                 req.session._id = user._id
                 console.log(req.session._id);
-                res.render("user/home",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
+                res.render("user/home",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids,orderreject})
             }
             else res.render("user/guesthome",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
         }

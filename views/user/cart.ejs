@@ -138,6 +138,9 @@
                             duration: 3000, // 3 seconds
                             backgroundColor: "green",
                             position: "center",
+                            callback: function() {
+                                window.location.reload();
+                            }
                         }).showToast();
                     } else {
                         // If the request fails, display an error message using Toastify
@@ -146,6 +149,9 @@
                             duration: 3000, // 3 seconds
                             backgroundColor: "red",
                             position: "center",
+                            callback: function() {
+                                window.location.reload();
+                            }
                         }).showToast();
                     }
                 }

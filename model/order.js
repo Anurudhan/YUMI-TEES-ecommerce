@@ -31,6 +31,8 @@ const orderSchema = new mongoose.Schema({
     PaymentStatus: String,
     totalAmount: Number,
     deliveryDate: Date,
+    rejectedDate: Date,
+    rejectdetails:String,
     orderStatus: String,
     couponDiscount: Number,
     couponCode: String,

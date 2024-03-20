@@ -11,6 +11,10 @@ const userschema= new mongoose.Schema({
     },
     status:{
         type:Number,
+    },
+    orderreject: {
+        type: Boolean,
+        default:false
     }
 },
 {

@@ -82,7 +82,15 @@
 .steps .step:last-child .step-icon-wrap::after {
     display: none
 }
-
+.steps .step.uncompleted .step-icon-wrap::before,
+.steps .step.uncompleted .step-icon-wrap::after {
+  background-color: #e41607
+}
+.steps .step.uncompleted .step-icon{
+    border-color: #e41607;
+    background-color: #e41607;
+    color: #fff
+}
 .steps .step.completed .step-icon-wrap::before,
 .steps .step.completed .step-icon-wrap::after {
     background-color: #48cf12
@@ -140,6 +148,14 @@
         color: white;
         border: none;
     }
+.modal-dialog-end .modal-content {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog-end .modal-content {
+    transform: translateX(0);
+}
 </style>
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/usernavbar.ejs")-%>
@@ -159,7 +175,7 @@
 
                       <div class="card d-flex justify-content-center shadow-0 border mb-4">
                           <div class="card-body">
-                              <% order.products.forEach(data => { %>
+                              <% order.products.forEach((data,index) => { %>
                               <div class="row">
                                   <div class="col-md-2">
                                       <div class="circle"> <!-- Add circle class here -->
@@ -178,14 +194,27 @@
                                               <p class="text-muted mb-0 small">Category: <%=data?.productid?.Category?.categoryname%></p>
                                           </div>
                                           <div class="col-md-3 text-center d-flex justify-content-center align-items-center">
-                                            <button class="btn custom-btn" style="margin-right: 5px;" >BuyAgain</button>
-                                              <% if (order.orderstatus === "Cancelled") { %>
-                                                <!-- No button here if order is cancelled -->
-                                            <% } else if (order.orderstatus === "Order Delivered") { %>
-                                                <button class="btn custom-btn">Return</button>
-                                            <% } else { %>
-                                                <button class="btn custom-btn" >Cancel</button>
-                                            <% } %>
+                                            <a href="/uniqueproduct/<%=data?.productid?._id%>" class="btn custom-btn" style="margin-right: 5px;">BuyAgain</a>
+                                            <% if (order.orderStatus === "Cancelled") { %>
+                                              <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                          <% } else if (order.orderStatus === "Order Returned") { %>
+                                              <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                              <% } else if (order.orderStatus === "Order Rejected") { %>
+                                                <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                                          <% } else if (data.status === "Cancelled") { %>
+                                              <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= data.status %></span>
+                                          <% } else if (data.status === "Return Requested") { %> 
+                                              <span class="badge rounded-pill bg-primary" style="font-weight: 400;"><%= data.status %></span>
+                                          <% } else if (data.status === "Order Returned") { %> 
+                                            <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= data.status %></span>
+                                          <% } else if (data.status === "Order Returned") { %>
+                                              <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= data.status %></span>
+                                          <% } else if (order.orderStatus === "Order Delivered") { %>
+                                            <button class="btn custom-btn" onclick="showReturnOrderModal('<%= index %>')">Return</button>
+                                          <% } else { %>
+                                              <button class="btn custom-btn" onclick="cancelOrder('<%= order._id %>', '<%= index %>')">Cancel</button>
+                                          <% } %>
+                                          
                                             
                                           </div>
                                       </div>
@@ -195,22 +224,68 @@
                               <% }); %>
                           </div>
                       </div>
-
-                      <div class="container px-md-4 mx-auto">
-                        <div class="card mb-3">
+                      <% if (order.orderStatus === "Order Rejected") { %>
+                        <div class="card shadow" style="border-radius: 10px;">
+                          <div class="card-header px-4 py-5">
+                              <h5 class="text-muted mb-0">Order Rejected Reason</h5>
+                          </div>
+                          <div class="card-body p-4">
+                              <p><%= order.rejectdetails %></p>
+                          </div>
+                      </div>
+                   <% } %>
+                      
+                        <div class="card shadow" style="border-radius: 10px;">
                           <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">Tracking Order Id - </span><span class="text-medium"><%=order._id%></span></div>
                           <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
                             <div class="w-100 text-center py-1 px-2"><span class="text-medium">Shipped Via:</span> UPS Ground</div>
                             <div class="w-100 text-center py-1 px-2"><span class="text-medium">Status:</span> <%=order.orderStatus%></div>
                             <div class="w-100 text-center py-1 px-2">
-                              <span class="text-medium">Expected Date:</span>
-                              <%= new Date(order.orderdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                              <% if (order.orderStatus === "Order Delivered") { %>
+                              <span class="text-medium">Delivered Date:</span>
+                              <%= new Date(order.deliveryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                              <% } else { %>
+                                <span class="text-medium">Expected Date:</span>
+                              <%= new Date(order.expectedDeliveryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                                <% } %>
                           </div>
                                                  
                         </div>
                           <div class="card-body">
                             <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
-                              
+                              <% if (order.orderStatus === "Cancelled" || order.orderStatus === "Order Rejected" || order.orderStatus === "Order Returned") { %>
+                                <div class="step <%= ['Order Returned','Order Rejected','Cancelled'].includes(order.orderStatus) ? 'uncompleted' : '' %>">
+                                  <div class="step-icon-wrap">
+                                    <div class="step-icon"><i class="bi bi-gear"></i></div>
+                                  </div>
+                                  <h4 class="step-title">Processing Order</h4>
+                                </div>
+                                <div class="step <%= ['Order Returned','Order Rejected','Cancelled'].includes(order.orderStatus) ? 'uncompleted' : '' %>">
+                                  <div class="step-icon-wrap">
+                                    <div class="step-icon"><i class="bi bi-cart3"></i></div>
+                                  </div>
+                                  <h4 class="step-title">Confirmed Order</h4>
+                                </div>
+                                <div class="step <%= ['Order Returned','Order Rejected','Cancelled'].includes(order.orderStatus) ? 'uncompleted' : '' %>">
+                                  <div class="step-icon-wrap">
+                                    <div class="step-icon"><i class="bi bi-postage"></i></div>
+                                  </div>
+                                  <h4 class="step-title">Order Shipped</h4>
+                                </div>
+                                <div class="step <%= ['Order Returned','Order Rejected','Cancelled'].includes(order.orderStatus) ? 'uncompleted' : '' %>">
+                                  <div class="step-icon-wrap">
+                                      <div class="step-icon"><i class="bi bi-house-x"></i></div>        
+                                  </div>
+                                  <% if (order.orderStatus=="Cancelled") { %>
+                                    <h4 class="step-title">Order Cancelled</h4>
+                                    <% } else if (order.orderStatus === "Order Rejected") { %>
+                                      <h4 class="step-title">Order Rejected</h4>
+                                    <% } else { %>
+                                      <h4 class="step-title">Order Return</h4>
+                                      <% } %>
+                                </div>
+                              </div>
+                                <% } else { %>
                               <div class="step <%= ['Order Confirmed', 'Order Processed', 'Order Shipped','Order Delivered'].includes(order.orderStatus) ? 'completed' : '' %>">
                                 <div class="step-icon-wrap">
                                   <div class="step-icon"><i class="bi bi-gear"></i></div>
@@ -232,9 +307,7 @@
                               <div class="step <%= order.orderStatus === 'Order Delivered' ? 'completed' : '' %>">
                                 <div class="step-icon-wrap">
                                   <% if (order.orderStatus=="Order Delivered") { %>
-                                  <div class="step-icon"><i class="bi bi-house-check"></i></div>
-                                  <% } else if (order.orderStatus=="Cancelled") { %>
-                                    <div class="step-icon"><i class="bi bi-house-x"></i></div>        
+                                  <div class="step-icon"><i class="bi bi-house-check"></i></div>       
                                   <% } else { %>
                                     <div class="step-icon"><i class="bi bi-house"></i></div>
                                     <% } %>
@@ -243,8 +316,8 @@
                               </div>
                             </div>
                           </div>
+                          <% } %>
                         </div>
-                      </div>
 
                       <div class="d-flex justify-content-between pt-2">
                           <p class="fw-bold mb-0">Order Details</p>
@@ -257,7 +330,14 @@
                       </div>
 
                       <div class="d-flex justify-content-between">
-                          <p class="text-muted mb-0">delivary Date : <%- order.expectedDeliveryDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></p>
+                          <p class="text-muted mb-0">delivary Date :
+                            <% if (order.orderStatus === "Order Delivered") { %>
+                             <%- order.
+                             deliveryDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %>
+                             <% } else { %>
+                              <%- order.expectedDeliveryDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %>
+                              <% } %>
+                            </p>
                           <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
                       </div>
 
@@ -267,13 +347,17 @@
                   </div>
                   <div class="card-footer border-0 px-4 py-5 d-flex justify-content-between align-items-center" style="background-color: #e1e7ec; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                     <div style="margin-left: 8%;">
-                        <% if (order.orderstatus === "Cancelled") { %>
-                            <!-- No button here if order is cancelled -->
-                        <% } else if (order.orderstatus === "Order Delivered") { %>
-                            <button class="btn custom-btn" >Return All</button>
-                        <% } else { %>
-                            <button class="btn custom-btn" >Cancel All</button>
-                        <% } %>
+                      <% if (order.orderStatus === "Cancelled") { %>
+                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                    <% } else if (order.orderStatus === "Order Returned") { %>
+                        <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                    <% } else if (order.orderStatus === "Order Rejected") { %>
+                      <span class="badge rounded-pill bg-danger" style="font-weight: 400;"><%= order.orderStatus %></span>
+                    <% } else if (order.orderStatus === "Order Delivered") { %>
+                      <span class="badge rounded-pill bg-success" style="font-weight: 400;"><%= order.orderStatus %></span>
+                    <% } else { %>
+                      <button class="btn custom-btn" onclick="cancelAllOrders('<%= order._id %>')">Cancel All</button>
+                    <% } %>
                     </div>
                     <h5 class="text-dark text-uppercase mb-0">Total price: <span class="h2 ms-2">₹<%- order.totalAmount %></span></h5>
                 </div>
@@ -283,5 +367,152 @@
       </div>
   </div>
 </section>
+<div id="returnOrderModal" class="modal fade" tabindex="-1" aria-labelledby="returnOrderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-end modal-dialog-slideout">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="returnOrderModalLabel">Return Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              
 
+                <input type="hidden" id="orderIndex" value="">
+
+                  <div class="mb-3">
+                      <label for="returnReason" class="form-label">Reason for Return</label>
+                      <input type="text" class="form-control" id="returnReason" placeholder="Enter reason">
+                  </div>
+                  <div class="mb-3">
+                      <label for="returnDescription" class="form-label">Description</label>
+                      <textarea class="form-control" id="returnDescription" rows="3" placeholder="Enter description"></textarea>
+                  </div>
+              
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" onclick="returnOrder()">Send</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  function cancelAllOrders(orderId) {
+      // SweetAlert confirmation
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, cancel all orders!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // AJAX request
+              $.ajax({
+                  url: `/cancellallorder/${orderId}`, // URL for your server-side endpoint to handle canceling all orders
+                  method: 'POST', // Assuming you're using POST method
+                  data: { orderId: orderId }, // Pass order._id as data
+                  success: function(response) {
+                      // Handle successful response with SweetAlert
+                      Swal.fire(
+                          'Cancelled!',
+                          'All orders have been cancelled.',
+                          'success'
+                      ).then((result) => {
+                          // Reload the page after user clicks OK on success message
+                          if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop || result.dismiss === Swal.DismissReason.esc) {
+                              window.location.reload();
+                          }
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      // Handle error with SweetAlert
+                      Swal.fire(
+                          'Error!',
+                          'Something went wrong. Please try again later.',
+                          'error'
+                      );
+                  }
+              });
+          }
+      });
+  }
+</script>
+<script>
+  function cancelOrder(orderId, index) {
+    console.log(orderId,index);
+      if (confirm("Are you sure you want to cancel this order?")) {
+          $.ajax({
+              url: `/cancelsingleorder/${orderId}/${index}`,
+              method: 'POST',
+              data: { orderId: orderId, index: index },
+              success: function(response) {
+                  swal({
+                      title: "Success",
+                      text: "Order canceled successfully!",
+                      icon: "success"
+                  }).then(() => {
+                      window.location.reload();
+                  });
+              },
+              error: function(xhr, status, error) {
+                  console.error(error);
+                  swal("Error", "Failed to cancel order", "error");
+              }
+          });
+      }
+  }
+
+  function showReturnOrderModal(index) {
+       // Set the index value in the hidden input field
+       document.getElementById('orderIndex').value = index;
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('returnOrderModal'), {
+            backdrop: 'static'
+        });
+        myModal.show();
+  }
+
+  function returnOrder() {
+    var index = $('#orderIndex').val();
+    var orderId ="<%=order._id%>"
+    var reason = $('#returnReason').val();
+    var description = $('#returnDescription').val();
+
+    // AJAX request
+    $.ajax({
+        url: '/returnorder',
+        method: 'POST',
+        data: {
+            index: index,
+            orderId: orderId,
+            reason: reason,
+            description: description
+        },
+        success: function(response) {
+            // Show SweetAlert success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Order Returned',
+                text: 'Your order has been returned successfully!',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                // If user clicks "OK", reload the page
+                if (result.isConfirmed) {
+                    window.location.reload();
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error(error);
+            // Display error message to the user
+            alert('Error occurred while processing the return order.');
+        }
+    });
+}
+</script>
 <%-include("../layout/userfooter.ejs")-%>

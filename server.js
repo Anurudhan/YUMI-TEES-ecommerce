@@ -3,6 +3,7 @@ require("dotenv").config();
 const mongoose = require('mongoose');
 const userRouter=require("./router/userRouter")
 const adminRouter=require("./router/adminRouter")
+const authRouter = require("./router/authRourter")
 const path = require('path');
 const session = require('express-session');
 const flash = require("connect-flash")
@@ -36,6 +37,7 @@ app.set('view engine', 'ejs');
 
 app.use("/", userRouter)
 app.use("/admin", adminRouter)
+app.use("/",authRouter)
 
 // mongoose connection------------------------------------------------------->
 
