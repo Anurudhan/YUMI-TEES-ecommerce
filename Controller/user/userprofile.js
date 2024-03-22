@@ -1,5 +1,5 @@
-const Addres = require("../model/address");
-const User = require("../model/usermodel");
+const Addres = require("../../model/address");
+const User = require("../../model/usermodel");
 const bcrypt = require("bcrypt")
 module.exports={
     profilepage:async (req,res)=>{

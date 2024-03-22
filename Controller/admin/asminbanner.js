@@ -1,4 +1,4 @@
-const Banner = require('../model/banner');
+const Banner = require('../../model/banner');
 module.exports={
     getbanner:async (req,res)=>{
         try{

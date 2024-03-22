@@ -1,6 +1,6 @@
-const upload = require("../middleware/multer");
-const Category = require("../model/category");
-const product = require("../model/productSchema");
+const upload = require("../../middleware/multer");
+const Category = require("../../model/category");
+const product = require("../../model/productSchema");
 module.exports = {
   productlist: async (req, res) => {
     try {

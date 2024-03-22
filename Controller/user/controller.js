@@ -1,9 +1,9 @@
-const OTP = require("../model/otpmodel");
-const User=require("../model/usermodel");
-const Product = require("../model/productSchema")
-const Category = require("../model/category")
-const { sendOTP } = require("../util/otp");
-const {sendResetEmail}=require("../auth/nodemailerForReset")
+const OTP = require("../../model/otpmodel");
+const User=require("../../model/usermodel");
+const Product = require("../../model/productSchema")
+const Category = require("../../model/category")
+const { sendOTP } = require("../../util/otp");
+const {sendResetEmail}=require("../../auth/nodemailerForReset")
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken")
 

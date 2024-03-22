@@ -1,4 +1,4 @@
-const User=require("../model/usermodel")
+const User=require("../../model/usermodel")
 module.exports={
     customerpage:async(req,res)=>{
         try{

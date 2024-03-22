@@ -1,4 +1,4 @@
-const Category=require("../model/category")
+const Category=require("../../model/category")
 
 module.exports={
     categorypage:async(req,res)=>{

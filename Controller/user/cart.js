@@ -1,6 +1,6 @@
-const User = require("../model/usermodel")
-const Cart = require("../model/cartmodel")
-const Product =require("../model/productSchema")
+const User = require("../../model/usermodel")
+const Cart = require("../../model/cartmodel")
+const Product =require("../../model/productSchema")
 
 module.exports={
     cartpage:async (req,res)=>{

@@ -1,11 +1,11 @@
 const express = require('express');
 const router=express()
 const path=require('path');
-const usercontoller = require("../Controller/controller")
-const productcontroller = require("../Controller/userproduct")
-const profilecontroller = require("../Controller/userprofile")
-const cartcontroller=require("../Controller/cart")
-const ordercontroller = require("../Controller/order")
+const usercontoller = require("../Controller/user/controller")
+const productcontroller = require("../Controller/user/userproduct")
+const profilecontroller = require("../Controller/user/userprofile")
+const cartcontroller=require("../Controller/user/cart")
+const ordercontroller = require("../Controller/user/order")
 const {CountOfCart}=require("../middleware/cartCount")
 const {userVerify,userExists}=require("../middleware/session")
 

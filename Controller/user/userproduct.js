@@ -1,6 +1,6 @@
-const Product=require("../model/productSchema")
-const Category=require("../model/category")
-const Cart = require("../model/cartmodel")
+const Product=require("../../model/productSchema")
+const Category=require("../../model/category")
+const Cart = require("../../model/cartmodel")
 module.exports={
     getallproduct: async (req,res)=>{
         try{

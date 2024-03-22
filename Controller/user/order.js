@@ -1,9 +1,10 @@
-const Addres = require('../model/address');
-const Cart = require("../model/cartmodel");
-const Order = require('../model/order');
-const User = require("../model/usermodel");
-const returns = require('../model/return');
-const Product = require("../model/productSchema");
+const Addres = require('../../model/address');
+const Cart = require("../../model/cartmodel");
+const Order = require('../../model/order');
+const User = require("../../model/usermodel");
+const returns = require('../../model/return');
+const Product = require("../../model/productSchema");
+const {createOrder} = require("../../Controller/user/razorpay")
 const session = require('express-session');
 const { resetpassword } = require('./controller');
 module.exports = {
@@ -155,6 +156,89 @@ module.exports = {
                 await Cart.findByIdAndDelete(carts._id)
                 console.log("sucess------------------------------------> ");
                 res.render("user/paymentsuccess")
+            }
+            else if(payment=="OnlinePayment"){
+                const usr = await User.findOne({ email : userEmail})
+
+                const [address, carts] = await Promise.all([
+                    await Addres.findOne({ _id: address_id }),
+                    await Cart.findOne({ userid: usr._id })
+                ])
+                // date setting------------------------------------------
+                const currentDate = new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Kolkata",
+                });
+
+                // delivery date ----------------------------------------  
+                const deliveryDate = new Date(
+                    Date.now() + 4 * 24 * 60 * 60 * 1000
+                ).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
+
+                //   if not coupen code ---------------------------------
+                let couponCode = "";
+                let couponDiscount = 0;
+
+                //   if coupen code--------------------------------------
+                if (req.session.cpnDiscount && req.session.couponCode) {
+                    couponDiscount = req.session.cpnDiscount;
+                    couponCode = req.session.couponCode;
+                }
+
+
+                let myOrders = {
+                    userid: usr._id,
+                    products: carts.products,
+                    address: {
+                        name: address.name,
+                        address: address.address,
+                        locality: address.locality,
+                        city: address.city,
+                        district: address.district,
+                        state: address.state,
+                        pincode: address.pincode,
+                        mobile:address.mobile
+                    },
+                    orderdate: currentDate,
+                    expectedDeliveryDate: deliveryDate,
+                    paymentMethod: payment,
+                    PaymentStatus: "Pending",
+                    orderStatus: "Order Processed",
+                    couponCode: couponCode,
+                    couponDiscount: couponDiscount,
+                    totalAmount: totalprice,
+                    discountAmount: disctotal,
+                }
+
+                await Order.create(myOrders)
+
+                const prdts = carts.products
+
+                //to update the quantity in inventory
+                for (const data of prdts) {
+
+                    try {
+                        prdId = data.productid
+                        ordrQty = data.quantity
+
+                        const prdt = await product.findOne({ _id: prdId })
+
+                        const stock = prdt.stockQuantity
+                        const newStock = stock - ordrQty
+
+                        await Product.updateOne({ _id: prdId }, { $set: { stockQuantity : newStock } })
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+
+                const ordrr = await Order.findOne().sort({ _id: -1 }).limit(1)
+
+                createOrder(req, res, ordrr._id + "")
+
+                await Cart.findByIdAndDelete(carts._id)
+
             }
         }
         catch(err){

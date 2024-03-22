@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="/public/stylesheet/whishlist.css">
-</head>
-<body>
-  <div class="santa-app container-fluid">
+<%-include("../layout/userheader.ejs")-%>
+<link rel="stylesheet" href="../../public/stylesheet/whishlist.css">
+<%-include("../layout/usercentre.ejs")-%>
+<%-include("../partials/usernavbar.ejs")-%>
+<div class="santa-app">
     <div class="menu">
       <i class="fa fa-scroll"></i>
       <div>WHISHLIST</ div>
@@ -75,5 +70,5 @@
       </div>
     </div>
   </div>
-</body>
-</html>
+<%-include("../partials/userfooter.ejs")-%>
+<%-include("../layout/userfooter.ejs")-%>

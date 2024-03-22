@@ -1,7 +1,7 @@
-const Order = require("../model/order")
-const User  = require('../model/usermodel');
-const  returns =require("../model/return")
-const product = require('../model/productSchema');
+const Order = require("../../model/order")
+const User  = require('../../model/usermodel');
+const  returns =require("../../model/return")
+const product = require('../../model/productSchema');
 module.exports={
     getorder: async (req,res)=>{
         try{

@@ -1,12 +1,12 @@
 const express = require('express');
 const {adminExists,adminVerify}=require("../middleware/session");
 const upload=require("../middleware/multer")
-const admincontroller=require("../Controller/admincontroller")
-const productcontroller=require("../Controller/adminproduct")
-const categorycontroller=require("../Controller/admincategory")
-const customercontroller=require("../Controller/admincustomers")
-const ordercontroller = require("../Controller/adminorder")
-const bannercontroller = require("../Controller/asminbanner")
+const admincontroller=require("../Controller/admin/admincontroller")
+const productcontroller=require("../Controller/admin/adminproduct")
+const categorycontroller=require("../Controller/admin/admincategory")
+const customercontroller=require("../Controller/admin/admincustomers")
+const ordercontroller = require("../Controller/admin/adminorder")
+const bannercontroller = require("../Controller/admin/asminbanner")
 const router=express();
 
 // login and home page ------------------------------------------------>
