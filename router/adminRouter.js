@@ -7,6 +7,7 @@ const categorycontroller=require("../Controller/admin/admincategory")
 const customercontroller=require("../Controller/admin/admincustomers")
 const ordercontroller = require("../Controller/admin/adminorder")
 const bannercontroller = require("../Controller/admin/asminbanner")
+const couponcontroller = require('../Controller/admin/admincoupon');
 const router=express();
 
 // login and home page ------------------------------------------------>
@@ -55,6 +56,15 @@ router.post("/updateorderstatus/:id/:status",adminVerify,ordercontroller.orderst
 router.get("/returndetails/:id",adminVerify,ordercontroller.getreturnrequest)
 router.post("/approveReturn",adminVerify,ordercontroller.returnapproove)
 router.post("/rejectReturn",adminVerify,)
+
+// coupon management-------------------------------------------------------->
+
+router.get("/coupons",adminVerify,couponcontroller.getcoupon)
+router.get("/coupon/:id",adminVerify,couponcontroller.coupon)
+router.post("/addcoupon",adminVerify,couponcontroller.addcoupon)
+router.put("/editcoupon/:id",adminVerify,couponcontroller.editcoupon)
+router.delete("/deletecoupon/:id",adminVerify,couponcontroller.deleteCoupon)
+
 // banner manage--------------------------------------------------------->
 
 router.get("/banner",adminVerify,bannercontroller.getbanner)

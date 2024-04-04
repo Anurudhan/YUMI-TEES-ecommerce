@@ -44,10 +44,9 @@
             
             <div class="col-lg-9">
                 <div class="card-header">
-                    <a class="btn btn-primary float-end" href="/addaddress">Add Address</a>
+                    <a class="btn btn-primary float-end" href="/addaddress?flag=1">Add Address</a>
                     <h4 class="card-title">Delivery Address</h4>
                 </div>
-                <form action="/placeorder/" method="post" id="placeOrderForm">
                 <% if (address != null && address.length > 0) { %>
                     <div class="card border mb-5 shadow-0" id="addressCard0" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);">
                         <div class="m-4">
@@ -132,10 +131,10 @@
                         <div class="col-lg-3 col-sm-6">
                             <div data-bs-toggle="collapse">
                                 <label class="card-radio-label">
-                                    <input type="radio" name="pay-method" id="pay-methodoption1" value="credit/debit" class="card-radio-input">
+                                    <input type="radio" name="pay-method" id="pay-methodoption1" value="walletPayment" class="card-radio-input">
                                     <span class="card-radio py-3 text-center text-truncate">
                                         <i class="bi bi-credit-card d-block h2 mb-3"></i>
-                                        Credit / Debit Card
+                                        Wallet
                                     </span>
                                 </label>
                             </div>
@@ -182,11 +181,21 @@
                         </div>
                     </div> <!-- end col -->
                 </div> <!-- end row-->
-            </form>
             </div>
             <div class="col-lg-3"  >
                 <div class="card" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);position: fixed;width: 25%;">
                     <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <select class="" id="category" name="Category" required
+                                    style="width:100%;height: 35px;border-radius: 5px;margin-right: 4%;">
+                                    <option value="" selected disabled>Please Select your coupon</option>
+                                    
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary mt-2 d-flex justify-content-end">Apply Coupon</button>
+                        </div>
+
                         <h5>PRICE DETAILS</h5>
                         <hr style="color:#554f4f;">
                         <div class="d-flex justify-content-between">
@@ -219,6 +228,7 @@
 </section>
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
     function toggleHiddenAddresses() {
@@ -269,41 +279,48 @@
         }
     }
 </script>
-
 <script>
-    document.getElementById('proceedButton').addEventListener('click', function(event) {
-        // Prevent default action of the anchor tag (preventing navigation)
-        event.preventDefault();
+    $(document).ready(function() {
+        $("#proceedButton").click(function() {
+            // Get the selected payment method
+            var paymentMethod = $('input[name="pay-method"]:checked').val();
 
-        // Get the selected payment method
-        var paymentMethod = '';
-        var paymentMethodInputs = document.getElementsByName('pay-method');
-        for (var i = 0; i < paymentMethodInputs.length; i++) {
-            if (paymentMethodInputs[i].checked) {
-                paymentMethod = paymentMethodInputs[i].value;
-                break; // Stop looping once we find the checked radio input
-            }
-        }
+            // Prepare the URL with parameters
+            var url = `/placeorder/${paymentMethod}`
 
-        if (paymentMethod === '') {
-            // Display a Toast message to the user
-            Toastify({
-                text: "Please select a payment method.",
-                duration: 3000, // Duration in milliseconds
-                close: true, // Whether to show the close button
-                gravity: "top", // toast position: 'top', 'bottom', 'center'
-                position: "center", // toast position: 'left', 'center', 'right'
-                backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
-            }).showToast();
-            return;
-        }
-        
-        // Update the form action with the selected payment method
-        var form = document.getElementById('placeOrderForm');
-        form.action = '/placeorder/' + encodeURIComponent(paymentMethod);
-
-        // Submit the form
-        form.submit();
+            // Make the AJAX request
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    // Handle the response from the server if needed
+                    console.log(response);
+                    if(response.msg){
+                        Swal.fire({
+                        icon: 'error',
+                        title: response.msg,
+                        showConfirmButton: false,
+                        timer: 3000 // Adjust the time the alert is displayed if needed
+                        })
+                    }
+                    if(response.paymentMethod==="COD"){
+                        window.location.href = "/ordersuccess"
+                    }
+                    else if(response.paymentMethod == "online"){
+                        console.log("Hlo I am here----->");
+                        createRazorpay(response.order);
+                    }
+                    else if (response.paymentMethod == "wallet") {
+                        window.location.href = "/ordersuccess";
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle any errors that occur during the request
+                    console.error('Request failed. Status: ' + status + ', Error: ' + error);
+                }
+            });
+        });
     });
 </script>
 

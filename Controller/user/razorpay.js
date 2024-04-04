@@ -1,7 +1,6 @@
-const razorpay = require('razorpay');
-const dotenv = require('dotenv').config()
+const Razorpay = require('razorpay');
 
-var instance = new razorpay({
+var instance = new Razorpay({
     key_id: process.env.KEY_ID,
     key_secret: process.env.KEY_SECRET,
 });
@@ -24,7 +23,7 @@ const createOrder = (req, res, orderid) => {
                 // res.json({ status: false, err: err, method: 'online' });
             } else {
                 console.log("Order created successfully:", order);
-                res.json({order:order,payMthd:"online"});
+                res.json({order:order,paymentMethod:"online"});
             }
         });
     } catch (error) {

@@ -41,13 +41,15 @@ router.get("/nocart",userVerify,cartcontroller.nocart)
 // order
 
 router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder)
-router.get("/getaddress/:id",userVerify,ordercontroller.getaddress)
+router.get("/getaddress/:id",userVerify,CountOfCart,ordercontroller.getaddress)
 router.post("/placeorder/:type",userVerify,ordercontroller.confirmorder)
-router.get("/userorder",userVerify,ordercontroller.getorder)
-router.get("/vieworderdetails/:id",userVerify,ordercontroller.getorderdetails)
+router.post("/verifypayment",userVerify,ordercontroller.verifypayment)
+router.get("/userorder",userVerify,CountOfCart,ordercontroller.getorder)
+router.get("/vieworderdetails/:id",CountOfCart,userVerify,ordercontroller.getorderdetails)
 router.post("/cancellallorder/:id",userVerify,ordercontroller.cancelallorder)
 router.post("/cancelsingleorder/:id/:index",userVerify,ordercontroller.cancelsingleorder)
 router.post("/returnorder",userVerify,ordercontroller.returnorder)
+router.get("/ordersuccess",userVerify,CountOfCart,ordercontroller.ordersucess)
 
 // product views in user side
 

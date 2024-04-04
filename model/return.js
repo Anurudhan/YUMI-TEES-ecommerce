@@ -11,6 +11,7 @@ const retutnItemSchema = new Schema({
     description: {
       type: String,
     },
+    quantity: { type: Number },
     status : {
       type : String,
       default: "Requested"

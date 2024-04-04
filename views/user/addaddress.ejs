@@ -19,7 +19,7 @@ input[type=number]::-webkit-outer-spin-button {
     </div>
     <div class="col-12">
         <form class="p-5" method="post" action="/addaddress" id="addressForm2" onsubmit="return validateForm()">
-
+          <input type="hidden" id="flagInput" name="flag" value="<%= (flag == 1) ? flag : '' %>">
             <div class="container">
               <div class="row">
                 <div class="col-md-6">

@@ -4,6 +4,10 @@ const Order = require('../../model/order');
 const User = require("../../model/usermodel");
 const returns = require('../../model/return');
 const Product = require("../../model/productSchema");
+const Coupon = require("../../model/coupon")
+const Wallet = require("../../model/wallet")
+const WalletHistory = require("../../model/walletHistory")
+const crypto = require('crypto');
 const {createOrder} = require("../../Controller/user/razorpay")
 const session = require('express-session');
 const { resetpassword } = require('./controller');
@@ -54,14 +58,15 @@ module.exports = {
             const grandtotal = req.session.grandtotal
             const disctotal = req.session.disctotal
             totalprice = grandtotal-disctotal
-            const [address,carts,orders] = await Promise.all([
+            const [address,carts,orders,couponCount] = await Promise.all([
                 Addres.find({userid:req.session._id}),
                 Cart.findOne({userid:req.session._id}),
-                Order.findOne({userid:req.session._id})
+                Order.findOne({userid:req.session._id}),
+                Coupon.find().count()
             ])
             console.log(orders);
             if(carts){
-                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,username,cart,grandtotal,disctotal,totalprice})
+                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,username,cart,grandtotal,disctotal,totalprice,couponCount})
             }
             else{
                 res.redirect("/home")
@@ -155,7 +160,7 @@ module.exports = {
                 }
                 await Cart.findByIdAndDelete(carts._id)
                 console.log("sucess------------------------------------> ");
-                res.render("user/paymentsuccess")
+                res.json({paymentMethod:"COD"})
             }
             else if(payment=="OnlinePayment"){
                 const usr = await User.findOne({ email : userEmail})
@@ -210,8 +215,8 @@ module.exports = {
                     discountAmount: disctotal,
                 }
 
-                await Order.create(myOrders)
-
+                const odrr = await Order.create(myOrders)
+                console.log(odrr._id,"--------------------------------------->hlo");
                 const prdts = carts.products
 
                 //to update the quantity in inventory
@@ -221,7 +226,7 @@ module.exports = {
                         prdId = data.productid
                         ordrQty = data.quantity
 
-                        const prdt = await product.findOne({ _id: prdId })
+                        const prdt = await Product.findOne({ _id: prdId })
 
                         const stock = prdt.stockQuantity
                         const newStock = stock - ordrQty
@@ -233,13 +238,153 @@ module.exports = {
                     }
                 }
 
-                const ordrr = await Order.findOne().sort({ _id: -1 }).limit(1)
 
-                createOrder(req, res, ordrr._id + "")
+                createOrder(req, res, odrr._id + "")
 
                 await Cart.findByIdAndDelete(carts._id)
 
             }
+            else if (payment == "walletPayment") {
+
+            
+                const usr = await User.findOne({ email: userEmail })
+                const walet = await Wallet.findOne({ userid: usr._id })
+       
+
+                if (walet) {
+                    
+                    if (walet.wallet >= totalprice) {
+                        await Wallet.updateOne({ userid: usr._id }, { $inc: { wallet: -totalprice } })
+
+                        const [addrs, carts] = await Promise.all([
+                            await Addres.findOne({ _id: address_id }),
+                            await Cart.findOne({ userid: usr._id })
+                        ])
+
+
+                        // date setting------------------------------------------
+                        const currentDate = new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Kolkata",
+                        });
+
+                        // delivery date ----------------------------------------  
+                        const deliveryDate = new Date(
+                            Date.now() + 4 * 24 * 60 * 60 * 1000
+                        ).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
+
+                        //   if not coupen code ---------------------------------
+                        let couponCode = "";
+                        let couponDiscount = 0;
+
+                        //   if coupen code--------------------------------------
+
+                        if (req.session.cpnDiscount && req.session.couponCode) {
+                            couponDiscount = req.session.cpnDiscount;
+                            couponCode = req.session.couponCode;
+                        }
+
+                        let myOrders = {
+                            userid: usr._id,
+                            products: carts.products,
+                            address: {
+                                name: addrs.name,
+                                address: addrs.address,
+                                locality: addrs.locality,
+                                city: addrs.city,
+                                district: addrs.district,
+                                state: addrs.state,
+                                pincode: addrs.pincode,
+                            },
+                            orderdate: currentDate,
+                            expectedDeliveryDate: deliveryDate,
+                            paymentMethod: payment,
+                            PaymentStatus: "Paid",
+                            orderStatus: "Order Processed",
+                            couponCode: couponCode,
+                            couponDiscount: couponDiscount,
+                            totalAmount: totalprice,
+                            discountAmount: disctotal,
+                        }
+
+                        await Order.create(myOrders)
+
+                        const prdts = carts.products
+
+                        //to update the quantity in inventory
+                        for (const data of prdts) {
+
+                            try {
+                                prdId = data.productid
+                                ordrQty = data.quantity
+
+                                const prdt = await Product.findOne({ _id: prdId })
+                                const stock = prdt.stockQuantity
+                                const newStock = stock - ordrQty
+
+                                await Product.updateOne({ _id: prdId }, { $set: { stockQuantity: newStock } })
+
+                            } catch (error) {
+                                console.log(error);
+                            }
+
+                        }
+
+                        const WalHist = await WalletHistory.findOne({ userid: usr._id })
+
+                        if (WalHist) {
+                            const reason = "Product Purchase With Wallet Amount";
+                            const type = "debit";
+                            const date = new Date();
+
+                            await WalletHistory.updateOne(
+                                { userid: usr._id },
+                                { $push: {
+                                        refund: {
+                                            amount: totalprice,
+                                            reason: reason,
+                                            type: type,
+                                            date: date,
+                                        },
+                                    },
+                                },
+                                { new: true }
+                            );
+                        } else {
+
+                            const reason = "Product Purchase With Wallet Amount";
+                            const type = "debit";
+                            const date = new Date();
+                            await WalletHistory.create({
+                                userid: usr._id,
+                                refund: [
+                                    {
+                                        amount: totalprice,
+                                        reason: reason,
+                                        type: type,
+                                        date: date,
+                                    },
+                                ],
+                            });
+                        }
+                        await Cart.findByIdAndDelete(carts._id)
+                        res.json({paymentMethod : 'wallet'})
+                    } else {
+                        res.json({ msg: "Insufficient Balance in Wallet" })
+                    }
+                } else {
+
+                    res.json({ msg: "Wallet doesn't exist" })
+                }
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    ordersucess : (req,res)=>{
+        try{
+            res.render("user/paymentsuccess")
         }
         catch(err){
             console.log(err);
@@ -266,6 +411,42 @@ module.exports = {
             const ordr = await Order.findOne({ _id: id })
             ordr.orderStatus = "Cancelled"
             await ordr.save();
+            if (ordr.paymentMethod == "OnlinePayment" && ordr.PaymentStatus == "Paid" || ordr.paymentMethod == "walletPayment") {
+                const walletFind = await Wallet.findOne({ userid: ordr.userid })
+
+                if (walletFind) {
+                    await Wallet.updateOne({ userid: ordr.userid }, { $inc: { wallet: ordr.totalAmount } })
+                } else {
+                    await Wallet.create({
+                        userid: ordr.userid,
+                        wallet: ordr.totalAmount
+                    })
+                }
+                //wallet history update
+                const wallHstry = await WalletHistory.findOne({ userid: ordr.userid })
+                if (wallHstry) {
+                    const amount = ordr.totalAmount;
+                    const reason = "Refund of cancelling order";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.updateOne(
+                        { userid: ordr.userid },
+                        { $push: { refund: { amount: amount, reason: reason, type: type, date: date } } },
+                        { new: true }
+                    );
+                } else {
+                    const amount = ordr.totalAmount;
+                    const reason = "Refund of cancelling order";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.create({
+                        userid: ordr.userid,
+                        refund: [{ amount: amount, reason: reason, type: type, date: date }],
+                    });
+                }
+
+                await Order.updateOne({_id: ordr._id},{$set: { PaymentStatus: "Refunded" } })
+            }
             await Order.updateOne(
                 { _id: id },
                 { $set: { 'products.$[].status': 'Cancelled' } })
@@ -286,12 +467,54 @@ module.exports = {
         try{
             const id = req.params.id
             let index = req.params.index
-            const ordr = await Order.findOne({ _id: id })
+            const ordr = await Order.findOne({ _id: id }).populate('products.productid');
+            const totalAmount = ordr.products[index].quantity*ordr.products[index].productid.grandprice;
+            console.log(totalAmount);
             if(ordr.products.length==1){
-                ordr.orderStatus = "Cancelled"
+                ordr.orderStatus = "Cancelled";
+                ordr.products[0].status = "Cancelled";
                 await ordr.save();
             }
-            await Order.updateOne({ _id: id }, { $set: { [`products.${index}.status`]: "Cancelled" } })
+            else{
+                await Order.updateOne({ _id: id }, { $set: { [`products.${index}.status`]: "Cancelled" } })
+            }
+            if (ordr.paymentMethod == "OnlinePayment" && ordr.PaymentStatus == "Paid" || ordr.paymentMethod == "walletPayment") {
+                const walletFind = await Wallet.findOne({ userid: ordr.userid })
+
+                if (walletFind) {
+                    await Wallet.updateOne({ userid: ordr.userid }, { $inc: { wallet: totalAmount } })
+                } else {
+                    await Wallet.create({
+                        userid: ordr.userid,
+                        wallet: totalAmount
+                    })
+                }
+                //wallet history update
+                const wallHstry = await WalletHistory.findOne({ userid: ordr.userid })
+                if (wallHstry) {
+                    const amount = totalAmount;
+                    const reason = "Refund of cancelling a product";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.updateOne(
+                        { userid: ordr.userid },
+                        { $push: { refund: { amount: amount, reason: reason, type: type, date: date } } },
+                        { new: true }
+                    );
+                } else {
+                    const amount = totalAmount;
+                    const reason = "Refund of cancelling a product";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.create({
+                        userid: ordr.userid,
+                        refund: [{ amount: amount, reason: reason, type: type, date: date }],
+                    });
+                }
+
+                await Order.updateOne({_id: ordr._id},{$set: { PaymentStatus: "Refunded" } })
+            }
+            
             const prdkt = await Product.findOne({ _id: ordr.products[index].productid })
                 if (prdkt) {
                     prdkt.stockQuantity = prdkt.stockQuantity + data.quantity
@@ -313,6 +536,7 @@ module.exports = {
                 userid: ordr.userid,
                 orderid: orderId,
                 productid: ordr.products[index].productid,
+                quantity:ordr.products[index].quantity,
                 returnReason: reason,
                 description: description,
             }
@@ -325,6 +549,39 @@ module.exports = {
                 console.log("finished----------------------------------------------->")
                 res.status(200).json({ message: 'Order returned successfully' });
             }
+        catch(err){
+            console.log(err);
+        }
+    },
+    verifypayment : async(req,res)=>{
+        try{
+             //HMAC (Hash-based Message Authentication Code) using the SHA-256 algorithm
+
+             let hmac = crypto.createHmac("sha256", process.env.KEY_SECRET);
+                console.log('Request Body:', req.body);
+            hmac.update(
+                req.body.payment.razorpay_order_id + "|" + req.body.payment.razorpay_payment_id
+            );
+
+            const calculatedHmac = hmac.digest("hex"); // Log the calculated HMAC
+            console.log("Calculated HMAC:", calculatedHmac);
+
+            console.log("Signature from Request Body:", req.body.payment.razorpay_signature);
+
+            if (calculatedHmac === req.body.payment.razorpay_signature) {
+                        console.log("Entering if condition");
+                        const orderId = req.body.order.receipt;
+                        console.log(orderId);
+                        const O = await Order.updateOne({ _id: orderId }, { $set: { PaymentStatus: "Paid" } });
+                        console.log(O);
+
+                        res.json({ success: true });
+
+            } else {
+                console.log("HMAC verification failed");
+                res.status(400).json({ error: true });
+            }
+        }
         catch(err){
             console.log(err);
         }

@@ -9,6 +9,7 @@ const session = require('express-session');
 const flash = require("connect-flash")
 const nocahe= require('nocache');
 const app=express()
+const Razorpay=require('razorpay')
 
 // nocache---------------------------------------------------------------->
 

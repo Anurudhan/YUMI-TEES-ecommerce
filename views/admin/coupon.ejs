@@ -1,0 +1,302 @@
+<%-include("../layout/adminheader.ejs")-%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<%-include("../layout/admincentre.ejs")-%>
+<style>
+  thead th {
+    vertical-align: top;
+  }
+</style>
+<%-include("../partials/adminnavbar.ejs")-%>
+<div class="container " style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/coupons" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold;">COUPON</a>
+            <a id="addCouponBtn" class="btn btn-primary p-2 m-3 float-end">Add Coupon</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+   
+    <div class="row">
+       
+        <div class="col-md-12">
+            
+          
+              <table class="table" id="example">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">SI.NO</th>
+                    <th scope="col" class="text-center">COUPON <br> CODE</th>
+                    <th scope="col" class="text-center">MINIMUM PURCHASE <br> AMOUNT</th>
+                    <th scope="col" class="text-center">DISCOUNT <br> AMOUNT</th>
+                    <th scope="col" class="text-center">VALID <br> FROM</th>
+                    <th scope="col" class="text-center">VALID <br> TO</th>
+                    <th scope="col" class="text-center">VIEW</th>
+                    <th scope="col" class="text-center">EDIT</th>
+                    <th scope="col" class="text-center">DELETE</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  <% coupon.forEach((ele,index) => { %>
+                    <tr>
+                      <th scope="row" class="text-center"><%-index+1-%></th>
+                      <td class="text-center"><%-ele.couponCode-%></td>
+                      <td class="text-center"><%-ele.minimumPurchaseAmount-%></td>
+                      <td class="text-center"><%-ele.discountAmount-%></td>
+                      <td class="text-center"><%= new Date(ele.validFrom).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) %></td>
+                      <td class="text-center"><%= new Date(ele.validTo).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) %></td>
+                      <td class="text-center">
+
+                        <a href="/admin/CouponDetails/<%-ele._id-%>" class="btn btn-success">view</a>                                                                                 
+  
+                      <!-- <a href=""><i class="fa-solid fa-trash fa-lg mx-1 text-danger" onclick=""></i></a> -->
+                    </td>
+                    <td class="text-center">
+                      <button onclick="editCoupon('<%= ele._id %>')" style="background: none; border: none;">
+                        <i class="bi bi-pencil-fill" style="color: blue; padding: 10px; font-size: 20px;"></i>
+                      </button>
+                    </td>
+                    
+                    <td class="text-center">
+                      <button onclick="deleteCoupon('<%= ele._id %>')" style="background: none; border: none;">
+                          <i class="bi bi-trash3" style="color: rgb(255, 0, 0); padding: 10px; font-size: 20px;"></i>
+                      </button>
+                  </td>
+                      
+              
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+              
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addCouponModal" tabindex="-1" role="dialog" aria-labelledby="addCouponModalLabel" aria-hidden="true">  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title text-center w-100" id="addCouponModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent; border: none; font-size: 24px;" onclick="window.location.reload();">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <!-- Add your form inputs here -->
+              <form id="couponForm">
+                <input type="text" class="form-control" id="couponid" hidden>
+                  <div class="form-group">
+                      <label for="couponCode">Coupon Code</label>
+                      <input type="text" class="form-control" id="couponCode" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="description">Description</label>
+                      <input type="text" class="form-control" id="description" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="minimumPurchaseAmount">Minimum Purchase Amount</label>
+                      <input type="number" class="form-control" id="minimumPurchaseAmount" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="discountAmount">Discount Amount</label>
+                      <input type="number" class="form-control" id="discountAmount" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="validFrom">Valid From</label>
+                      <input type="date" class="form-control" id="validFrom" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="validTo">Valid To</label>
+                      <input type="date" class="form-control" id="validTo" required>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveChangesBtn"></button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  $(document).ready(function () {
+      $('#addCouponBtn').click(function () {
+        $('#addCouponModalLabel').text('Add Coupon');
+        $('#saveChangesBtn').text('Add Coupon');
+          $('#addCouponModal').modal('show');
+      });
+  });
+</script>
+<script>
+  document.getElementById("saveChangesBtn").addEventListener("click", function() {
+      var couponId = document.getElementById("couponid").value.trim();
+      var couponCode = document.getElementById("couponCode").value.trim();
+      var description = document.getElementById("description").value.trim();
+      var minimumPurchaseAmount = document.getElementById("minimumPurchaseAmount").value.trim();
+      var discountAmount = document.getElementById("discountAmount").value.trim();
+      var validFrom = document.getElementById("validFrom").value;
+      var validTo = document.getElementById("validTo").value;
+
+      var modalLabel = document.getElementById("addCouponModalLabel").innerText.trim();
+        var url = "";
+        var method = "";
+        
+        if (modalLabel === "Add Coupon") {
+            url = "/admin/addcoupon";
+            method = "POST";
+        } else if (modalLabel === "Edit Coupon") {
+            url = `/admin/editcoupon/${couponId}`;
+            method = "PUT";
+        } else {
+            console.error("Unknown modal label: " + modalLabel);
+            return;
+        }
+
+      // Example validation
+      if (couponCode === "") {
+          showAlert('error', 'Coupon Code cannot be empty');
+          return;
+      }
+      if (description === "") {
+          showAlert('error', 'Description cannot be empty');
+          return;
+      }
+      if (/^[0-9~`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(description)) {
+          showAlert('error', 'Description cannot start with a symbol or number');
+          return;
+      }
+      if (parseFloat(minimumPurchaseAmount) <= 0 || isNaN(parseFloat(minimumPurchaseAmount))) {
+          showAlert('error', 'Minimum Purchase Amount must be a valid number greater than 0');
+          return;
+      }
+      if (parseFloat(discountAmount) <= 0 || isNaN(parseFloat(discountAmount))) {
+          showAlert('error', 'Discount Amount must be a valid number greater than 0');
+          return;
+      }
+      if (parseFloat(discountAmount) >= parseFloat(minimumPurchaseAmount)) {
+          showAlert('error', 'Discount Amount must be less than Minimum Purchase Amount');
+          return;
+      }
+      if (new Date(validFrom) >= new Date(validTo)) {
+          showAlert('error', 'Valid To date must be after Valid From date');
+          return;
+      }
+
+      // AJAX post request using fetch API
+      fetch(url, {
+          method: method,
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              couponCode: couponCode,
+              description: description,
+              minimumPurchaseAmount: minimumPurchaseAmount,
+              discountAmount: discountAmount,
+              validFrom: validFrom,
+              validTo: validTo
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.errorMessage) {
+            showAlert('error', data.errorMessage);
+            setTimeout(function() {
+                window.location.reload();
+            }, 2000);
+        } else {
+            showAlert('success', data.successMessage);
+            // Reload page after 2 seconds
+            setTimeout(function() {
+                window.location.reload();
+            }, 2000);
+        }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          // Display error message
+          showAlert('error', 'An error occurred. Please try again later.');
+      });
+  });
+
+  function deleteCoupon(couponId) {
+    // AJAX request to delete the coupon
+    $.ajax({
+        url: `/admin/deletecoupon/${couponId}`,
+        method: 'DELETE',
+        success: function(response) {
+
+          console.log('Coupon deleted successfully');
+            showAlert('success', 'Coupon deleted successfully');
+            setTimeout(function() {
+                window.location.reload();
+            }, 2000);
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error('Error deleting coupon:', error);
+            // Optionally, you can display an error message to the user
+        }
+    });
+}
+
+  // Function to show SweetAlert messages
+  function showAlert(icon, message) {
+      Swal.fire({
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 2000
+      });
+  }
+</script>
+
+<script>
+  function editCoupon(couponId) {
+    // AJAX call to fetch data for the given coupon ID
+    $.ajax({
+      url: `/admin/coupon/${couponId}`,
+      method: 'GET',
+      success: function(response) {
+        // Handle the response data and display it in a modal
+        showModalWithData(response.coupon);
+      },
+      error: function(xhr, status, error) {
+        // Handle errors
+        console.error(error);
+      }
+    });
+  }
+
+  function showModalWithData(data) {
+    console.log(data.validFrom);
+    
+    $('#addCouponModalLabel').text('Edit Coupon');
+    $('#saveChangesBtn').text('Edit Coupon');
+    $('#couponid').val(data._id)
+    $('#couponCode').val(data.couponCode);
+    $('#description').val(data.description);
+    $('#minimumPurchaseAmount').val(data.minimumPurchaseAmount);
+    $('#discountAmount').val(data.discountAmount);
+
+    var validFromDate = new Date(data.validFrom);
+    var formattedValidFrom = validFromDate.toISOString().split('T')[0]; // Get yyyy-mm-dd part
+    $('#validFrom').val(formattedValidFrom);
+    
+    var validToDate = new Date(data.validTo);
+    var formattedValidTo = validToDate.toISOString().split('T')[0]; // Get yyyy-mm-dd part
+    $('#validTo').val(formattedValidTo);
+
+    // Show the modal
+    $('#addCouponModal').modal('show');
+}
+</script>
+
+
+<%-include("../layout/adminfooter.ejs")-%>

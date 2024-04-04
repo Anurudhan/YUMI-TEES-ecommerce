@@ -1,5 +1,7 @@
 const Addres = require("../../model/address");
 const User = require("../../model/usermodel");
+const Coupon = require("../../model/coupon");
+const Wallet = require("../../model/wallet");
 const bcrypt = require("bcrypt")
 module.exports={
     profilepage:async (req,res)=>{
@@ -8,9 +10,13 @@ module.exports={
             const errorMessage = req.session.errorMessage
             delete req.session.successMessage
             delete req.session.errorMessage
-            
-            const address = await Addres.find({userid:req.session._id})
-            res.render("user/profile",{successMessage,errorMessage,username:req.session.username,email:req.session.email,cart:req.session.cart,address})
+            const [address, coupon, wallet] = await Promise.all([
+                Addres.find({userid:req.session._id}),
+                Coupon.find().sort({ _id: -1 }),
+                Wallet.findOne({ userid: req.session._id}).populate('invited')
+            ])
+            console.log(wallet);
+            res.render("user/profile",{successMessage,errorMessage,username:req.session.username,email:req.session.email,cart:req.session.cart,address,coupon,wallet})
         }
         catch(err){
             console.log(err);
@@ -41,7 +47,8 @@ module.exports={
     },
     getaddress:async (req,res)=>{
         try{
-            res.render("user/addaddress")
+            const flag = req.query.flag
+            res.render("user/addaddress",{flag})
         }
         catch(err){
             console.log(err);
@@ -51,15 +58,14 @@ module.exports={
         try{
             req.body.userid = req.session._id
             const data = req.body
+            console.log(req.body);
             await Addres.create({...data});
             const address = await Addres.find()
             req.session.successMessage = "succesfully created address"
-            const flag=req.session.addadress
-            delete req.session.addadress
-            if(flag){
-                res.redirect("/placeorder")
-            }
-            res.redirect("/profile")
+            console.log(data.flag);
+            const flag=data.flag;
+            console.log(flag);
+            (flag == 1) ? res.redirect("/placeorder") : res.redirect("/profile")
         }
         catch(err){
             console.log(err);

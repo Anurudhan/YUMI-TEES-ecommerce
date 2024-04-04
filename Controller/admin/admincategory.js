@@ -30,6 +30,7 @@ module.exports={
         try{
             let cat=req.body.catagoryname;
             cat = cat.toUpperCase()
+            const catcheckimg = await Category.findOne({categoryname:cat.trim()})
             console.log(cat);
             if (cat.trim() == "") {
                 req.session.errorMessage = "category cannot contains spaces!!"
@@ -39,6 +40,10 @@ module.exports={
             else if (/\d/.test(cat)) { 
                 req.session.errorMessage = "category cannot contain numbers!"
                 res.redirect("/admin/addcategory")      
+            }
+            else if(catcheckimg){
+                req.session.errorMessage = "category already consist!"
+                res.redirect("/admin/addcategory") 
             }
             else{
                 const exist= await Category.findOne({categoryname:cat})
@@ -75,6 +80,7 @@ module.exports={
             const id = req.params.id
             let cat=req.body.catagoryname;
             cat = cat.toUpperCase()
+            const catcheckimg = await Category.findOne({categoryname:cat.trim()})
             console.log(cat);
             if (cat.trim() == "") {
                 req.session.errorMessage = "category contains spaces!!"
@@ -84,6 +90,10 @@ module.exports={
             else if (/\d/.test(cat)) { 
                 req.session.errorMessage = "category cannot contain numbers!"
                 res.redirect(`/admin/editcategory/${id}`)      
+            }
+            else if(catcheckimg){
+                req.session.errorMessage = "category already consist!"
+                res.redirect("/admin/addcategory") 
             }
             else{
                 await Category.updateOne({_id:id},{categoryname:cat})

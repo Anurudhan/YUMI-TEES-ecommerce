@@ -1,6 +1,8 @@
 const Order = require("../../model/order")
 const User  = require('../../model/usermodel');
-const  returns =require("../../model/return")
+const returns =require("../../model/return");
+const Wallet = require("../../model/wallet")
+const WalletHistory = require("../../model/walletHistory")
 const product = require('../../model/productSchema');
 module.exports={
     getorder: async (req,res)=>{
@@ -141,10 +143,46 @@ module.exports={
             const return_id = req.body.return_id
             const retn = await returns.findOne({_id:return_id})
             await returns.updateOne({_id:return_id},{$set:{status:"Return Approoved"}})
-            const order = await Order.findOne({_id:retn.orderid})
-            if(order.products.length == 1){
-                await Order.updateOne({_id:order.id},{$set:{orderStatus:"Order Returned"}})
+            const ordr = await Order.findOne({_id:retn.orderid})
+            const Prdct = await product.findOne({_id:retn.productid})
+            const totalAmount = Prdct.grandprice*retn.quantity
+            if(ordr.products.length == 1){
+                await Order.updateOne({_id:ordr.id},{$set:{orderStatus:"Order Returned"}})
             }
+            const walletFind = await Wallet.findOne({ userid: ordr.userid })
+
+                if (walletFind) {
+                    await Wallet.updateOne({ userid: ordr.userid }, { $inc: { wallet: totalAmount } })
+                } else {
+                    await Wallet.create({
+                        userid: ordr.userid,
+                        wallet: totalAmount
+                    })
+                }
+                //wallet history update
+                const wallHstry = await WalletHistory.findOne({ userid: ordr.userid })
+                if (wallHstry) {
+                    const amount = totalAmount;
+                    const reason = "Refund of return a product";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.updateOne(
+                        { userid: ordr.userid },
+                        { $push: { refund: { amount: amount, reason: reason, type: type, date: date } } },
+                        { new: true }
+                    );
+                } else {
+                    const amount = totalAmount;
+                    const reason = "Refund of return a product";
+                    const type = "credit";
+                    const date = new Date();
+                    await WalletHistory.create({
+                        userid: ordr.userid,
+                        refund: [{ amount: amount, reason: reason, type: type, date: date }],
+                    });
+                }
+
+                await Order.updateOne({_id: ordr._id},{$set: { PaymentStatus: "Refunded" } })
             res.json({success:true})
         }
         catch(err){

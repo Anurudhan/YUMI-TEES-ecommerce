@@ -37,6 +37,222 @@
         border: none;
         border-radius: 10%;
     }
+
+    .atag, .atag.link {
+  display: block;
+  padding: 33px 0 0 0;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+/*  ================================================
+            TICKET STYLING & COUPON EFFECT
+    ================================================  */
+.ticket {
+position: relative;
+display: table;
+width: 600px;
+height: 180px;
+margin: 50px auto 0 auto;
+padding-bottom: 57px;
+background: #1981d6;
+text-align: center;
+}
+
+.ticket::before {
+  content:"";
+  position: absolute;
+  top: 54.5%;
+  left: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid #ffffff;
+}
+
+.ticket::after {
+  content:"";
+  position: absolute;
+  top: 54.5%;
+  right: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 20px solid #ffffff;
+}
+
+/*  ================================================
+                    RIBBON EFFECT
+    ================================================  */
+.ribbon {
+position: absolute;
+display: block;
+top: -4px;
+right: -4px;
+width: 110px;
+height: 110px;
+overflow: hidden;
+}
+
+.ribbon .clabel {
+position: relative;
+display: block;
+left: -10px;
+top: 23px;
+width: 158px;
+padding: 10px 0;
+font-size: 11px;
+text-align: center;
+color: #fff;
+background-color: #e85e68;
+-webkit-box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
+-moz-box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
+-ms-box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
+box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
+-webkit-transform: rotate(45deg) translate3d(0,0,0);
+-moz-transform: rotate(45deg) translate3d(0,0,0);
+-ms-transform: rotate(45deg) translate3d(0,0,0);
+transform: rotate(45deg) translate3d(0,0,0);
+}
+
+.clabel:before, .label:after {
+content: '';
+position: absolute;
+bottom: -4px;
+border-top: 4px solid #a71c26;
+border-left: 4px solid transparent;
+border-right: 4px solid transparent;
+}
+
+.clabel:before {
+left: 0;
+}
+
+.clabel:after {
+right: 0;
+}
+
+
+
+/*  ================================================
+                        CONTENT
+    ================================================  */
+.cspan {
+  display: block;
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.cstrong {
+  display: block;
+  font-size: 85px;
+  color: #a52958;
+  margin: 0 0 10px 0;
+}
+
+.cem {
+  display: block;
+  font-size: 29px;
+  font-style: normal;
+  color: #ffffff;
+  border-top: 2px dashed rgba(0,0,0,.1);
+  padding: 10px 0;
+}
+
+
+
+/*  ================================================
+              ACTION CALL & ARROW UP EFFECT
+    ================================================  */
+.cbutton {
+  display: block;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 57px;
+  padding: 0;
+  line-height: 58px;
+  text-align: center;
+  border-radius: 0;
+  background-color: #d17a7a;
+}
+
+.cbutton::before {
+  content:"";
+  position: absolute;
+  top: -10px;
+  left: calc(50% - 20px);
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 10px solid #d17a7a;
+}
+
+
+
+/*  ================================================
+                    INSIDE TICKET
+    ================================================  */
+
+
+.content {
+  height: 260px;
+  margin: 8px;
+  border: 2px dashed #e0c68e;
+  border-radius: 10px;
+}
+
+.content h1 {
+  font-size: 29px;
+  color: #4c483b;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-family: 'Berkshire Swash', cursive;
+}
+
+.pass {
+  display: block;
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 57px;
+  margin: 15px 0 0 15px; 
+  padding: 0;
+  line-height: 58px;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
+  background: #eadbb8;
+  border: 1px solid #82113c;
+}
+
+.pass::before {
+  content:"";
+  position: absolute;
+  bottom: -10px;
+  left: calc(50% - 20px);
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 10px solid #eadbb8;
+}
+
+.content span {
+  margin: 85px 0 0 0;
+  text-align: center;
+  color: #82113c;
+}
+
+.content em {
+  border: none;
+  text-align: center;
+  font-size: 89px;
+  color: #eadbb8;
+  text-shadow: 1px 1px 0 rgba(0,0,0,.7);
+}
 </style>
 <section style="min-height: 90vh;margin-top: 100px;">
     <div class="container-fluid">
@@ -194,6 +410,23 @@
                             <div class="card-body hidden-div" id="div4">
                                 <div class="row">
                                     <div class="col-12">
+                                        <h3 >Available Coupons</h3>
+                                        <% coupon.forEach(item => { %>
+                                        <div class="ticket">
+                                            <div class="datas">
+                                              <a class="atag link">
+                                                <div class="ribbon">
+                                                  <div class="clabel">Expierydate :  <%= new Date(item.validTo).toLocaleDateString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric' }) %>
+                                                  </li> </div>
+                                                </div>
+                                                <span class="cspan"><%=item.description%></span>
+                                                <strong class="strong"><%=item.couponCode%></strong>
+                                                <em class="cem">Green PASS</em>
+                                              </a>
+                                            </div>
+                                            <a class="atag cbutton">ORDER NOW!</a>
+                                          </div>
+                                          <% }) %>
                                     </div>
                                 </div>
                             </div>
@@ -220,7 +453,7 @@
                                                 <div>
                                                     <h2>Manage Address</h2>
                                                 </div>
-                                                <a class="ms-auto me-0" href="/addaddress">
+                                                <a class="ms-auto me-0" href="/addaddress?flag=0">
                                                     <button class="add-address-btn p-3" 
                                                 style="background-color: rgba(59, 59, 231, 0.753);color: azure;border: none;border-radius: 10%;">
                                                 Add Address</button>
