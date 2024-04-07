@@ -6,12 +6,13 @@ const productcontroller = require("../Controller/user/userproduct")
 const profilecontroller = require("../Controller/user/userprofile")
 const cartcontroller=require("../Controller/user/cart")
 const ordercontroller = require("../Controller/user/order")
+const wishlistcontroller =  require("../Controller/user/whishlist")
 const {CountOfCart}=require("../middleware/cartCount")
 const {userVerify,userExists}=require("../middleware/session")
 
 // Home page
 router.get("/",CountOfCart,usercontoller.homepage)
-router.get("/home",userExists,userVerify)
+router.get("/home",userExists,userVerify,CountOfCart)
 
 // Login page
 
@@ -33,23 +34,28 @@ router.get("/invalid_otp",userExists,usercontoller.invalidotp)
 
 // cart 
 
-router.get("/addtocart/:id/:change",userVerify,cartcontroller.addcart)
+router.get("/addtocart/:id/:change",userVerify,CountOfCart,cartcontroller.addcart)
 router.get("/cart",userVerify,CountOfCart,cartcontroller.cartpage)
-router.delete("/removecart/:prdktId",userVerify,cartcontroller.removeCart)
-router.get("/nocart",userVerify,cartcontroller.nocart)
+router.delete("/removecart/:prdktId",userVerify,CountOfCart,cartcontroller.removeCart)
+router.get("/nocart",userVerify,CountOfCart,cartcontroller.nocart)
 
+// Whishlist
+
+router.get("/wishlist",userVerify,CountOfCart,wishlistcontroller.getwishlist)
 // order
 
-router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder)
-router.get("/getaddress/:id",userVerify,CountOfCart,ordercontroller.getaddress)
-router.post("/placeorder/:type",userVerify,ordercontroller.confirmorder)
-router.post("/verifypayment",userVerify,ordercontroller.verifypayment)
-router.get("/userorder",userVerify,CountOfCart,ordercontroller.getorder)
-router.get("/vieworderdetails/:id",CountOfCart,userVerify,ordercontroller.getorderdetails)
-router.post("/cancellallorder/:id",userVerify,ordercontroller.cancelallorder)
-router.post("/cancelsingleorder/:id/:index",userVerify,ordercontroller.cancelsingleorder)
-router.post("/returnorder",userVerify,ordercontroller.returnorder)
-router.get("/ordersuccess",userVerify,CountOfCart,ordercontroller.ordersucess)
+router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder);
+router.get("/getaddress/:id",userVerify,CountOfCart,ordercontroller.getaddress);
+router.post("/placeorder/:type",userVerify,CountOfCart,ordercontroller.confirmorder);
+router.post("/verifypayment",userVerify,CountOfCart,ordercontroller.verifypayment);
+router.get("/userorder",userVerify,CountOfCart,ordercontroller.getorder);
+router.get("/vieworderdetails/:id",CountOfCart,userVerify,ordercontroller.getorderdetails);
+router.post("/cancellallorder/:id",userVerify,CountOfCart,ordercontroller.cancelallorder);
+router.post("/cancelsingleorder/:id/:index",userVerify,CountOfCart,ordercontroller.cancelsingleorder);
+router.post("/returnorder",userVerify,CountOfCart,ordercontroller.returnorder);
+router.get("/ordersuccess",userVerify,CountOfCart,ordercontroller.ordersucess);
+router.post("/couponapply",userVerify,CountOfCart,ordercontroller.couponapply);
+
 
 // product views in user side
 

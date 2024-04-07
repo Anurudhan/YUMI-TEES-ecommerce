@@ -1,74 +1,32 @@
 <%-include("../layout/userheader.ejs")-%>
-<link rel="stylesheet" href="../../public/stylesheet/whishlist.css">
+<link rel="stylesheet" href="../stylesheet/whishlist.css">
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/usernavbar.ejs")-%>
-<div class="santa-app">
-    <div class="menu">
-      <i class="fa fa-scroll"></i>
-      <div>WHISHLIST</ div>
-      <i class="fa fa-ellipsis-h"></i>
-    </div>
-    <div class="tabs">
-      <div>Seen</div>
-      <div class="active">Want</div>
-      <div>Like</div>
-    </div>
-    <div class="content">
-      <div class="gift-card">
-        <div class="actions">
-          <i class="fa fa-heart"></i>
-        </div>
-        <img src="https://image.flaticon.com/icons/svg/1153/1153054.svg"></img>
-        <div class="title">
-          Train
-        </div>
-        <div class="description">
-          Funny toy made by wood.
-        </div>
-      </div>
-    <div class="gift-card">
-        <div class="actions">
-          <i class="fa fa-heart"></i>
-        </div>
-        <img src="https://image.flaticon.com/icons/svg/818/818897.svg"></img>
-        <div class="title">
-          Duck
-        </div>
-        <div class="description">
-          She can help programmers too.
+<div class="container" style="margin-top: 50px;">
+  <h3>WHISHLIST</h3>
+  <br>
+  <br>
+  <div class="row">
+      <div class="col-md-3">
+        <div class="dress-card">
+          <div class="dress-card-head">
+            <img class="dress-card-img-top" src="https://assets.myntassets.com/h_1440,q_100,w_1080/v1/assets/images/7578935/2018/10/23/d7b740bc-e00e-4bec-97aa-65016f8ff2e71540289479612-Harpa-Women-Dresses-2331540289479465-1.jpg" alt="">
+            <div class="surprise-bubble"><span class="dress-card-heart">
+              <i class="bi bi-suit-heart-fill"></i>
+              </span><a href="#"> <span>More</span></a></div>
+          </div>
+          <div class="dress-card-body">
+            <h4 class="dress-card-title">Harpa</h4>
+            <p class="dress-card-para">Womans printed clothing</p>
+            <p class="dress-card-para"><span class="dress-card-price">Rs.839 &ensp;</span><span class="dress-card-crossed">Rs.2099</span><span class="dress-card-off">&ensp;(60% OFF)</span></p>
+            <div class="row">
+              <div class="col-md-6 card-button"><a href=""><div class="card-button-inner bag-button">Add to Bag</div></a></div>
+              <div class="col-md-6 card-button"><a href=""><div class="card-button-inner wish-button">Whishlist</div></a></div>
+            </div>
+          </div>
         </div>
       </div>
-  <div class="gift-card">
-        <div class="actions">
-          <i class="fa fa-heart"></i>
-        </div>
-        <img src="https://image.flaticon.com/icons/svg/191/191582.svg"></img>
-        <div class="title">
-          Robot
-        </div>
-        <div class="description">
-          Makes funny noises.
-        </div>
-      </div>
-  <div class="gift-card">
-        <div class="actions">
-          <i class="fa fa-heart"></i>
-        </div>
-        <img src="https://image.flaticon.com/icons/svg/191/191563.svg"></img>
-        <div class="title">
-          Doll
-        </div>
-        <div class="description">
-          If you don't feed her, she will cry.
-        </div>
-      </div>
-    </div>
-  
-    <div class="action">
-      <div>
-        <i class="fa fa-plus"></i>
-      </div>
-    </div>
   </div>
+</div>
 <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/userfooter.ejs")-%>

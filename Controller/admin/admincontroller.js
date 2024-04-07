@@ -1,12 +1,4 @@
 module.exports={
-    dashboardpage:async (req,res)=>{
-    try{
-        res.render("admin/dashboard")
-    }
-    catch(err){
-        console.log(err);
-    }
-    },
     loginpage:async (req,res)=>{
         try{
             res.render("admin/login",{err:null})

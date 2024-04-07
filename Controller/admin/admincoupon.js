@@ -13,9 +13,10 @@ module.exports = {
     addcoupon : async (req,res)=>{
         try{
             const { couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo } = req.body;
-            const coupon = await Coupon.findOne({couponCode:req.body.couponCode})
+            console.log(couponCode);
+            const coupon = await Coupon.findOne({couponCode:couponCode})
             if(coupon){
-                res.json({errormessage:"This coupon code already exist"})
+                res.json({errorMessage:"This coupon code already exist"})
             }
             else{
                 const newCoupon = new Coupon({
@@ -56,8 +57,15 @@ module.exports = {
             const id = req.params.id
             console.log(id);
             const { couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo } = req.body;
-            await Coupon.updateOne({_id:id},{couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo})
-            res.json({successMessage:"Coupon updated succesfully"})
+            const coupon=await Coupon.findOne({couponCode:couponCode})
+            if(coupon){
+                res.json({errorMessage:"This coupon code already exist"})
+            }
+            else{
+                await Coupon.updateOne({_id:id},{couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo})
+                res.json({successMessage:"Coupon updated succesfully"})
+            }
+            
         }
         catch(err){
             console.log(err);

@@ -1,6 +1,7 @@
 const express = require('express');
 const {adminExists,adminVerify}=require("../middleware/session");
 const upload=require("../middleware/multer")
+const dashboardcontroller = require("../Controller/admin/admindashboard")
 const admincontroller=require("../Controller/admin/admincontroller")
 const productcontroller=require("../Controller/admin/adminproduct")
 const categorycontroller=require("../Controller/admin/admincategory")
@@ -12,7 +13,7 @@ const router=express();
 
 // login and home page ------------------------------------------------>
 
-router.get("/",adminVerify,admincontroller.dashboardpage)
+router.get("/",adminVerify,dashboardcontroller.getdashboard)
 router.get("/login",adminExists,admincontroller.loginpage)
 router.post("/login",admincontroller.postloginpage)
 router.get("/logout",admincontroller.logout)
@@ -68,6 +69,10 @@ router.delete("/deletecoupon/:id",adminVerify,couponcontroller.deleteCoupon)
 // banner manage--------------------------------------------------------->
 
 router.get("/banner",adminVerify,bannercontroller.getbanner)
+
+// download salesreport-------------------------------------------------------->
+
+router.post("/downloadsales",adminVerify,dashboardcontroller.downloadsalesreport)
 
 
 

@@ -1,12 +1,261 @@
 <%-include("../layout/adminheader.ejs")-%>
-<%-include("../layout/admincentre.ejs")-%>
+</head>
+<style>
+    body{
+    min-height: 100%;
+    background-color: #ffffff;
+}
+</style>
+<body>
 <%-include("../partials/adminnavbar.ejs")-%>
 <div class="container" style="margin-top: 80px;">
     <div class="row">
         <div class="col-md-12">
             <a href="/admin" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold;">DASHBOARD</a>
-            <a class="btn  float-end m-3" style="background-color: blue !important; color: white;"><small><i class="bi bi-download pe-2" ></i>Sales Report</small></a>
+            <a id="openModalBtn" class="btn float-end m-3" style="background-color: blue !important; color: white;"><small><i class="bi bi-download pe-2"></i>Sales Report</small></a>
+
+            
+        </div>
+
+         <!-- Recent Sales -->
+         <div class="col-12" style="z-index: -1;">
+            <div class="card recent-sales overflow-auto">
+
+
+            <div class="card-body">
+                <h5 class="card-title">Recent Sales </h5>
+
+                <table class="table table-borderless ">
+                <thead class="text-center" style="font-size: 16px;">
+                    <tr>
+                    <th scope="col">Si.No</th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Payment Status</th>
+                    <th scope="col">Order Status</th>
+                    </tr>
+                </thead>
+                <tbody >
+
+                    <% recentOrders.forEach((data,index) => { %>
+
+                        <tr >
+                            <th class="text-center" scope="row"><a href="#" style="text-decoration: none;"><%= index + 1 %></a></th>
+                            <td class="text-center"><%= data._id %></td>
+                            <td class="text-center"><%= data.orderdate.toLocaleDateString() %></td>
+                            <td class="text-center">₹ <%= data.totalAmount %></td>
+
+
+                            <% if (data.PaymentStatus=="Paid") { %>
+                                <td class="text-center"><span class="badge bg-success"><%= data.PaymentStatus %></span></td>
+                            <% } else if (data.PaymentStatus=="Pending") { %>
+                                <td class="text-center"><span class="badge bg-warning"><%= data.PaymentStatus %></span></td>
+                            <% } else if (data.PaymentStatus=="Refunded") { %>
+                                <td class="text-center"><span class="badge bg-info"><%= data.PaymentStatus %></span></td>
+                            <% } %>
+                            
+
+
+                            <% if (data.orderStatus=="Order Delivered") { %>
+                                <td class="text-center"><span class="badge bg-success"><%= data.orderStatus %></span></td>
+                            <% } else if (data.orderStatus=="Cancelled") { %>
+                                <td class="text-center"><span class="badge bg-danger"><%= data.orderStatus %></span></td>
+                            <% } else { %>
+                                <td class="text-center"><span class="badge bg-warning"><%= data.orderStatus %></span></td>
+                            <% } %>
+                           
+                        </tr>
+
+                    <% }) %>
+                    
+
+                </tbody>
+                </table>
+
+            </div>
+
+            </div>
+        </div><!-- End Recent Sales -->
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="salesreport" action="/admin/downloadsales" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Download SalesReport</h5>
+                    <button type="button" class="close" data-dismiss="modal" style="background: none;font-size: 29px;border: none;" aria-label="Close" onclick="window.location.reload();">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="customDateOptions">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="StartDate" class="col-form-label">Start-Date:</label>
+                                <input type="date" class="form-control" id="StartDate" name="startDate">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="EndDate" class="col-form-label">End-Date:</label>
+                                <input type="date" class="form-control" id="EndDate" name="endDate">
+                            </div>
+                            <div class="form-group col-md-4 d-flex justify-content-end align-items-end">
+                                <button type="button" class="btn btn-sm btn-primary" id="latestIntervalOptionBtn">Choose Latest Interval</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="latestIntervalOptions" style="display: none;">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="Year" class="col-form-label">Latest Interval:</label>
+                                <select name="interval" class="form-select" id="Year">
+                                    <option value="">Options</option>
+                                    <option value="day">Today</option>
+                                    <option value="month">Current Month</option>
+                                    <option value="week">Current Week</option>
+                                    <option value="year">Current year</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4 d-flex justify-content-end align-items-end">
+                                <button type="button" class="btn btn-sm btn-primary" id="customDateOptionBtn">Choose Custom Date</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="downloadFormat" class="col-form-label ps-3">Download Format</label>
+                    <select name="downloadformat" class="form-select" id="downloadFormat" style="width: 80%;margin-left: 10%;" onchange="checkButtonState()">
+                        <option value="">Select Format</option>
+                        <option value="pdf">Pdf</option>
+                        <option value="excell">excell</option>
+                    </select>
+                </div>
+                <div class="modal-footer mt-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload();">Close</button>
+                    <button type="submit" class="btn btn-primary" id="Download" disabled onclick="submitForm()">Download</button>
+                </div>
+         </form>   
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Include SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    // Get a reference to the modal element
+const salesReportModal = document.getElementById('exampleModal');
+
+// Function to open the modal
+function openSalesReportModal() {
+    // Create a new modal instance
+    const modal = new bootstrap.Modal(salesReportModal);
+
+    // Show the modal
+    modal.show();
+}
+
+// Example: Open the modal when a button with id="openModalBtn" is clicked
+const openModalBtn = document.getElementById('openModalBtn');
+openModalBtn.addEventListener('click', openSalesReportModal);
+
+$(document).ready(function() {
+    $('#customDateOptionBtn').click(function() {
+        console.log("Custom Date button clicked");
+        $('#customDateOptions').show();
+        $('#latestIntervalOptions').hide();
+    });
+
+    $('#latestIntervalOptionBtn').click(function() {
+        console.log("Latest Interval button clicked");
+        $('#customDateOptions').hide();
+        $('#latestIntervalOptions').show();
+    });
+});
+
+    function checkButtonState() {
+        var downloadFormat = document.getElementById("downloadFormat").value;
+        var startDate = document.getElementById("StartDate").value;
+        var endDate = document.getElementById("EndDate").value;
+        var year = document.getElementById("Year").value;
+
+        if (downloadFormat && ((startDate && endDate) || year)) {
+            document.getElementById("Download").disabled = false;
+        } else {
+            document.getElementById("Download").disabled = true;
+        }
+    }
+
+    document.getElementById("StartDate").addEventListener("input", checkButtonState);
+    document.getElementById("EndDate").addEventListener("input", checkButtonState);
+    document.getElementById("Year").addEventListener("input", checkButtonState);
+
+    function showSweetAlert(title, message, icon) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: icon
+        });
+    }
+
+   function submitForm() {
+    // Get form data
+    let startDate = $('#StartDate').val();
+    let endDate = $('#EndDate').val();
+    let interval = $('#Year').val();
+    let downloadFormat = $('#downloadFormat').val();
+
+    console.log(startDate,endDate,interval,downloadFormat);
+    // Check if start date and end date are greater than the current date
+    let currentDate = new Date();
+    let selectedStartDate = new Date(startDate);
+    let selectedEndDate = new Date(endDate);
+    console.log(currentDate);
+    if (selectedStartDate > currentDate || selectedEndDate > currentDate) {
+        console.log("errrrrrr");
+        // Show SweetAlert error message
+        showSweetAlert("Error", "Please select a valid date range.", "error");
+        return; // Stop further execution
+    }
+
+    // Check if start date is greater than end date
+    else if (selectedStartDate > selectedEndDate) {
+        // Show SweetAlert error message
+        showSweetAlert("Error", "Please select a valid date range.", "error");
+        return; // Stop further execution
+    }
+    const data = {
+        startDate : startDate,
+        endDate : endDate,
+        interval : interval,
+        downloadformat : downloadFormat
+    }
+
+    document.getElementById("salesreport").submit();
+    // Perform AJAX request
+    // $.ajax({
+    //     type: 'POST',
+    //     url: '/admin/downloadsales',
+    //     data: data,
+    //     success: function(response) {
+    //         if (response.errorMessage) {
+    //             // Show error message using SweetAlert
+    //             showSweetAlert("Error", response.errorMessage, "error");
+    //         } 
+    //     },
+    //     error: function(xhr, status, error) {
+    //         // Handle error
+    //         console.error(error);
+    //     }
+    // });
+}
+
+</script>
+
+
 <%-include("../layout/adminfooter.ejs")-%>

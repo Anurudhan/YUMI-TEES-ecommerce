@@ -58,15 +58,19 @@ module.exports = {
             const grandtotal = req.session.grandtotal
             const disctotal = req.session.disctotal
             totalprice = grandtotal-disctotal
-            const [address,carts,orders,couponCount] = await Promise.all([
+            const [address,carts,orders] = await Promise.all([
                 Addres.find({userid:req.session._id}),
                 Cart.findOne({userid:req.session._id}),
                 Order.findOne({userid:req.session._id}),
-                Coupon.find().count()
             ])
+            const currenetdate = new Date();
+            const coupon = await Coupon.find({$and:[{minimumPurchaseAmount:{$lte:req.session.totalprice}},{validTo:{$gte:currenetdate}},{validFrom:{$lte:currenetdate}}]})
+            console.log(coupon);
+            const couponCount = coupon.length;
+            console.log(couponCount);
             console.log(orders);
             if(carts){
-                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,username,cart,grandtotal,disctotal,totalprice,couponCount})
+                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,username,cart,grandtotal,disctotal,totalprice,couponCount,coupon})
             }
             else{
                 res.redirect("/home")
@@ -97,7 +101,7 @@ module.exports = {
             const address_id = req.session.address_id
             const grandtotal = req.session.grandtotal
             const disctotal = req.session.disctotal
-            const totalprice = grandtotal-disctotal
+            const totalprice = req.session.totalprice
             const userEmail = req.session.email
             delete req.session.address_id
             if (address_id == null) {
@@ -121,6 +125,18 @@ module.exports = {
                     Date.now() + 4 * 24 * 60 * 60 * 1000
                 ).toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
 
+                //   if not coupen code ---------------------------------
+                let couponCode = "";
+                let couponDiscount = 0;
+
+                //   if coupen code--------------------------------------
+                if (req.session.cpnDiscount && req.session.couponCode) {
+                    couponDiscount = req.session.cpnDiscount;
+                    couponCode = req.session.couponCode;
+                    delete req.session.cpnDiscount;
+                    delete req.session.couponCode;
+                }
+
                 let myOrders = {
                     userid: req.session._id,
                     products: carts.products,
@@ -139,6 +155,8 @@ module.exports = {
                     paymentMethod: payment,
                     PaymentStatus: "Pending",
                     orderStatus: "Order Processed",
+                    couponCode: couponCode,
+                    couponDiscount: couponDiscount,
                     totalAmount: totalprice,
                     discountAmount: disctotal,
                 }
@@ -188,6 +206,8 @@ module.exports = {
                 if (req.session.cpnDiscount && req.session.couponCode) {
                     couponDiscount = req.session.cpnDiscount;
                     couponCode = req.session.couponCode;
+                    delete req.session.cpnDiscount;
+                    delete req.session.couponCode;
                 }
 
 
@@ -282,6 +302,8 @@ module.exports = {
                         if (req.session.cpnDiscount && req.session.couponCode) {
                             couponDiscount = req.session.cpnDiscount;
                             couponCode = req.session.couponCode;
+                            delete req.session.cpnDiscount;
+                            delete req.session.couponCode;
                         }
 
                         let myOrders = {
@@ -580,6 +602,28 @@ module.exports = {
             } else {
                 console.log("HMAC verification failed");
                 res.status(400).json({ error: true });
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+    },
+    couponapply:async (req,res)=>{
+        try{
+            if(req.session.couponCode){
+                res.json({errorMsg:"This order already get coupon"})
+            }
+            else{
+                const {couponcode} = req.body;
+                console.log(couponcode);
+                const coupon = await Coupon.findOne({couponCode:couponcode});
+                req.session.totalprice -= coupon.discountAmount;
+                req.session.couponCode = couponcode;
+                req.session.cpnDiscount = coupon.discountAmount;
+
+                console.log(req.session.totalprice,req.session.couponCode,req.session.cpnDiscount);
+
+                res.json({successMsg:"Coupon applied In your Order"})
             }
         }
         catch(err){

@@ -25,8 +25,9 @@ module.exports={
         
                 req.session.grandtotal = grandtotal
                 req.session.disctotal = disctotal
-                totalprice = grandtotal-disctotal;  
-                console.log(totalprice);
+                totalprice = grandtotal-disctotal; 
+                req.session.totalprice = totalprice 
+                console.log(req.session.totalprice+"gggggggahhhhhhhhhh");
                 if(carts.length>0){
                     res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
                 } 

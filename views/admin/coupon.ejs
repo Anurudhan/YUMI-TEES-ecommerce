@@ -206,10 +206,7 @@
       .then(response => response.json())
       .then(data => {
         if (data.errorMessage) {
-            showAlert('error', data.errorMessage);
-            setTimeout(function() {
-                window.location.reload();
-            }, 2000);
+          showAlert('error', data.errorMessage);
         } else {
             showAlert('success', data.successMessage);
             // Reload page after 2 seconds
