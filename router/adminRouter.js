@@ -18,6 +18,12 @@ router.get("/login",adminExists,admincontroller.loginpage)
 router.post("/login",admincontroller.postloginpage)
 router.get("/logout",admincontroller.logout)
 
+// charts--------------------------------------------------------------->
+
+router.get("/count-orders-by-day",adminVerify,dashboardcontroller.getchart);
+router.get("/count-orders-by-month",adminVerify,dashboardcontroller.getchart);
+router.get("/count-orders-by-year",adminVerify,dashboardcontroller.getchart);
+
 // product maintain----------------------------------------------------->
 
 const uploadfields = [

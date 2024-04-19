@@ -7,27 +7,14 @@
       padding: 0;
     }
     .container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-wrap: wrap;
       padding: 20px;
-    }
-    .product-column {
-      flex: 1;
-      margin-right: 20px;
-    }
-    .product-card {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 20px;
-      margin-bottom: 20px;
-      background-color: #f9f9f9;
-      width: calc(33.33% - 20px); /* 3 cards per row with margin */
-      box-sizing: border-box;
     }
     .user-details {
       flex: 1;
+      margin-left: 20px;
+    }
+    .product-details{
+        flex: 1;
       margin-left: 20px;
     }
     .user-address {
@@ -36,109 +23,89 @@
       padding: 20px;
       background-color: #f0f0f0;
     }
-    .product-card {
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow as needed */
-    background-color: #f9f9f9; /* Your desired background color */
-    margin-bottom: 20px;
-    padding: 20px;
-}
+    .img{
+        width: auto;
+        max-height: 20px;
+    }
 
-.product-column {
-    display: flex;
-    flex-wrap: wrap; /* Allow cards to wrap to the next line */
-    justify-content: space-between; /* Align cards with space between */
-    margin-top: 20px; /* Add margin at the top for spacing */
-}
-
-.product-card {
-    width: calc(50% - 10px); /* Two cards per row with margin */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
-    background-color: #fff; /* Background color of card */
-    margin-bottom: 20px;
-    overflow: hidden; /* Ensure images don't overflow */
-}
-
-.product-card img {
-    width: 100%;
-    max-height: 200px;
-    border-radius: 10px 10px 0 0; /* Rounded corners for top */
-}
-
-.product-card .card-body {
-    padding: 20px;
-    background-color: #f9f9f9; /* Background color of card body */
-}
-
-.product-card .card-title {
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.product-card .card-text {
-    font-size: 16px;
-}
 
   </style>
 <%-include("../partials/adminnavbar.ejs")-%>
-<h1 class="page-heading text-center" style="margin-top: 80px;">Return Products</h1>
-
 <div class="container">
-    <!-- Product column -->
-    <div class="product-column">
-        <% orders.products.slice(0, 2).forEach(product => { %>
-            <div class="product-card">
-                <img src="/productimages/<%= product?.productid.images[0] %>" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h3 class="card-title"><%= product.productid.productName %></h3>
-                    <p class="card-text">Price: <%= product.productid.price %></p>
-                    
-                    <% retrn.forEach(returnData => {
-                        if (returnData.productid == product.productid.id) { %>
-                            <div class="form-group">
-                                <label for="reason">Reason for Return:</label>
-                                <p><%= returnData.returnReason %></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description:</label>
-                                <p><%= returnData.description %></p>
-                            </div>
-
-                            <div class="form-group d-flex">
-                                <% if (returnData.status=="Requested") { %>
-                                <button class="btn btn-sm btn-success me-2" onclick="approveReturn('<%=returnData.id%>')">Approve Return</button>
-                                <button class="btn btn-sm btn-danger" onclick="rejectReturn('<%=returnData.id%>')">Reject Return</button>
-                                <% } else if (returnData.status=="Return Approoved") { %>
-                                    <span class="badge rounded-pill bg-success"><%=returnData.status%></span>
-                                <% } else { %>
-                                    <span class="badge rounded-pill bg-danger"><%=returnData.status%></span>
-                                <% } %>
-                            </div>
-                            
-                    <%   }
-                    }); %>
-                    
-                </div>
-            </div>
-        <% }); %>
+    <div>
+        <h2 class="page-heading text-center mt-5 mb-4">Return Products</h2>
     </div>
-
-    <!-- User details column -->
-    <div class="user-details shadow" style="background-color: white;">
-        <!-- User address details -->
-        <div class="user-address">
-            <h2 class="mb-3">User Address Details</h2>  
-            <h6>Name : <%=orders.address.name%></h6> 
-            <h6>Addres : <%=orders.address.address%></h6>
-            <h6>State : <%=orders.address.state%></h6>
-            <h6>Phone No : <%=orders.address.mobile%></h6>
-            <h6>Pin Code : <%=orders.address.pincode%></h6>
-           <!-- Include constant user address details here -->
+    
+    <!-- User address details -->
+    <div class="user-details shadow p-4 mb-4" style="background-color: white;">
+        <h4 class="mb-3 ps-4">User Address Details</h4>
+        <div class="row" style="padding-left: 60px;">
+            <div class="col-md-2">
+                <h6>Name:</h6>
+                <p><%= orders.address.name %></p>
+            </div>
+            <div class="col-md-3">
+                <h6>Address:</h6>
+                <p><%= orders.address.address %></p>
+            </div>
+            <div class="col-md-2">
+                <h6>State:</h6>
+                <p><%= orders.address.state %></p>
+            </div>
+            <div class="col-md-2">
+                <h6>Phone No:</h6>
+                <p><%= orders.address.mobile %></p>
+            </div> 
+            <div class="col-md-2">
+                <h6>Pin Code:</h6>
+                <p><%= orders.address.pincode %></p>
+            </div>
         </div>
     </div>
+
+    <!-- Product details -->
+        <% orders.products.forEach(product => { %>
+            <% if (product.status === "Return Requested") { %>
+                    <div class="product-details card shadow mb-4" style="z-index: -1;">
+                        <div class="row g-0">
+                            <div class="col-md-2" >
+                                <img src="/productimages/<%= product.productid.images[0] %>" style="border-radius: 5%;" class="img-fluid" alt="...">
+                            </div>
+                            
+                            <div class="col-md-6 ps-4">
+                                <div class="card-body">
+                                    <h3 class="card-title"><%= product.productid.productName %></h3>
+                                    <p class="card-text">Price  <span style="font-weight: bold;">:</span>  <%= product.productid.price %></p>
+                                    <% retrn.forEach(returnData => {
+                                        if (returnData.productid == product.productid.id) { %>
+                                            <div class="form-group">
+                                                <p>Reason for Return  <span style="font-weight: bold;">:</span>  <%= returnData.returnReason %></p>
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Description  <span style="font-weight: bold;">:</span>  <%= returnData.description %></p>
+                                            </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 ps-4">
+                                <div class="form-group d-flex justify-content-center align-items-center" style="padding-top: 30%;">
+                                    <% if (returnData.status === "Requested") { %>
+                                        <button class="btn btn-sm btn-success me-2" onclick="approveReturn('<%=returnData.id%>')">Approve Return</button>
+                                        <button class="btn btn-sm btn-danger" onclick="rejectReturn('<%=returnData.id%>')">Reject Return</button>
+                                    <% } else if (returnData.status === "Return Approved") { %>
+                                        <span class="badge rounded-pill bg-success"><%=returnData.status%></span>
+                                    <% } else { %>
+                                        <span class="badge rounded-pill bg-danger"><%=returnData.status%></span>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <%   }
+                        }); %>
+                        </div>
+                    </div>
+            <% } %>
+        <% }); %>
 </div>
+
 
 <script>
 

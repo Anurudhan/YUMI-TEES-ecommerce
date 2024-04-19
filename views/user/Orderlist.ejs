@@ -42,17 +42,44 @@ button {
     width: 150px; /* Set the button width */
 }
 
+@keyframes blink {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.blink {
+    animation: blink 1.5s infinite;
+    font-size: 14px;
+}
+
+
+
 </style>
 <%-include("../partials/usernavbar.ejs")-%>
 <% if (orders.length > 0) { %>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-12">
-                <div class="card-header text-center" style="margin-top: 100px;">
+                <div class="card-header d-flex mb-4" style="margin-top: 100px;">
                     <h4>Order Details</h4>
-                    <br>
+                    <% if (pendingOrder.length > 0) { %>
+                        <div class="float-end justify-content-end ms-auto me-0">
+                            <a class="btn blink" href="#" style="color: white; background-color: red; text-decoration: none; text-align: center;">
+                                <%= pendingOrder.length %> Orders payment is pending. Please pay.
+                            </a>
+                        </div>
+                        
+                    <% } %>
+                    
                 </div>
-                <div class="card">
+                <div class="card" id="cardcontainer" >
                     <table id="ordersTable" class="display" style="width: 100%;">
                         <tbody>
                             <% orders.forEach(order => { %>
@@ -60,7 +87,7 @@ button {
                                     <th>
                                         <div class="card">
                                             <div class="order-info">
-                                                <span>Orders: <%= order._id %></span>
+    
                                                 <span class="order-date">Order Date: <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
                                             </div>
                                         </div>
@@ -109,7 +136,11 @@ button {
                                         <% }) %>
                                         <div class="card-footer text-center">
                                             <a href="/vieworderdetails/<%= order._id %>"  class="btn btn-light" style="background-color: #d3f2f0;">View details</a>
-                                        </div>
+                                        
+                                        <% if (order.paymentMethod == "OnlinePayment" && order.PaymentStatus == "Pending") { %>
+                                            <a   class="btn " style="background-color: red;color: azure;" >Payment is pending</a>
+                                        <% } %>
+                                    </div>
                                     </th>
                                 </tr>
                             <% }) %>
@@ -147,10 +178,10 @@ button {
     
 <% } %>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-<script>
-    // Initialize DataTables
-    $(document).ready(function() {
-        $('#ordersTable').DataTable();
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            $('#ordersTable').DataTable();
+        });
+    </script>
+
 <%-include("../layout/userfooter.ejs")-%>

@@ -42,7 +42,8 @@ module.exports={
     orderstatuschanging:async(req,res)=>{
         try{
             const id = req.params.id
-            const status = req.params.status
+            const status = req.params.status;
+            let flag=0;
             console.log(id);
 
             const currentDate = new Date().toLocaleString("en-US", {
@@ -64,12 +65,17 @@ module.exports={
                     }
                 });
             } else if (status == "Order Delivered") {
+                if(ordr.paymentMethod == "OnlinePayment" && ordr.PaymentStatus == "Pending"){
+                    flag=1;
+                }
+                else{
                 await Order.updateOne({ _id: id }, { $set: { orderStatus: status, deliveryDate: currentDate, PaymentStatus: "Paid" } })
                 ordr.products.forEach(async (data, index) => {
                     if (data.status != "Cancelled") {
                         await Order.updateOne({ _id: id }, { $set: { [`products.${index}.status`]: "Delivered" } })
                     }
                 });
+            }
             } else if (status == "Order Rejected") {
                 const userid = ordr.userid
                 const details = req.body.reason
@@ -83,7 +89,12 @@ module.exports={
                 });
                 await Order.updateOne({ _id: id }, { $set: { orderStatus: status, rejectedDate: currentDate,rejectdetails: details} })
             }
-            res.json({ success: true });
+            if(flag==1){
+                res.json({ errorMessage : true });
+            }
+            else{
+                res.json({ success: true });
+            }
         }
         catch(err){
             console.log(err);
@@ -92,7 +103,7 @@ module.exports={
     getorderdetails:async (req,res)=>{
         try{
             const orderId = req.params.id;
-            console.log(orderId);
+            console.log(orderId,"gjsagjgajsghdjags--------------->");
             const orders = await Order.findById({_id:orderId}).populate(
                 { path: "products.productid", model:'product', populate: 
                 { path: 'Category', model: 'category' } });

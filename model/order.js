@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
     userid:{
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'user' 
     },
     products:[
         {
@@ -31,6 +32,7 @@ const orderSchema = new mongoose.Schema({
     PaymentStatus: String,
     totalAmount: Number,
     deliveryDate: Date,
+    deliverycharge: {type : Number, default : 0},
     rejectedDate: Date,
     rejectdetails:String,
     orderStatus: String,

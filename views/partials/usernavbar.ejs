@@ -37,10 +37,32 @@
                   <a class="nav-link active" aria-current="page" href="/">KID's</a>
               </li>
               <li class="nav-item "><a class="nav-link active" aria-current="page" href="/wishlist">
-               
+                <% if ( wish != undefined && wish!=0) { %>
+                  <div class="cart position-relative">
+                      <span class="count" style="position: absolute;
+                            margin-left: 10px;
+                            z-index: 2;
+                            font-size: 11px;
+                            border-radius: 50%;
+                            background: #d60b28;
+                            width: 16px;
+                            height: 16px;
+                            line-height:16px;
+                            display: block;
+                            text-align: center;
+                            color: white;
+                            font-family: 'Roboto', sans-serif;
+                            font-weight: bold;"><%= wish %></span>
+                      <!--   <span class="count">1</span> -->
+                      <i class="bi bi-bag-heart" style="color: #ffffff;cursor: pointer;font-size: 20px;margin-top: -20px;"></i>
+                  </div>
+                  <% } else { %>
                     <div class="cart position-relative">
-                    <i class="bi bi-bag-heart" style="color: #ffffff;cursor: pointer;font-size: 20px;margin-top: -20px;"></i>
-                    </div>
+                      <i class="bi bi-bag-heart" style="color: #ffffff;cursor: pointer;font-size: 20px;margin-top: -20px;"></i>
+                      </div>
+                  <% } %>
+               
+                    
                   </a>
               </li>
               <li class="nav-item ">

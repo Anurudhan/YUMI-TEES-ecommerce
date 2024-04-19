@@ -61,7 +61,8 @@ module.exports={
     homepage:async(req,res)=>{
         try{
             const products = await Product.find().populate('Category')
-            const categories = await Category.find()
+            const categories = await Category.find();
+            const wish = req.session.wish;
             const mens = products.filter(product => product.Category.categoryname==categories[0].categoryname);
             const womens = products.filter(product => product.Category.categoryname ==categories[1].categoryname );
             const kids = products.filter(product => product.Category.categoryname == categories[2].categoryname);
@@ -74,9 +75,9 @@ module.exports={
                 }
                 req.session._id = user._id
                 console.log(req.session._id);
-                res.render("user/home",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids,orderreject})
+                res.render("user/home",{username:req.session.username,cart:req.session.cart,wish,products,mens,womens,kids,orderreject})
             }
-            else res.render("user/guesthome",{username:req.session.username,cart:req.session.cart,products,mens,womens,kids})
+            else res.render("user/guesthome",{username:req.session.username,cart:req.session.cart,wish,products,mens,womens,kids})
         }
         catch(err){
             console.log(err);

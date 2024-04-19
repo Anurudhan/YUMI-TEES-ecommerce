@@ -68,8 +68,8 @@ const generateSalesPDF = async (orders, startDate, currentDate) => {
                 doc,
                 invoiceTableTop,
                 "SL No",
-                "Order ID",
-                "User ID",
+                "product Name",
+                "User Name",
                 "Order Date",
                 "Payment Method",
                 "coupon Amount",
@@ -80,6 +80,7 @@ const generateSalesPDF = async (orders, startDate, currentDate) => {
             let sum = 0;
             let discount = 0;
             orders.forEach((x) => {
+                x.products.forEach((item)=>{
                 var position = invoiceTableTop + (i + 1) * 30;
                 sum += x.totalAmount;
                 discount += x.discountAmount
@@ -87,14 +88,15 @@ const generateSalesPDF = async (orders, startDate, currentDate) => {
                     doc,
                     position,
                     i + 1,
-                    x._id,
-                    x.userid,
+                    item?.productid?.productName,
+                    x.userid?.name,
                     x.orderdate.toLocaleDateString() + x.orderdate.toLocaleTimeString(),
                     x.paymentMethod,
                     x.couponDiscount,
                     x.totalAmount || x.discountAmount
                 );
                 i++;
+            })
             });
 
             // Summary rows

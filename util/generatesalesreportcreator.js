@@ -23,9 +23,9 @@ module.exports = {
           const worksheet = workbook.addWorksheet('Sales Report');
   
           worksheet.columns = [
-            { header: 'Order ID', key: 'orderId', width: 25 },
             { header: 'Product Name', key: 'productName', width: 25 },
-            { header: 'User ID', key: 'userId', width: 25},
+            { header: 'Quantity', key: 'Quantity', width: 25 },
+            { header: 'User Name', key: 'userId', width: 25},
             { header: 'Date', key: 'date', width: 25 },
             { header: 'Total Amount', key: 'totalamount', width: 25 },
             { header: 'Payment Method', key: 'paymentmethod', width: 25 },
@@ -39,10 +39,10 @@ module.exports = {
             order.products.forEach(item => {
             
               worksheet.addRow({
-                orderId: order._id,
                 productName: item?.productid?.productName,
-                userId: order.userid,
-                date: order.orderdate ? new Date(order.orderDate).toLocaleDateString() : '',
+                Quantity:item.quantity !== undefined ? item?.quantity.toFixed(2) : '',
+                userId: order.userid?.name,
+                date: order.orderdate ? new Date(order.orderdate).toLocaleDateString()+new Date(order.orderdate).toLocaleTimeString() : '',
                 totalamount: order.totalAmount !== undefined ? order.totalAmount.toFixed(2) : '',
                 paymentmethod: order.paymentMethod,
               });
@@ -57,7 +57,7 @@ module.exports = {
           
           worksheet.addRow({ totalamount: 'Total Sales Amount', paymentmethod: totalSalesAmount.toFixed(2) });
           worksheet.addRow({ totalamount: 'Total discount Amount', paymentmethod: totaldiscountAmount.toFixed(2) });
-          worksheet.addRow({ totalamount: 'Total discount', paymentmethod: orders.length });
+          worksheet.addRow({ totalamount: 'Total sales', paymentmethod: orders.length.toFixed(2) });
           console.log("hlo");
           const excelFilePath = `public/SRexcel/sales-report-${formattedStartDate}-${formattedEndDate}.xlsx`;
           console.log(excelFilePath);

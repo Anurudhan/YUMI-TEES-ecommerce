@@ -118,6 +118,8 @@ body {
 }
 .card-button a {
   text-decoration: none;
+  cursor: pointer;
+
 }
 
 .card-button-inner {
@@ -126,8 +128,12 @@ body {
 }
 
 .bag-button {
-  background: #E06C9F;
-  color: white;
+  background: rgb(233, 218, 12);
+  color: black;
+}
+.cart-button{
+  background: #0e4aee;
+  color: rgb(255, 255, 255);
 }
 
 .bag-button :hover{

@@ -52,12 +52,12 @@ function validateConfirmPassword() {
 }
 
 function createRazorpay(order) {
-
     const id = order.id;
     const total = order.amount;
-    console.log("kujghio", id, total);
+    console.log("Order ID:", id, "Total Amount:", total);
+    console.log("gkgkgasb ");
     var options = {
-        key: "rzp_test_ZqqOUloxXfd27z" ,
+        key: "rzp_test_ZqqOUloxXfd27z",
         amount: total,
         currency: 'INR',
         name: 'YUMI-TEES',
@@ -65,19 +65,26 @@ function createRazorpay(order) {
         image: '../assets/logoblack.png',
         order_id: id,
         handler: function (response) {
-
-            // alert(response.razorpay_payment_id);
-            // alert(response.razorpay_order_id);
-            verifyPayment(response, order)
-
+            verifyPayment(response, order);
         },
         theme: {
             color: '#3c3c3c'
         }
-    }
+    };
+
     var rzp1 = new Razorpay(options);
+
+    rzp1.on('payment.failed', function (response) {
+        const error = response.error;
+        console.log(error);
+        window.location.href = `/failedpayment?error=${error}&id=${order.receipt}`;
+    });
+
     rzp1.open();
 }
+
+    
+    
 
 function verifyPayment(payment, order) {
     console.log(payment);   

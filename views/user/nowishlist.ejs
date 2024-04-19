@@ -1,0 +1,45 @@
+<%-include("../layout/userheader.ejs")-%>
+<style>
+ .empty-wishlist {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-wishlist img {
+    width: 60%; /* Adjust the width as needed */
+    max-height: 60vh;
+    margin-bottom: 20px;
+}
+
+#create-wishlist-btn {
+    font-size: 16px;
+    color: #e2e2e2;
+    background-color: #e97d01;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline */
+}
+
+#create-wishlist-btn i {
+    margin-left: 5px;
+}
+
+
+</style>
+
+<%-include("../layout/usercentre.ejs")-%>
+<%-include("../partials/usernavbar.ejs")-%>
+<div class="empty-wishlist" style="margin-top: 120px;">
+    <img src="/assets/empty-wishlist.png" alt="Empty Wishlist Image">
+    <a href="/allproduct" id="create-wishlist-btn"><i class="bi bi-plus" style="font-weight: bold;font-size: large;"></i> Create New Wishlist </a>
+
+</div>
+
+<%-include("../partials/userfooter.ejs")-%>
+<%-include("../layout/userfooter.ejs")-%>

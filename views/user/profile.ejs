@@ -438,6 +438,55 @@ right: 0;
                             <div class="card-body hidden-div" id="div5">
                                 <div class="row">
                                     <div class="col-12">
+                                        <h4>Wallet</h4>
+                                        <div
+                                          class="balance-container shadow p-3 mb-5 rounded"
+                                          style="
+                                            background-color: #eeeeee;
+                                            padding: 20px;
+                                            display: flex;
+                                            border-radius: 10px;
+                                          "
+                                        >
+                                          <img src="/assets/wallet.png" style="width: 50px" alt="" />
+                                          <div class="balance text-dark" style="margin-left: 20px">
+                                            <h5>Balance:</h5>
+                                            <span style="font-weight: bold">₹ <%=WalletUser?.wallet %></span>
+                                          </div>
+                                        </div>
+                                        <% if(WalletUserHist?.length===0) {%>
+                                        <div>
+                                          <h5>No Wallet History</h5>
+                                        </div>
+                                        <% } else{ %>
+                                        <table class="table">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col">Index</th>
+                                              <th scope="col">Date</th>
+                                              <th scope="col">Amount</th>
+                                              <th scope="col">Type</th>
+                                              <th scope="col">Info</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <% WalletUserHisto.forEach((doc, index) => { %> <%
+                                            doc.refund.forEach((refund, refundIndex) => { %>
+                                            <tr>
+                                              <th scope="row"><%- refundIndex + 1 %></th>
+                                              <!-- Displaying the document index -->
+                                              <td>
+                                                <%- refund?.date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
+                                                dateStyle: 'short', timeStyle: 'short' }) %>
+                                              </td>
+                                              <td><%- refund?.amount %></td>
+                                              <td><%- refund?.type %></td>
+                                              <td><%- refund?.reason %></td>
+                                            </tr>
+                                            <% }) %> <% }) %>
+                                          </tbody>
+                                        </table>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>

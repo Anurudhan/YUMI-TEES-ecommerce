@@ -2,6 +2,7 @@ const Addres = require("../../model/address");
 const User = require("../../model/usermodel");
 const Coupon = require("../../model/coupon");
 const Wallet = require("../../model/wallet");
+const walletHistory = require("../../model/walletHistory")
 const bcrypt = require("bcrypt")
 module.exports={
     profilepage:async (req,res)=>{
@@ -9,14 +10,29 @@ module.exports={
             const successMessage = req.session.successMessage
             const errorMessage = req.session.errorMessage
             delete req.session.successMessage
-            delete req.session.errorMessage
-            const [address, coupon, wallet] = await Promise.all([
+            delete req.session.errorMessage;
+            const wish = req.session.wish;
+            const [address, coupon, WalletUser,WalletUserHist] = await Promise.all([
                 Addres.find({userid:req.session._id}),
                 Coupon.find().sort({ _id: -1 }),
-                Wallet.findOne({ userid: req.session._id}).populate('invited')
+                Wallet.findOne({ userid: req.session._id}).populate('invited'),
+                walletHistory.findOne({ userId: req.session.user_Id }).sort({ "refund._id": -1 }),
             ])
-            console.log(wallet);
-            res.render("user/profile",{successMessage,errorMessage,username:req.session.username,email:req.session.email,cart:req.session.cart,address,coupon,wallet})
+            const IsuserwalletId=WalletUserHist._id
+            const WalletUserHisto = await walletHistory.aggregate([
+              { $match: {_id:IsuserwalletId } }, 
+              { $unwind: "$refund" }, 
+              { $sort: { "refund._id": -1 } }, 
+              {
+                $group: {
+                  _id: "$_id", 
+                  userId: { $first: "$userId" }, 
+                  refund: { $push: "$refund" }, 
+                },
+              },
+            ]);
+            res.render("user/profile",{successMessage,errorMessage,wish,username:req.session.username,
+                email:req.session.email,cart:req.session.cart,address,coupon,WalletUser,WalletUserHist,WalletUserHisto})
         }
         catch(err){
             console.log(err);

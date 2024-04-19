@@ -1,5 +1,7 @@
 <%-include("../layout/adminheader.ejs")-%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
 <%-include("../layout/admincentre.ejs")-%>
 <style>
   thead th {
@@ -15,11 +17,11 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container" >
    
     <div class="row">
        
-        <div class="col-md-12">
+        <div class="col-md-12" style="z-index: -1;">
             
           
               <table class="table" id="example">
@@ -73,7 +75,19 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="addCouponModal" tabindex="-1" role="dialog" aria-labelledby="addCouponModalLabel" aria-hidden="true">  <div class="modal-dialog modal-dialog-centered" role="document">
+<script>
+  function generateCouponCode() {
+      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      var couponCode = '';
+      for (var i = 0; i < 10; i++) {
+          couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return couponCode;
+  }
+</script>
+
+<div class="modal fade" id="addCouponModal" tabindex="-1" role="dialog" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title text-center w-100" id="addCouponModalLabel"></h5>
@@ -82,12 +96,13 @@
               </button>
           </div>
           <div class="modal-body">
-              <!-- Add your form inputs here -->
+ 
               <form id="couponForm">
-                <input type="text" class="form-control" id="couponid" hidden>
+                  <input type="text" class="form-control" id="couponid" hidden>
                   <div class="form-group">
                       <label for="couponCode">Coupon Code</label>
-                      <input type="text" class="form-control" id="couponCode" required>
+
+                      <input type="text" class="form-control" id="couponCode" readonly>
                   </div>
                   <div class="form-group">
                       <label for="description">Description</label>
@@ -113,18 +128,35 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="saveChangesBtn"></button>
+              <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
           </div>
       </div>
   </div>
 </div>
+
+<script>
+ 
+  document.getElementById('couponCode').value = generateCouponCode();
+</script>
+
 
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
+  $(document).ready(function() {
+      $('#example').DataTable();
+  });
+</script>
+
+<script>
+  
   $(document).ready(function () {
       $('#addCouponBtn').click(function () {
         $('#addCouponModalLabel').text('Add Coupon');
@@ -134,6 +166,7 @@
   });
 </script>
 <script>
+  
   document.getElementById("saveChangesBtn").addEventListener("click", function() {
       var couponId = document.getElementById("couponid").value.trim();
       var couponCode = document.getElementById("couponCode").value.trim();
@@ -142,6 +175,7 @@
       var discountAmount = document.getElementById("discountAmount").value.trim();
       var validFrom = document.getElementById("validFrom").value;
       var validTo = document.getElementById("validTo").value;
+      var currentDate = new Date();
 
       var modalLabel = document.getElementById("addCouponModalLabel").innerText.trim();
         var url = "";
@@ -185,6 +219,10 @@
       }
       if (new Date(validFrom) >= new Date(validTo)) {
           showAlert('error', 'Valid To date must be after Valid From date');
+          return;
+      }
+      if (currentDate > new Date(validFrom) || currentDate >= new Date(validTo)) {
+          showAlert('error', 'Please select Valid dates');
           return;
       }
 

@@ -41,7 +41,6 @@
  <section class="bg-light" style="padding-top: 50px;margin-top: 80px;">
     <div class="container">
         <div class="row">
-            
             <div class="col-lg-9">
                 <div class="card-header">
                     <a class="btn btn-primary float-end" href="/addaddress?flag=1">Add Address</a>
@@ -166,7 +165,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-4">
+                <% if (totalprice>1000) { %>
+                    <p style="color: rgb(236, 52, 52);">Order above Rs 1000 can't allowed for Cash On Delivery</p>
+                <% } %>
+                <div class="row my-4 ">
                     <div class="col">
                         <a href="/" class="btn btn-link text-muted" style="text-decoration: none;">
                             <i class="bi bi-arrow-left me-1"></i> Continue Shopping </a>
@@ -182,64 +184,72 @@
                     </div> <!-- end col -->
                 </div> <!-- end row-->
             </div>
-            <div class="col-lg-3"  >
-                <div class="card" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1);position: fixed;width: 25%;">
+            <div class="col-lg-3">
+                <div class="card" style="box-shadow: 0 14px 14px rgba(0, 0, 0, 0.1); position: fixed; width: 25%;">
                     <div class="card-body">
-                        <h6 style="padding-bottom: 8px;padding-left: 5px;">HAVE A COUPON?</h6>
+                        <h6 style="padding-bottom: 8px; padding-left: 5px;">HAVE A COUPON?</h6>
                         <% if (couponCount >= 1) { %>
                             <div class="mb-3" style="padding-bottom: 5px;">
                                 <div class="d-flex justify-content-center align-items-center" style="padding-bottom: 7px;">
-                                    <select class="coupon-select" id="category" name="Category" required style="width:100%;height: 35px;">
+                                    <select class="coupon-select" id="category" name="Category" required style="width:100%; height: 35px;">
                                         <option value="" selected disabled>Please Select your coupon</option>
                                         <% coupon.forEach((ele) => { %>
                                             <option value="<%= ele.couponCode %>"><%= ele.couponCode %></option>
                                         <% }) %>
                                     </select>
-                                    <button type="button" class="btn btn-primary apply-button" style="border-radius:0;height: 35px;display: flex;align-items: center;">Apply</button>
-                                </div>
-                                <p style="color: green;"><%= couponCount %> coupon available for your Order.</p>
+                                    <% if (cpn != null || cpn != undefined) { %>
+                                        <button type="button" class="btn btn-danger remove-button" style="border-radius:0; height: 35px; display: flex; align-items: center;">Remove</button>
+                                    </div>
+                                    <p style="color: red;">If you don't want coupon, please remove.</p>
+                                    <% } else { %>
+                                        <button type="button" class="btn btn-primary apply-button" style="border-radius:0; height: 35px; display: flex; align-items: center;">Apply</button>
+                                    </div>
+                                    <p style="color: green;"><%= couponCount %> coupon available for your Order.</p>
+                                <% } %>
                             </div>
                         <% } else { %>
                             <div class="mb-3" style="padding-bottom: 5px;">
                                 <div class="d-flex justify-content-center align-items-center" style="padding-bottom: 7px;">
-                                    <select class="coupon-select" id="category" name="Category" required style="width:100%;height: 35px;">
+                                    <select class="coupon-select" id="category" name="Category" required style="width:100%; height: 35px;">
                                         <option value="" selected disabled>No coupon available now</option>
                                     </select>
                                 </div>
                                 <p style="color: red;">No coupon available for your Order.</p>
                             </div>
                         <% } %>
-                                                
+            
                         <hr style="color:#554f4f;">
-                        </div>
-
                         <h5 style="margin-top: -8px;">PRICE DETAILS</h5>
                         <hr style="color:#554f4f;">
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Total price:</p>
-                            <p class="mb-2">₹ <%=grandtotal%>
-                            </p>
+                            <p class="mb-2">₹ <%= grandtotal %></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Discount:</p>
-                            <p class="mb-2 text-success">-₹ <%=disctotal%>
-                            </p>
+                            <p class="mb-2 text-success">-₹ <%= disctotal %></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Delivery charges:</p>
-                            <span style="font-size: small;color: green;">Free</span><del
-                                class="text-muted text-nowrap" style="font-size: small;">₹ 40
-                            </del>
+                            <% if (totalprice < 1000) { %>
+                                <p class="mb-2" style="color: red;">+₹ 40</p>
+                            <% } else { %>
+                                <span style="font-size: small; color: green;">Free</span><del class="text-muted text-nowrap" style="font-size: small;">₹ 40</del>
+                            <% } %>
                         </div>
                         <hr style="color:#554f4f;">
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">TOTAL PAYABLE</p>
-                            <p class="mb-2 fw-bold">₹ <%=totalprice%>
-                            </p>
+                            <% if (totalprice < 1000) { %>
+                                <p class="mb-2 fw-bold">₹ <%= totalprice + 40 %></p>
+                            <% } else { %>
+                                <p class="mb-2 fw-bold">₹ <%= totalprice %></p>
+                            <% } %>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 </section>
@@ -264,26 +274,7 @@
         }
     }
 </script>
-<% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
-    <script>
-        Toastify({
-            text: "<%= successMessage %>",
-            duration: 3000, // 3 seconds
-            backgroundColor: "green",
-            position: "center", // Adjust position as needed
-        }).showToast();
-    </script>
-<% } %>
-<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
-    <script>
-        Toastify({
-            text: "<%= errorMessage %>",
-            duration: 3000, // 3 seconds
-            backgroundColor: "red",
-            position: "center", // Adjust position as needed
-        }).showToast();
-    </script>
-<% } %>
+
 <script>
     function showButton(buttonId) {
         var buttons = document.querySelectorAll('.btn-deliv'); // Get all "Deliver Here" buttons
@@ -292,27 +283,32 @@
         });
         var button = document.getElementById(buttonId);
         if (button) {
-            button.classList.remove('d-none'); // Show the clicked button
+            button.classList.remove('d-none'); 
         }
     }
 </script>
 <script>
     $(document).ready(function() {
         $("#proceedButton").click(function() {
-            // Get the selected payment method
+            
             var paymentMethod = $('input[name="pay-method"]:checked').val();
-
-            // Prepare the URL with parameters
+            var price = "<%=totalprice%>";
             var url = `/placeorder/${paymentMethod}`
+           if(price > 1000 && paymentMethod == "cashOnDelivery"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Order above Rs 1000 can't allowed for Cash On Delivery`
+                });
+           }
+           else{
 
-            // Make the AJAX request
             $.ajax({
                 type: "POST",
                 url: url,
                 contentType: "application/json; charset=utf-8",
                 success: function(response) {
-                    // Handle the response from the server if needed
-                    console.log(response);
+                    
                     if(response.msg){
                         Swal.fire({
                         icon: 'error',
@@ -337,6 +333,7 @@
                     console.error('Request failed. Status: ' + status + ', Error: ' + error);
                 }
             });
+           }  
         });
     });
 </script>
@@ -364,6 +361,40 @@
                         icon: 'success',
                         title: 'Success!',
                         text: response.successMsg,
+                    }).then(function() {
+                        // Reload the window after displaying the success message
+                        window.location.reload();
+                    });
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.errorMsg,
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+$(document).ready(function() {
+    $('.remove-button').click(function() {
+        $.ajax({
+            type: 'POST',
+            url: '/removecouponapply',
+            success: function(response) {
+                if(response.successMsg){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.successMsg,
+                    }).then(function() {
+                        // Reload the window after displaying the success message
+                        window.location.reload();
                     });
                 }
                 else{

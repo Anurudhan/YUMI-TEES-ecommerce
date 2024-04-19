@@ -236,8 +236,10 @@
                   <div class="card-footer d-flex align-items-end pt-0 px-0 pb-0 mt-auto" style="background-color: white;">
 
                                          
-                    <a  onclick="addTowishlist('<%-el._id-%>')" class="btn px-2 pt-2  " style="background-color:white;  color: black; border-radius:2px !important;border: 2px black;"><small><i id="hurt" class="bi bi-heart text-secondary px-1"></i></small></a>
-                    <!-- <a href="#!" class="btn btn-primary shadow-0 me-1">view </a> -->
+                    <a href="#" onclick="addToWishlist('<%-el._id-%>')" class="btn px-2 pt-2" style="background-color: white; color: black; border-radius: 2px !important; border: 2px black;">
+                      <small><i id="heartIcon_<%-el._id-%>" class="bi bi-heart text-danger px-1"></i></small>
+                  </a>
+                  
                   </div>
                 </div>
               </div>
@@ -339,6 +341,40 @@
     }
     
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function addToWishlist(itemId) {
+            $.ajax({
+                type: 'POST',
+                url: `/addtowishlist/${itemId}`, // Change the URL to the appropriate endpoint
+                success: function(response) {
+                    // Update UI or show message based on response
+                    if (response.successMsg) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Wishlist!',
+                        text: response.successMsg,
+                    }).then(function(){
+                      window.location.reload()
+                    })
+                        $('#heartIcon_' + itemId).removeClass('bi bi-heart').addClass('bi bi-heart-fill');
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Added to Wishlist!',
+                        text: response.errorMsg,
+                    });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error occurred while adding to wishlist');
+                }
+            });
+        }
+    </script>
+    
   <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/adminfooter.ejs")-%>
 

@@ -6,9 +6,17 @@ var instance = new Razorpay({
 });
 
 const createOrder = (req, res, orderid) => {
-    console.log('this uis ');
+    console.log('this uis ', orderid);
     try {
-        const total = req.session.grandtotal-req.session.disctotal;
+        let total
+        if(req.session.rePaytotal){
+            total = req.session.rePaytotal;
+            console.log(total);
+            delete req.session.rePaytotal;
+        }
+        else{
+            total = req.session.grandtotal-req.session.disctotal;
+        }
         var options = {
             amount: total * 100,
             currency: "INR",

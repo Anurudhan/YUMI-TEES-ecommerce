@@ -7,6 +7,7 @@ module.exports={
         try{
             const useremail=req.session.email;
             const username = req.session.username;
+            const wish = req.session.wish;
             console.log(useremail);
             const user = await User.findOne({email:useremail})
             const kart = await Cart.findOne({ userid: user._id }).populate(
@@ -29,7 +30,7 @@ module.exports={
                 req.session.totalprice = totalprice 
                 console.log(req.session.totalprice+"gggggggahhhhhhhhhh");
                 if(carts.length>0){
-                    res.render("user/cart",{username,cart:req.session.cart,carts,grandtotal,disctotal,totalprice})
+                    res.render("user/cart",{username,cart:req.session.cart,wish,carts,grandtotal,disctotal,totalprice})
                 } 
                 else{
                     res.redirect("/nocart")
@@ -47,8 +48,9 @@ module.exports={
     nocart:async(req,res)=>{
         try{
             const username = req.session.username;
-            const cart = req.session.cart
-            res.render("user/nocart",{cart,username})
+            const cart = req.session.cart;
+            const wish = req.session.wish;
+            res.render("user/nocart",{cart,username,wish})
         }
         catch(err){
             console.log(err);

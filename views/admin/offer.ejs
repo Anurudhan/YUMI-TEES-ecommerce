@@ -1,0 +1,206 @@
+<%-include("../layout/adminheader.ejs")-%>
+<style>
+    .list-group-item{
+        border:2px soid rgb(10, 10, 10) !important;
+       
+       }
+       .ok{
+        background-color: grey;
+        
+       }
+</style>
+<%-include("../layout/admincentre.ejs")-%>
+
+<%-include("../partials/adminnavbar.ejs")-%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            
+            <button type="button" class="btn z m-3 float-end mt-4" style=" background-color: blue; color: white;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"><small>Add offer</small></button>
+        </div>
+    </div>
+</div>
+<div class="container">
+   
+    <div class="row">
+       
+        <div class="col-md-12">
+            
+          
+              <table class="table" id="example">
+                <thead>
+                  <tr>
+                    <th scope="col">NO</th>
+                    <th scope="col"> CATEGORY NAME </th>
+                    <th scope="col"> EXPIRE DATE</th>
+                    <th scope="col">DISCOUNT </th>
+                    <th scope="col">EDIT</th>
+                    <th scope="col">DELETE</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                    <% offer.forEach((ele, index) => { %>
+                        <tr>
+                            <td><%- index + 1 %></td>
+                            <td><%- ele.Category.categoryname %></td>
+                            <td><%- new Date(ele.expiryDate).toLocaleDateString() %></td>
+                            <td><%- ele.discount %>%</td>
+                            <td>
+                                <a><i class="fa-solid fa-pen-to-square" data-bs-toggle="modal" data-bs-target="#exampleModal<%- ele._id %>" data-bs-whatever="@getbootstrap" style="color: blue; padding: 10px"></i></a>
+                            </td>
+                            <td>
+                                <a><i class="fa-solid fa-trash" style="color: red;" onclick="deleteoffer('<%-ele._id-%>')"></i></a>
+                            </td>
+                        </tr> 
+                    <% }) %>
+                    
+                </tbody>
+              </table>
+              <% if (locals.err) { %>
+                <p class=" text-light" style="color: red;"><%-err-%></p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+        let table = new DataTable('#example');
+      });
+</script>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-dark">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"><small>Add offer</small></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="p-5" method="post" id="offerForm" >
+                    <!-- Existing fields -->
+                    <small class="text-danger" id="commonError"></small>
+                    <!-- New Category Select Field -->
+                    <div class="mb-3">
+                        <label for="coupon-category" class="col-form-label">Category:</label>
+                        <select class="form-control" name="Category" id="coupon-category" required>
+                            <option value="" selected disabled>Select a category</option>
+                    <%  category.forEach(ele=> { %>
+                        <option value="<%-ele._id-%>"><small><%-ele.categoryname-%></small></option>
+                        <% }) %>
+                        </select>
+                        <small class="text-danger" id="couponCategoryError"></small>
+                    </div>
+
+                    <!-- Modified Discount Amount Field -->
+                    <div class="mb-3">
+                        <label for="discount-amount" class="col-form-label">Discount Percentage:</label>
+                        <input type="number" class="form-control" name="discount" id="discount-amount" required oninput="validateDiscount(this)">
+                        <small class="text-danger" id="discountAmountError"></small>
+                    </div>
+                    <!-- Existing fields -->
+                    <div class="mb-3">
+                        <label for="expiry-date" class="col-form-label">Expiry Date:</label>
+                        
+                        <input type="date" class="form-control" name="expiryDate" id="expiry-date" required>
+                        <small class="text-danger" id="expiryDateError"></small>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" style="background-color:white; color: blue ; border: 1px solid blue;" data-bs-dismiss="modal"><small>Close</small> </button>
+                <button type="submit" class="btn " style="background-color: blue; color: white;"  id="submitBtn " onclick="addoffer(event)"><small>Submit</small></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<% offer.forEach(elem => { %>
+    <div class="modal fade" id="exampleModal<%- elem._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-white text-dark">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><small>edit offer</small></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="p-5" method="post" id="editofferForm<%- elem._id %>">
+
+                        <!-- Existing fields -->
+                        <small class="text-danger" id="commonError11"></small>
+                        <!-- New Category Select Field -->
+                        <div class="mb-3">
+                            <label for="coupon-category" class="col-form-label">Category:</label>
+                           
+                            <select class="form-control" name="Category" id="coupon-category" required>
+                                
+                                <% category.forEach(ele => { %>
+                                    <option <%- elem.Category.categoryname == ele.categoryname ? 'selected' : '' %> value="<%- ele._id %>"><%- ele.categoryname %></option>
+                                <% }) %>
+                            </select>
+                            <small class="text-danger" id="couponCategoryError"></small>
+                        </div>
+                        <input type="hidden" name="oldCategory" value="<%-elem.Category._id-%>">
+                        <input type="hidden" name="_id" value="<%- elem._id %>">
+                        <!-- Modified Discount Amount Field -->
+                        <div class="mb-3">
+                            <label for="discount-amount" class="col-form-label">Discount Percentage:</label>
+                            <input type="number" class="form-control" name="discount" id="discount-amount" value="<%- elem.discount %>" required oninput="validateDiscount(this)">
+                            <small class="text-danger" id="discountAmountError"></small>
+                        </div>
+                        <!-- Existing fields -->
+                        <div class="mb-3">
+                            <label for="expiry-date" class="col-form-label">Expiry Date:</label>
+                            <% const formattedDate = elem.expiryDate.toISOString().split('T')[0]; %>
+                            <input type="date" class="form-control" value="<%- formattedDate %>" name="expiryDate" id="expiry-date" required>
+                            <small class="text-danger" id="expiryDateError"></small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="background-color:white; color: blue; border: 1px solid blue;"   data-bs-dismiss="modal"><small>Close</small></button>
+                    <button type="button" class="btn" style="background-color: blue; color: white;" data-offer-id="<%- elem._id %>" onclick="editoffer(event)"><small>Submit</small></button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<% }) %>
+
+
+  <script>
+    document.getElementById('couponform').addEventListener('input', function () {
+      validateForm();
+    });
+  
+ 
+    function validateDiscount(input) {
+        var maxDiscount = 99;
+        var discountValue = parseInt(input.value, 10);
+
+        if (isNaN(discountValue) || discountValue <= 0 || discountValue > maxDiscount) {
+            document.getElementById('discountAmountError').textContent = "Discount percentage must be a number between 0 and 99";
+            document.getElementById('submitBtn').disabled = true;
+        } else {
+            document.getElementById('discountAmountError').textContent = "";
+            document.getElementById('submitBtn').disabled = false;
+        }
+    }
+
+   
+</script>
+</div>
+</div>
+
+<%-include("../layout/adminfooter.ejs")-%>

@@ -13,12 +13,112 @@
         <div class="col-md-12">
             <a href="/admin" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold;">DASHBOARD</a>
             <a id="openModalBtn" class="btn float-end m-3" style="background-color: blue !important; color: white;"><small><i class="bi bi-download pe-2"></i>Sales Report</small></a>
-
-            
+            <a class="dropdown-toggle float-end m-3" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                Select Time
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item"  onclick="updatecount('/admin/count-orders-by-day')">Day</a></li>
+                <li><a class="dropdown-item"  onclick="updatecount('/admin/count-orders-by-month')">Month</a></li>
+                <li><a class="dropdown-item"  onclick="updatecount('/admin/count-orders-by-year')">Year</a></li>
+            </ul>
         </div>
+        <!-- Sales Card -->
+<div class="col-xl-4 col-md-6 mb-3" style="z-index: -1;">
+    <div class="card info-card sales-card" style="background-color: rgba(0, 128, 128, 0.5);"> <!-- Adjust the RGBA values as needed -->
+        <div class="card-body">
+            <h5 class="card-title">Sales </h5>
+            <!-- <h5 class="card-title">Sales <span>| Today</span></h5> -->
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-cart"></i>
+                </div>
+                <div class="ps-3">
+                    <h6><%= totalSales %></h6>
+                    <!-- <span class="text-success small pt-1 fw-bold">12%</span>
+                    <span class="text-muted small pt-2 ps-1">increase</span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- End Sales Card -->
 
+<!-- Revenue Card -->
+<div class="col-xl-4 col-md-6 mb-3" style="z-index: -1;">
+    <div class="card info-card revenue-card" style="background-color: rgba(0, 128, 128, 0.5);"> <!-- Adjust the RGBA values as needed -->
+        <div class="card-body">
+            <h5 class="card-title">Revenue </h5>
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                    <h6>₹ <%= totalRevenue %></h6>
+                    <!-- <span class="text-success small pt-1 fw-bold">8%</span>
+                    <span class="text-muted small pt-2 ps-1">increase</span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- End Revenue Card -->
+
+<!-- Customers Card -->
+<div class="col-xxl-4 col-xl-4 mb-3" style="z-index: -1;">
+    <div class="card info-card customers-card" style="background-color: rgba(0, 128, 128, 0.5);"> <!-- Adjust the RGBA values as needed -->
+        <div class="card-body">
+            <h5 class="card-title">Customers </h5>
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="ps-3">
+                    <h6><%= customers %></h6>
+                    <!-- <span class="text-danger small pt-1 fw-bold">12%</span>
+                    <span class="text-muted small pt-2 ps-1">decrease</span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- End Customers Card -->
+
+        <div class="col-12 mb-5" style="z-index: -1;">
+            <div class="card">
+
+            <div class="card-body">
+                <h5 class="card-title">Reports <span> ( Sales/Order )</span></h5>
+
+                <!-- Line Chart -->
+                <canvas id="reportsChart" height="100" ></canvas>
+
+
+            </div>
+
+            </div>
+        </div>
+         <!-- Pie Chart -->
+         <div class="col-lg-6 mb-5" style="z-index: -1;">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Pie Chart<span> ( Sales/Order )</span></h5>
+                    <canvas id="pieChart" style="max-height: 400px;height: 0px;width: 0px;"></canvas>
+
+                </div>
+            </div>
+        </div>
+        <!-- End Pie Chart -->
+
+        <!-- Bar Chart -->
+        <div class="col-lg-6 mb-5" style="z-index: -1;">
+            <div class="card" style="height: 465px;">
+                <div class="card-body">
+                    <h5 class="card-title">Bar Chart<span> ( Sales/Amount )</span></h5>
+                    <canvas id="barChart" style="max-height: 400px;height: 0px;width: 0px;"></canvas>
+                    
+                </div>
+            </div>
+        </div>
+          
          <!-- Recent Sales -->
-         <div class="col-12" style="z-index: -1;">
+         <div class="col-12 mb-4" style="z-index: -1;">
             <div class="card recent-sales overflow-auto">
 
 
@@ -77,6 +177,84 @@
 
             </div>
         </div><!-- End Recent Sales -->
+
+         <!-- Top Selling -->
+         <div class="col-12 mb-3" style="z-index: -1;">
+            <div class="card top-selling overflow-auto">
+
+
+            <div class="card-body pb-0" >
+                <h5 class="card-title">Top Selling </h5>
+
+                <table class="table table-borderless" >
+                <thead class="text-center" style="font-size: 16px;">
+                    <tr>
+                    <th scope="col">Si.No</th>
+                    <th scope="col">Preview</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Sold</th>
+                    <th scope="col">Approx. Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% topSelling.forEach((data,index) => { %>
+
+                        <tr>
+                            <th class="text-center" scope="row"><%= index + 1 %></a></th>
+                            <td class="text-center"><a href="#"><img src="/productimages/<%= data?.productInfo?.images[0] %>" style="width: 50px;height: 50px;" alt=""></td>
+                            <td class="text-center"><a href="#" class="text-primary fw-bold"><%= data.productInfo?.productName %></a></td>
+                            <td class="text-center">₹ <%= data.productInfo?.grandprice %></td>
+                            <td class="fw-bold text-center"><%= data?.totalQuantity %></td>
+                            <td class="text-center">₹ <%= data?.productInfo?.grandprice *  data?.totalQuantity %></td>
+                        </tr>
+
+                    <% }) %>
+                    
+                </tbody>
+                </table>
+
+            </div>
+
+            </div>
+        </div><!-- End Top Selling -->
+        <h5 class="card-title mb-3">Top-Performing Category </h5>
+        <% result.forEach(ele=>{ %>
+            <div class="col-md-6 col-lg-4">
+                
+              <div
+                class="card-shadow-danger mb-3 widget-chart widget-chart2 text-left card"
+              >
+                <div class="widget-content">
+                  <div class="widget-content-outer">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left pr-2 fsize-1">
+                        <div class="widget-numbers mt-0 fsize-3 text-danger">
+                        <%-ele.totalQuantity %>%
+                        </div>
+                      </div>
+                      <div class="widget-content-right w-100">
+                        <div class="progress-bar-xs progress">
+                          <div
+                            class="progress-bar bg-danger"
+                            role="progressbar"
+                            aria-valuenow="<%-ele.totalQuantity-%>"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                         
+                            id="progressBar<%- ele._id %>"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left fsize-1">
+                      <div class="text " style="color: #95109e;"><%-ele.categoryName-%></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }) %>
     </div>
 </div>
 
@@ -134,47 +312,70 @@
                 </div>
                 <div class="modal-footer mt-3">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload();">Close</button>
-                    <button type="submit" class="btn btn-primary" id="Download" disabled onclick="submitForm()">Download</button>
+                    <button type="submit" class="btn btn-primary" id="Download" disabled >Download</button>
                 </div>
          </form>   
         </div>
     </div>
 </div>
+
+<% if(errorMessage) { %>
+    <script>
+    showSweetAlert("Error", "<%= errorMessage %>", "error");
+    </script>
+<% } %>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
 
 <!-- Include SweetAlert JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    updatecount("/admin/count-orders-by-day");
+</script>
 
-  <script>
+<script>
+     
     // Get a reference to the modal element
-const salesReportModal = document.getElementById('exampleModal');
+    const salesReportModal = document.getElementById('exampleModal');
 
-// Function to open the modal
-function openSalesReportModal() {
-    // Create a new modal instance
-    const modal = new bootstrap.Modal(salesReportModal);
+    // Function to open the modal
+    function openSalesReportModal() {
+        // Create a new modal instance
+        const modal = new bootstrap.Modal(salesReportModal);
 
-    // Show the modal
-    modal.show();
-}
+        // Show the modal
+        modal.show();
+    }
 
-// Example: Open the modal when a button with id="openModalBtn" is clicked
-const openModalBtn = document.getElementById('openModalBtn');
-openModalBtn.addEventListener('click', openSalesReportModal);
+    // Example: Open the modal when a button with id="openModalBtn" is clicked
+    const openModalBtn = document.getElementById('openModalBtn');
+    openModalBtn.addEventListener('click', openSalesReportModal);
 
-$(document).ready(function() {
+    $(document).ready(function() {
+    // Function to reset the input fields
+    function resetInputFields() {
+        $('#StartDate').val(''); // Reset start date input
+        $('#EndDate').val(''); // Reset end date input
+        $('#Year').val(''); // Reset interval select
+    }
+
     $('#customDateOptionBtn').click(function() {
         console.log("Custom Date button clicked");
         $('#customDateOptions').show();
         $('#latestIntervalOptions').hide();
+        // Reset the input fields when switching to custom date option
+        resetInputFields();
     });
 
     $('#latestIntervalOptionBtn').click(function() {
         console.log("Latest Interval button clicked");
         $('#customDateOptions').hide();
         $('#latestIntervalOptions').show();
+        // Reset the input fields when switching to latest interval option
+        resetInputFields();
     });
 });
 
@@ -184,7 +385,7 @@ $(document).ready(function() {
         var endDate = document.getElementById("EndDate").value;
         var year = document.getElementById("Year").value;
 
-        if (downloadFormat && ((startDate && endDate) || year)) {
+        if (downloadFormat && ((startDate && endDate) != null || year != null)) {
             document.getElementById("Download").disabled = false;
         } else {
             document.getElementById("Download").disabled = true;
@@ -203,59 +404,64 @@ $(document).ready(function() {
         });
     }
 
-   function submitForm() {
-    // Get form data
-    let startDate = $('#StartDate').val();
-    let endDate = $('#EndDate').val();
-    let interval = $('#Year').val();
-    let downloadFormat = $('#downloadFormat').val();
+    function submitForm(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
 
-    console.log(startDate,endDate,interval,downloadFormat);
-    // Check if start date and end date are greater than the current date
-    let currentDate = new Date();
-    let selectedStartDate = new Date(startDate);
-    let selectedEndDate = new Date(endDate);
-    console.log(currentDate);
-    if (selectedStartDate > currentDate || selectedEndDate > currentDate) {
-        console.log("errrrrrr");
-        // Show SweetAlert error message
-        showSweetAlert("Error", "Please select a valid date range.", "error");
-        return; // Stop further execution
-    }
+        // Get form data
+        let startDate = $('#StartDate').val();
+        let endDate = $('#EndDate').val();
+        let interval = $('#Year').val();
+        let downloadFormat = $('#downloadFormat').val();
 
-    // Check if start date is greater than end date
-    else if (selectedStartDate > selectedEndDate) {
-        // Show SweetAlert error message
-        showSweetAlert("Error", "Please select a valid date range.", "error");
-        return; // Stop further execution
-    }
-    const data = {
-        startDate : startDate,
-        endDate : endDate,
-        interval : interval,
-        downloadformat : downloadFormat
-    }
+        console.log(startDate, endDate, interval, downloadFormat);
+        // Check if start date and end date are greater than the current date
+        let currentDate = new Date();
+        let selectedStartDate = new Date(startDate);
+        let selectedEndDate = new Date(endDate);
+        console.log(currentDate);
+        if (selectedStartDate > currentDate || selectedEndDate > currentDate) {
+            console.log("errrrrrr");
+            // Show SweetAlert error message
+            showSweetAlert("Error", "Please select a valid date range.", "error");
+            return; // Stop further execution
+        } else if (selectedStartDate > selectedEndDate) {
+            // Show SweetAlert error message
+            showSweetAlert("Error", "Please select a valid date range.", "error");
+            return; // Stop further execution
+        }
 
-    document.getElementById("salesreport").submit();
-    // Perform AJAX request
-    // $.ajax({
-    //     type: 'POST',
-    //     url: '/admin/downloadsales',
-    //     data: data,
-    //     success: function(response) {
-    //         if (response.errorMessage) {
-    //             // Show error message using SweetAlert
-    //             showSweetAlert("Error", response.errorMessage, "error");
-    //         } 
-    //     },
-    //     error: function(xhr, status, error) {
-    //         // Handle error
-    //         console.error(error);
-    //     }
-    // });
-}
+        const data = {
+            startDate: startDate,
+            endDate: endDate,
+            interval: interval,
+            downloadformat: downloadFormat
+        };
+
+        // Perform form submission
+        document.getElementById("salesreport").submit();
+
+        // If you want to perform AJAX request instead of form submission, uncomment the following lines
+        // $.ajax({
+        //     type: 'POST',
+        //     url: '/admin/downloadsales',
+        //     data: data,
+        //     success: function(response) {
+        //         if (response.errorMessage) {
+        //             // Show error message using SweetAlert
+        //             showSweetAlert("Error", response.errorMessage, "error");
+        //         } 
+        //     },
+        //     error: function(xhr, status, error) {
+        //         // Handle error
+        //         console.error(error);
+        //     }
+        // });
+        }
+
+        // Add an event listener to the button to call the submitForm function
+        document.getElementById("Download").addEventListener("click", submitForm);
 
 </script>
-
 
 <%-include("../layout/adminfooter.ejs")-%>

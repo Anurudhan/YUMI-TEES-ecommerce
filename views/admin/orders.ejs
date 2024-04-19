@@ -127,7 +127,8 @@ input.border-bottom {
 
 
                     <td class="text-center">
-                        <% const hasReturnRequested = retns.some(returnData => returnData.orderid.toString() === data._id.toString() && returnData.status === "Requested"); %>
+                        <% const Status = ["Return Approoved","Requested","Return Reject"] %>
+                        <% const hasReturnRequested = retns.some(returnData => returnData.orderid.toString() === data._id.toString() && Status.includes(returnData.status)); %>
                         
                         <% if (hasReturnRequested) { %>
                             <a href="/admin/returndetails/<%-data._id-%>" class="badge rounded-pill bg-light-navy text-light" style="font-weight: 400; padding: 5px 10px; text-decoration: none;">View</a>
@@ -215,13 +216,23 @@ input.border-bottom {
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        // Display success message with SweetAlert2
-                        Swal.fire("Success", "Order status updated successfully", "success").then((result) => {
-                            // Reload the page only if the user clicks "OK" on the success message
+                        if(data.errorMessage){
+                            Swal.fire("error", "This Order Online payment Method And Payment is pending ", "error").then((result) => {
+                           
                             if (result.isConfirmed) {
                                 window.location.reload();
                             }
                         });
+                        }
+                        else{
+                        
+                        Swal.fire("Success", "Order status updated successfully", "success").then((result) => {
+                
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    }
                     })
                     .catch((error) => {
                         // Display error message with SweetAlert2

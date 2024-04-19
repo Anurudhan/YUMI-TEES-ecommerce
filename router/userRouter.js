@@ -7,12 +7,13 @@ const profilecontroller = require("../Controller/user/userprofile")
 const cartcontroller=require("../Controller/user/cart")
 const ordercontroller = require("../Controller/user/order")
 const wishlistcontroller =  require("../Controller/user/whishlist")
-const {CountOfCart}=require("../middleware/cartCount")
+const {CountOfCart}=require("../middleware/cartCount");
+const {wishCount} = require("../middleware/wishCount");
 const {userVerify,userExists}=require("../middleware/session")
 
 // Home page
-router.get("/",CountOfCart,usercontoller.homepage)
-router.get("/home",userExists,userVerify,CountOfCart)
+router.get("/",CountOfCart,wishCount,usercontoller.homepage)
+router.get("/home",userExists,userVerify,CountOfCart,wishCount)
 
 // Login page
 
@@ -34,38 +35,50 @@ router.get("/invalid_otp",userExists,usercontoller.invalidotp)
 
 // cart 
 
-router.get("/addtocart/:id/:change",userVerify,CountOfCart,cartcontroller.addcart)
-router.get("/cart",userVerify,CountOfCart,cartcontroller.cartpage)
-router.delete("/removecart/:prdktId",userVerify,CountOfCart,cartcontroller.removeCart)
-router.get("/nocart",userVerify,CountOfCart,cartcontroller.nocart)
+router.get("/addtocart/:id/:change",userVerify,CountOfCart,wishCount,cartcontroller.addcart)
+router.get("/cart",userVerify,CountOfCart,wishCount,cartcontroller.cartpage)
+router.delete("/removecart/:prdktId",userVerify,CountOfCart,wishCount,cartcontroller.removeCart)
+router.get("/nocart",userVerify,CountOfCart,wishCount,cartcontroller.nocart)
 
 // Whishlist
 
-router.get("/wishlist",userVerify,CountOfCart,wishlistcontroller.getwishlist)
+router.get("/wishlist",userVerify,CountOfCart,wishCount,wishlistcontroller.getwishlist);
+router.post("/addtowishlist/:prdktId",userVerify,CountOfCart,wishCount,wishlistcontroller.addToWishlist)
+router.post("/removewishlist/:prdktid/:wishId",userVerify,CountOfCart,wishCount,wishlistcontroller.removeFromWishlist);
+router.get("/nowishlist",userVerify,CountOfCart,wishCount,wishlistcontroller.noWishlist)
+
 // order
 
-router.get("/placeorder",userVerify,CountOfCart,ordercontroller.getplaceorder);
-router.get("/getaddress/:id",userVerify,CountOfCart,ordercontroller.getaddress);
-router.post("/placeorder/:type",userVerify,CountOfCart,ordercontroller.confirmorder);
-router.post("/verifypayment",userVerify,CountOfCart,ordercontroller.verifypayment);
-router.get("/userorder",userVerify,CountOfCart,ordercontroller.getorder);
-router.get("/vieworderdetails/:id",CountOfCart,userVerify,ordercontroller.getorderdetails);
-router.post("/cancellallorder/:id",userVerify,CountOfCart,ordercontroller.cancelallorder);
-router.post("/cancelsingleorder/:id/:index",userVerify,CountOfCart,ordercontroller.cancelsingleorder);
-router.post("/returnorder",userVerify,CountOfCart,ordercontroller.returnorder);
-router.get("/ordersuccess",userVerify,CountOfCart,ordercontroller.ordersucess);
-router.post("/couponapply",userVerify,CountOfCart,ordercontroller.couponapply);
+router.get("/placeorder",userVerify,CountOfCart,wishCount,ordercontroller.getplaceorder);
+router.get("/getaddress/:id",userVerify,CountOfCart,wishCount,ordercontroller.getaddress);
+router.post("/placeorder/:type",userVerify,CountOfCart,wishCount,ordercontroller.confirmorder);
+router.post("/verifypayment",userVerify,CountOfCart,wishCount,ordercontroller.verifypayment);
+router.get("/userorder",userVerify,CountOfCart,wishCount,ordercontroller.getorder);
+router.get("/vieworderdetails/:id",CountOfCart,wishCount,userVerify,ordercontroller.getorderdetails);
+router.post("/cancellallorder/:id",userVerify,CountOfCart,wishCount,ordercontroller.cancelallorder);
+router.post("/cancelsingleorder/:id/:index",userVerify,CountOfCart,wishCount,ordercontroller.cancelsingleorder);
+router.post("/returnorder",userVerify,CountOfCart,wishCount,ordercontroller.returnorder);
+router.get("/ordersuccess",userVerify,CountOfCart,wishCount,ordercontroller.ordersucess);
+router.get("/failedpayment",userVerify,CountOfCart,wishCount,ordercontroller.paymentFailed)
+router.post("/couponapply",userVerify,CountOfCart,wishCount,ordercontroller.couponapply);
+router.post("/removecouponapply",userVerify,CountOfCart,wishCount,ordercontroller.removecouponaply);
+router.get("/repaymentOnline/:id",userVerify,CountOfCart,wishCount,ordercontroller.repayment)
+
+// Invoice 
+
+router.get("/generateinvoice/:orderId/:index",userVerify,CountOfCart,ordercontroller.generateinvoice);
+router.get("/downloadinginvoice/:orderId",userVerify,CountOfCart,ordercontroller.downloadinvoice)
 
 
 // product views in user side
 
-router.get("/allproduct",userVerify,CountOfCart,productcontroller.getallproduct)
-router.get("/uniqueproduct/:id",userVerify,CountOfCart,productcontroller.uniqueproduct)
-router.get("/searchproduct",userVerify,productcontroller.searchproduct)
-router.post("/filter",userVerify,productcontroller.getallproduct)
-router.get("/filter",userVerify,productcontroller.getallproduct)
+router.get("/allproduct",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
+router.get("/uniqueproduct/:id",userVerify,CountOfCart,wishCount,productcontroller.uniqueproduct)
+router.get("/searchproduct",userVerify,CountOfCart,wishCount,productcontroller.searchproduct)
+router.post("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
+router.get("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
 // user-profile 
-router.get("/profile",userVerify,CountOfCart,profilecontroller.profilepage)
+router.get("/profile",userVerify,CountOfCart,wishCount,profilecontroller.profilepage)
 router.post("/resetuserdetails",userVerify,profilecontroller.resetuserdetails)
 router.get("/addaddress",userVerify,profilecontroller.getaddress)
 router.post("/addaddress",userVerify,profilecontroller.postaddress)

@@ -1,0 +1,74 @@
+<%- include("../layout/userheader.ejs") -%>
+<style>
+/* Styles for the payment failure page */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.payment-failed {
+    text-align: center;
+}
+
+.payment-failed h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.payment-failed p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.payment-failed .btn,
+.payment-failed .pay-later-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.payment-failed .btn:hover,
+.payment-failed .pay-later-btn:hover {
+    background-color: #0056b3;
+}
+</style>
+<%- include("../layout/usercentre.ejs") -%>
+
+<div class="payment-failed">
+    <h1>Payment Failed</h1>
+    <p>Unfortunately, your payment could not be processed. Pleaase try again.</p>
+    <a class="btn" onclick="confirmOrder('<%= id %>')">Retry Payment</a>
+    <a href="/" class="pay-later-btn">Pay Later</a>
+</div>
+
+<script>
+    function confirmOrder(data) {
+      console.log('data from the checkout form', data);
+      $.ajax({
+         url: `/repaymentOnline/${data}`,
+         type: 'get',
+         success: function (data) {
+          createRazorpay(data.order);
+         },
+         error: function (err) {
+          Swal.fire({
+            icon: 'error',
+            title: "Some error occurred! Please try again later.",
+            showConfirmButton: false,
+            timer: 3000 // Adjust the time the alert is displayed if needed
+          })
+            console.log(err);
+         }
+      });
+   }
+</script>
+
+<%- include("../layout/userfooter.ejs") -%>

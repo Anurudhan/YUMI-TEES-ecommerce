@@ -11,6 +11,7 @@ module.exports={
             const currentPage = parseInt(req.query.page) || 1;
             let username=req.session.username;
             let cart=req.session.cart;
+            const wish = req.session.wish;
             let product;
             let flag;
             if(Category == undefined && min == undefined && max==undefined){
@@ -53,7 +54,7 @@ module.exports={
                 }])
             ])
             const totalpages = Math.ceil(count/pageSize);   
-            res.render("user/allproduct",{product,categories,count,totalpages,currentPage,username,cart,flag,existingQueryString})
+            res.render("user/allproduct",{product,categories,count,totalpages,currentPage,wish,username,cart,flag,existingQueryString})
             
         }
         catch(err){
@@ -63,7 +64,8 @@ module.exports={
     searchproduct:async(req,res)=>{
         try{
             let username=req.session.username;
-            let cart=req.session.cart
+            let cart=req.session.cart;
+            const wish = req.session.wish;
             searchTerm = req.query.search
             const category= await Category.findOne({ categoryname: { $regex: searchTerm, $options: "i" } })
             console.log(category);
@@ -76,7 +78,7 @@ module.exports={
             }
             const searchvalues = await Product.find(searchOptions).populate({path: 'Category', model: 'category'})
             console.log(searchvalues);
-            res.render('user/searcgproducts', {username, searchvalues, searchTerm,cart });
+            res.render('user/searcgproducts', {username, searchvalues, searchTerm,cart,wish });
             
         }
         catch(err){
@@ -89,9 +91,10 @@ module.exports={
             const product= await Product.findOne({_id:id})
             console.log(product);
             let username=req.session.username;
-            let cart=req.session.cart
+            let cart=req.session.cart;
+            const wish = req.session.wish;
             let checkcart = await Cart.findOne({"products.productid":id})
-            res.render("user/uniqueproduct",{product:product,username,cart,checkcart})
+            res.render("user/uniqueproduct",{product:product,username,cart,wish,checkcart})
         }
         catch(err){
             console.log(err);

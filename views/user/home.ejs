@@ -67,7 +67,7 @@ body{
     </div>
     
     <div class="row row-cols row-cols-md-4 g-4 d-flex mt-4 pb-2">
-        <% mens.forEach((product,index)=> { %>
+        <% mens.splice(0,4).forEach((product,index)=> { %>
           <a href="/uniqueproduct/<%-product._id-%>" style="text-decoration: none;" >
         <div class="col">
           <div class="card h-100 shadow">
@@ -93,7 +93,7 @@ body{
     </div>
     
     <div class="row row-cols row-cols-md-4 g-4 d-flex pb-2 mt-4" style="max-height: 100vh;">
-        <% womens.forEach((product,index)=> { %>
+        <% womens.splice(0,4).forEach((product,index)=> { %>
         <div class="col">
           <div class="card h-100 shadow">
             <img src="/productimages/<%=product.images[0]%>" class="card-img-top" alt="...">
