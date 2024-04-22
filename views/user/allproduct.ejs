@@ -23,7 +23,6 @@
       <div class="row">
         <!-- sidebar -->
         <div class="col-lg-3" style="max-width: 300px;">
-          <!-- Toggle button -->
           <form action="\filter" method="post" id="filterForm">
           <button
                   class="btn btn-outline-secondary mb-3 w-100 d-lg-none"
@@ -325,19 +324,12 @@
 
       var minPrice = document.getElementById('minPrice').value;
       var maxPrice = document.getElementById('maxPrice').value;
-      // Construct the query string
-       
-      var queryString = '';
-
-      // Add selected categories to the query string
-      categoryCheckboxes.forEach(function(checkbox) {
-          queryString += 'Category=' + checkbox.value + '&';
-       });
-      queryString += 'min=' + minPrice + '&max=' + maxPrice;
-      // Update the form action with the new query string
-      document.getElementById('filterForm').action = '/filter?'+ queryString;
-      // Submit the form
-      document.getElementById('filterForm').submit();
+    
+ 
+      var formData = new FormData(document.getElementById('filterForm'));
+      var queryString = new URLSearchParams(formData).toString();
+     
+      window.location.href = '/filter?' + queryString;
     }
     
     </script>

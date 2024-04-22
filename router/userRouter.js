@@ -77,6 +77,8 @@ router.get("/uniqueproduct/:id",userVerify,CountOfCart,wishCount,productcontroll
 router.get("/searchproduct",userVerify,CountOfCart,wishCount,productcontroller.searchproduct)
 router.post("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
 router.get("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
+router.get("/searchfilter",userVerify,CountOfCart,wishCount,productcontroller.searchproduct)
+
 // user-profile 
 router.get("/profile",userVerify,CountOfCart,wishCount,profilecontroller.profilepage)
 router.post("/resetuserdetails",userVerify,profilecontroller.resetuserdetails)
