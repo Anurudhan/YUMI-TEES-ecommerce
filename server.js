@@ -42,7 +42,7 @@ app.use("/",authRouter)
 
 // mongoose connection------------------------------------------------------->
 
-mongoose.connect(process.env.MONGOURL,{useNewUrlParser:true,useUnifiedTopology:true})
+mongoose.connect(process.env.MONGOURL)
 .then(()=>{console.log("MongoDB connected")})
 .catch((err)=>{console.log("MongoDB not connected",err);})
 
