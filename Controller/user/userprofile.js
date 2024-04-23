@@ -3,7 +3,7 @@ const User = require("../../model/usermodel");
 const Coupon = require("../../model/coupon");
 const Wallet = require("../../model/wallet");
 const walletHistory = require("../../model/walletHistory")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 module.exports={
     profilepage:async (req,res)=>{
         try{

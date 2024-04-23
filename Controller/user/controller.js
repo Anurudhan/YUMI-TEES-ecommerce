@@ -4,7 +4,7 @@ const Product = require("../../model/productSchema")
 const Category = require("../../model/category")
 const { sendOTP } = require("../../util/otp");
 const {sendResetEmail}=require("../../auth/nodemailerForReset")
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken")
 
 const JWT_SECRET = "I AM THE SECRET"
