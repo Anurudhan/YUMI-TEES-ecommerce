@@ -84,8 +84,9 @@ module.exports = {
         try {
             const username = req.session.username;
             const cart = req.session.cart;
+            const wish = req.session.wish;
             console.log("hllpdjls");
-            res.render('user/nowishlist',{username,cart})
+            res.render('user/nowishlist',{username,cart,wish})
         } catch (error) {
             console.log(error);
         }

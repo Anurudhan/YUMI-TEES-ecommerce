@@ -1,35 +1,32 @@
-function addTocart(prdctid){
+function addTocart(prdctid) {
     console.log("hlooo---");
     $.ajax({
-        url:`/addtocart/${prdctid}/0`,
-        method:'get',
+        url: `/addtocart/${prdctid}/0`,
+        method: 'get',
         success: function (response) {
-          Toastify({
-              text: response.msg,
-              duration: 3000,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "green",
-              stopOnFocus: true,
-          }).showToast();
-
-          setTimeout(function () {
-              window.location.reload();
-          }, 3000);
-      },
-      error: function (err) {
-          Toastify({
-              text: "Something Error",
-              duration: 3000,
-              gravity: "top",
-              position: "center",
-              backgroundColor: "red",
-              stopOnFocus: true,
-          }).showToast();
-          console.log(err);
-      }
-      })
+            Swal.fire({
+                title: 'Success',
+                text: response.msg,
+                icon: 'success',
+                timer: 3000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.reload();
+            });
+        },
+        error: function (err) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Something Error',
+                icon: 'error',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            console.log(err);
+        }
+    });
 }
+
 
 function removeFromCart(productId) {
     Swal.fire({

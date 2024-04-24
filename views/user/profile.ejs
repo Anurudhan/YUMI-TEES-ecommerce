@@ -278,13 +278,13 @@ right: 0;
                                 Manage Addresses
                             </button>
                         </a>
-                        <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div4')"
+                        <a class="list-group-item list-group-item-action" id="div4tick" onclick="manageAddresses(this,'div4')"
                             role="tab">
                             Available Coupons
                         </a>
                         <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div5')"
                             role="tab">
-                            Refer and Earn
+                            Wallet
                         </a>
                         <!--<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
                         Widgets
@@ -411,6 +411,7 @@ right: 0;
                                 <div class="row">
                                     <div class="col-12">
                                         <h3 >Available Coupons</h3>
+                                        <% if (coupon && coupon.length > 0) { %>
                                         <% coupon.forEach(item => { %>
                                         <div class="ticket">
                                             <div class="datas">
@@ -427,6 +428,12 @@ right: 0;
                                             <a class="atag cbutton">ORDER NOW!</a>
                                           </div>
                                           <% }) %>
+                                          
+                                          <% } else{ %>
+                                            <div>
+                                                <h5>No Coupon In Here</h5>
+                                              </div>
+                                            <% } %>
                                     </div>
                                 </div>
                             </div>
@@ -451,10 +458,10 @@ right: 0;
                                           <img src="/assets/wallet.png" style="width: 50px" alt="" />
                                           <div class="balance text-dark" style="margin-left: 20px">
                                             <h5>Balance:</h5>
-                                            <span style="font-weight: bold">₹ <%=WalletUser?.wallet %></span>
+                                            <span style="font-weight: bold">₹ <%= WalletUser?.wallet ? WalletUser.wallet : 0 %></span>
                                           </div>
                                         </div>
-                                        <% if(WalletUserHist?.length===0) {%>
+                                        <% if(WalletUserHist?.length===0||WalletUserHist==null||WalletUserHist!=undefined) {%>
                                         <div>
                                           <h5>No Wallet History</h5>
                                         </div>
@@ -509,7 +516,7 @@ right: 0;
                                                 </a>
                                                 
                                             </div>
-
+                                            <% if (address && address.length > 0) { %>
                                             <% address.forEach(data=> { %>
 
                                                 <ul class="address-list">
@@ -543,6 +550,11 @@ right: 0;
             
             
                                                 <% }) %>
+                                                <% } else{ %>
+                                                    <div>
+                                                        <h5>No Address Please Add Address</h5>
+                                                      </div>
+                                                    <% } %>
             
             
                                             
@@ -560,6 +572,7 @@ right: 0;
         </div>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Get references to the edit icon and the save button
     var editIcon = document.getElementById('editIcon');
@@ -586,27 +599,56 @@ right: 0;
             inputEmail.setCustomValidity('')
         }
     })
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+    function showSectionFromUrlParam() {
+        var section = getUrlParameter('section');
+        if (section === 'div4') {
+            var listItems = document.querySelectorAll('.list-group-item');
+            listItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            document.getElementById('div1').classList.add('hidden-div');
+            document.getElementById('div2').classList.add('hidden-div');
+            document.getElementById('div3').classList.add('hidden-div');
+            document.getElementById('div4').classList.remove('hidden-div');
+            document.getElementById('div5').classList.add('hidden-div');
+            document.getElementById('div4tick').classList.add('active');
+        }
+    }
+
+
+    window.onload = function() {
+        showSectionFromUrlParam();
+    };
 </script>
 <% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
     <script>
-        Toastify({
-            text: "<%= successMessage %>",
-            duration: 3000, // 3 seconds
-            backgroundColor: "green",
-            position: "center", // Adjust position as needed
-        }).showToast();
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '<%= successMessage %>',
+            showConfirmButton: false,
+            timer: 3000
+        });
     </script>
 <% } %>
 <% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
     <script>
-        Toastify({
-            text: "<%= errorMessage %>",
-            duration: 3000, // 3 seconds
-            backgroundColor: "red",
-            position: "center", // Adjust position as needed
-        }).showToast();
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '<%= errorMessage %>',
+            showConfirmButton: false,
+            timer: 3000
+        });
     </script>
 <% } %>
+
 
 <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/userfooter.ejs")-%>

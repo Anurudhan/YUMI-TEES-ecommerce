@@ -129,8 +129,8 @@
                 <thead class="text-center" style="font-size: 16px;">
                     <tr>
                     <th scope="col">Si.No</th>
-                    <th scope="col">Order ID</th>
                     <th scope="col">Product</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Price</th>
                     <th scope="col">Payment Status</th>
                     <th scope="col">Order Status</th>
@@ -142,7 +142,7 @@
 
                         <tr >
                             <th class="text-center" scope="row"><a href="#" style="text-decoration: none;"><%= index + 1 %></a></th>
-                            <td class="text-center"><%= data._id %></td>
+                            <td class="text-center"><%= data.products %></td>
                             <td class="text-center"><%= data.orderdate.toLocaleDateString() %></td>
                             <td class="text-center">₹ <%= data.totalAmount %></td>
 
@@ -319,12 +319,6 @@
     </div>
 </div>
 
-<% if(errorMessage) { %>
-    <script>
-    showSweetAlert("Error", "<%= errorMessage %>", "error");
-    </script>
-<% } %>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include SweetAlert CSS -->
@@ -463,5 +457,26 @@
         document.getElementById("Download").addEventListener("click", submitForm);
 
 </script>
-
+<% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '<%= successMessage %>',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+<% } %>
+<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '<%= errorMessage %>',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+<% } %>
 <%-include("../layout/adminfooter.ejs")-%>

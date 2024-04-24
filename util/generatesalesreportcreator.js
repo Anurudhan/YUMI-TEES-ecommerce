@@ -56,8 +56,8 @@ module.exports = {
   
           
           worksheet.addRow({ totalamount: 'Total Sales Amount', paymentmethod: totalSalesAmount.toFixed(2) });
-          worksheet.addRow({ totalamount: 'Total discount Amount', paymentmethod: totaldiscountAmount.toFixed(2) });
-          worksheet.addRow({ totalamount: 'Total sales', paymentmethod: orders.length.toFixed(2) });
+          worksheet.addRow({ totalamount: 'Total Discount Amount', paymentmethod: totaldiscountAmount.toFixed(2) });
+          worksheet.addRow({ totalamount: 'Total Orders', paymentmethod: orders.length.toFixed(2) });
           console.log("hlo");
           const excelFilePath = `public/SRexcel/sales-report-${formattedStartDate}-${formattedEndDate}.xlsx`;
           console.log(excelFilePath);
