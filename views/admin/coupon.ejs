@@ -7,6 +7,7 @@
   thead th {
     vertical-align: top;
   }
+
 </style>
 <%-include("../partials/adminnavbar.ejs")-%>
 <div class="container " style="margin-top: 80px;">
@@ -19,7 +20,7 @@
 </div>
 <div class="container" >
    
-    <div class="row">
+    <div class="row1">
        
         <div class="col-md-12" style="z-index: -1;">
             
@@ -176,7 +177,8 @@
       var validFrom = document.getElementById("validFrom").value;
       var validTo = document.getElementById("validTo").value;
       var currentDate = new Date();
-
+      currentDate.setHours(0, 0, 0, 0);
+      console.log(currentDate);
       var modalLabel = document.getElementById("addCouponModalLabel").innerText.trim();
         var url = "";
         var method = "";
@@ -192,7 +194,6 @@
             return;
         }
 
-      // Example validation
       if (couponCode === "") {
           showAlert('error', 'Coupon Code cannot be empty');
           return;
@@ -221,7 +222,7 @@
           showAlert('error', 'Valid To date must be after Valid From date');
           return;
       }
-      if (currentDate > new Date(validFrom) || currentDate >= new Date(validTo)) {
+      if ((currentDate > new Date(validFrom) || currentDate >= new Date(validTo ))&& modalLabel === "Add Coupon") {
           showAlert('error', 'Please select Valid dates');
           return;
       }
@@ -261,22 +262,36 @@
   });
 
   function deleteCoupon(couponId) {
-    // AJAX request to delete the coupon
-    $.ajax({
-        url: `/admin/deletecoupon/${couponId}`,
-        method: 'DELETE',
-        success: function(response) {
-
-          console.log('Coupon deleted successfully');
-            showAlert('success', 'Coupon deleted successfully');
-            setTimeout(function() {
-                window.location.reload();
-            }, 2000);
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error('Error deleting coupon:', error);
-            // Optionally, you can display an error message to the user
+    // Display confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this coupon. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        // If user confirms deletion
+        if (result.isConfirmed) {
+            // AJAX request to delete the coupon
+            $.ajax({
+                url: `/admin/deletecoupon/${couponId}`,
+                method: 'DELETE',
+                success: function(response) {
+                    console.log('Coupon deleted successfully');
+                    showAlert('success', 'Coupon deleted successfully');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error('Error deleting coupon:', error);
+                    // Optionally, you can display an error message to the user
+                    showAlert('error', 'An error occurred while deleting the coupon. Please try again later.');
+                }
+            });
         }
     });
 }

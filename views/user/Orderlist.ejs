@@ -87,8 +87,8 @@ button {
                                     <th>
                                         <div class="card">
                                             <div class="order-info">
-    
-                                                <span class="order-date">Order Date: <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
+                                                <span class="order-id text-uppercase">Order Id : <%- order.orderid %></span>
+                                                <span class="order-date">Order Date : <%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
                                             </div>
                                         </div>
                                         <% order.products.forEach(data => { %>

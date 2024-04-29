@@ -13,6 +13,7 @@ const {createOrder} = require("../../Controller/user/razorpay")
 const { generateInvoice } = require("../../util/invoiceCreator")
 const session = require('express-session');
 const { resetpassword } = require('./controller');
+const {generateOrderId} = require('../../util/generateorderId');
 module.exports = {
     getorder:async(req,res)=>{
         const cart = req.session.cart;
@@ -53,6 +54,7 @@ module.exports = {
     getplaceorder:async(req,res)=>{
         try{
             const cpn = req.session.couponCode
+            const cpndiscnt = req.session.cpnDiscount?req.session.cpnDiscount:0;
             const successMessage = req.session.successMessage;
             const errorMessage = req.session.errorMessage;
             delete req.session.errorMessage;
@@ -70,13 +72,13 @@ module.exports = {
                 Order.findOne({userid:req.session._id}),
             ])
             const currenetdate = new Date();
-            const coupon = await Coupon.find({$and:[{minimumPurchaseAmount:{$lte:req.session.totalprice}},{validTo:{$gte:currenetdate}},{validFrom:{$lte:currenetdate}}]})
-            console.log(coupon);
+            const coupon = await Coupon.find({$and:[{minimumPurchaseAmount:{$lte:req.session.totalprice}},{validTo:{$gte:currenetdate}},{validFrom:{$lte:currenetdate}},{status:"Active"}]})
+            console.log(coupon,"hjfhggfdhfhg---------------------->");
             const couponCount = coupon.length;
-            console.log(couponCount);
+            console.log(couponCount,"ghjgdshjfghjgdsh dfsghj-------------------->");
             console.log(orders);
             if(carts){
-                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,wish,username,cart,grandtotal,disctotal,totalprice,couponCount,coupon,cpn})
+                res.render("user/placeorder",{address,orders,successMessage,errorMessage,adrsSelect:req.session.address_id,wish,username,cart,grandtotal,disctotal,totalprice,couponCount,coupon,cpn,cpndiscnt})
             }
             else{
                 res.redirect("/home")
@@ -104,12 +106,16 @@ module.exports = {
         try{
             const payment = req.params.type;
             console.log(payment+"------------------------->");
+            const orderid = generateOrderId();
             const address_id = req.session.address_id
             const grandtotal = req.session.grandtotal
             const disctotal = req.session.disctotal
             const totalprice = req.session.totalprice
+            req.session.deliverycharge = totalprice<1000?40:0;
+            let  deliverycharge = req.session.deliverycharge;
             const userEmail = req.session.email
             delete req.session.address_id
+            console.log(orderid);
             if (address_id == null) {
                 console.log("no address----------------------->");
                 req.session.errorMessage="please select the address or add address"
@@ -145,6 +151,7 @@ module.exports = {
                 }
 
                 let myOrders = {
+                    orderid : orderid,
                     userid: req.session._id,
                     products: carts.products,
                     address: {
@@ -166,6 +173,7 @@ module.exports = {
                     couponDiscount: couponDiscount,
                     totalAmount: totalprice,
                     discountAmount: disctotal,
+                    deliverycharge:deliverycharge
                 }
                 await Order.create(myOrders)
 
@@ -220,6 +228,7 @@ module.exports = {
 
 
                 let myOrders = {
+                    orderid: orderid,
                     userid: usr._id,
                     products: carts.products,
                     address: {
@@ -241,6 +250,7 @@ module.exports = {
                     couponDiscount: couponDiscount,
                     totalAmount: totalprice,
                     discountAmount: disctotal,
+                    deliverycharge: deliverycharge
                 }
 
                 const odrr = await Order.create(myOrders)
@@ -315,6 +325,7 @@ module.exports = {
                         }
 
                         let myOrders = {
+                            orderid:orderid,
                             userid: usr._id,
                             products: carts.products,
                             address: {
@@ -335,6 +346,7 @@ module.exports = {
                             couponDiscount: couponDiscount,
                             totalAmount: totalprice,
                             discountAmount: disctotal,
+                            deliverycharge: deliverycharge
                         }
 
                         await Order.create(myOrders)
@@ -417,7 +429,8 @@ module.exports = {
             console.log('reached to payfrom my order',req.params.id);
             const oder = await Order.findOne({userid : req.session._id,_id : req.params.id});
 
-            req.session.rePaytotal = oder.totalAmount
+            req.session.rePaytotal = oder.totalAmount-oder.couponDiscount;
+            req.session.deliverycharge = oder.totalAmount<1000?40:0;
             createOrder(req, res, oder._id + "")
         }
         catch(err){
@@ -463,6 +476,7 @@ module.exports = {
     },
     ordersucess : (req,res)=>{
         try{
+            
             res.render("user/paymentsuccess")
         }
         catch(err){
@@ -561,14 +575,16 @@ module.exports = {
             const id = req.params.id
             let index = req.params.index
             const ordr = await Order.findOne({ _id: id }).populate('products.productid');
-            const totalAmount = ordr.products[index].quantity*ordr.products[index].productid.grandprice;
+            let totalAmount;
             console.log(totalAmount);
             if(ordr.products.length==1){
                 ordr.orderStatus = "Cancelled";
                 ordr.products[0].status = "Cancelled";
                 await ordr.save();
+                totalAmount = ordr.totalAmount
             }
             else{
+                totalAmount = ordr.products[index].quantity*ordr.products[index].productid.grandprice;
                 await Order.updateOne({ _id: id }, { $set: { [`products.${index}.status`]: "Cancelled" } })
             }
             if (ordr.paymentMethod == "OnlinePayment" && ordr.PaymentStatus == "Paid" || ordr.paymentMethod == "walletPayment") {
@@ -610,10 +626,10 @@ module.exports = {
             
             const prdkt = await Product.findOne({ _id: ordr.products[index].productid })
                 if (prdkt) {
-                    prdkt.stockQuantity = prdkt.stockQuantity + data.quantity
+                    prdkt.stockQuantity = prdkt.stockQuantity +  ordr.products[index].quantity
                     await prdkt.save()
                 }
-            res.status(200).json({ message: 'All orders canceled successfully' });
+            res.json({ success : true });
         }
         catch(err){
             console.log(err);
@@ -694,7 +710,7 @@ module.exports = {
 
                 console.log(req.session.totalprice,req.session.couponCode,req.session.cpnDiscount);
 
-                res.json({successMsg:"Coupon applied In your Order"})
+                res.json({success:true,successMsg:"Coupon applied In your Order"})
             }
         }
         catch(err){

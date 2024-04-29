@@ -461,7 +461,7 @@ right: 0;
                                             <span style="font-weight: bold">₹ <%= WalletUser?.wallet ? WalletUser.wallet : 0 %></span>
                                           </div>
                                         </div>
-                                        <% if(WalletUserHist?.length===0||WalletUserHist==null||WalletUserHist!=undefined) {%>
+                                        <% if(WalletUserHist?.length===0||WalletUserHist==null||WalletUserHist==undefined) {%>
                                         <div>
                                           <h5>No Wallet History</h5>
                                         </div>
@@ -477,20 +477,19 @@ right: 0;
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            <% WalletUserHisto.forEach((doc, index) => { %> <%
-                                            doc.refund.forEach((refund, refundIndex) => { %>
+                                            <% WalletUserHist.refund.forEach((doc, index) => { %> 
                                             <tr>
-                                              <th scope="row"><%- refundIndex + 1 %></th>
+                                              <th scope="row"><%- index + 1 %></th>
                                               <!-- Displaying the document index -->
                                               <td>
-                                                <%- refund?.date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
+                                                <%- doc?.date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
                                                 dateStyle: 'short', timeStyle: 'short' }) %>
                                               </td>
-                                              <td><%- refund?.amount %></td>
-                                              <td><%- refund?.type %></td>
-                                              <td><%- refund?.reason %></td>
+                                              <td><%- doc?.amount %></td>
+                                              <td><%- doc?.type %></td>
+                                              <td><%- doc?.reason %></td>
                                             </tr>
-                                            <% }) %> <% }) %>
+                                            <% }) %> 
                                           </tbody>
                                         </table>
                                         <% } %>

@@ -44,6 +44,7 @@ module.exports = {
     },
     coupon : async (req,res)=>{
         try{
+            console.log(req.params);
             const id = req.params.id
             const coupon = await Coupon.findOne({_id:id})
             res.json({coupon})
@@ -57,8 +58,8 @@ module.exports = {
             const id = req.params.id
             console.log(id);
             const { couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo } = req.body;
-            const coupon=await Coupon.findOne({couponCode:couponCode})
-            if(coupon){
+            const coupon=await Coupon.find({couponCode:couponCode})
+            if(coupon.length>1){
                 res.json({errorMessage:"This coupon code already exist"})
             }
             else{

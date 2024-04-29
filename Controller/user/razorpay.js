@@ -10,12 +10,15 @@ const createOrder = (req, res, orderid) => {
     try {
         let total
         if(req.session.rePaytotal){
-            total = req.session.rePaytotal;
+            total = req.session.rePaytotal+req.session.deliverycharge;
             console.log(total);
             delete req.session.rePaytotal;
+            delete req.session.deliverycharge;
         }
         else{
-            total = req.session.grandtotal-req.session.disctotal;
+            total = req.session.totalprice+req.session.deliverycharge;
+            delete req.session.deliverycharge;
+            console.log(total);
         }
         var options = {
             amount: total * 100,

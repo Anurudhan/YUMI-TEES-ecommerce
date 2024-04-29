@@ -69,6 +69,7 @@ module.exports = {
                 })
               );
             console.log(topsellingCat);
+            console.log(recentOrders);
 
             const totalSales = sales[0] ? sales[0].totalSalesCount : 0;
             const totalRevenue = revenue[0] ? revenue[0].totalDiscountAmount : 0;

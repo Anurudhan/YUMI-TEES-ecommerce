@@ -66,8 +66,8 @@
     <!-- Product details -->
         <% orders.products.forEach(product => { %>
             <% if (product.status === "Return Requested") { %>
-                    <div class="product-details card shadow mb-4" style="z-index: -1;">
-                        <div class="row g-0">
+                    <div class="product-details container shadow mb-4 "  style="background-color: white;width: 1080px;">
+                        <div class="row">
                             <div class="col-md-2" >
                                 <img src="/productimages/<%= product.productid.images[0] %>" style="border-radius: 5%;" class="img-fluid" alt="...">
                             </div>
@@ -89,8 +89,8 @@
                             <div class="col-md-4 ps-4">
                                 <div class="form-group d-flex justify-content-center align-items-center" style="padding-top: 30%;">
                                     <% if (returnData.status === "Requested") { %>
-                                        <button class="btn btn-sm btn-success me-2" onclick="approveReturn('<%=returnData.id%>')">Approve Return</button>
-                                        <button class="btn btn-sm btn-danger" onclick="rejectReturn('<%=returnData.id%>')">Reject Return</button>
+                                        <button class="btn btn-sm btn-success me-2" onclick="approveReturn('<%=returnData.id%>')" >Approve Return</button>
+                                        <button class="btn btn-sm btn-danger" onclick="rejectReturn('<%=returnData.id%>')" >Reject Return</button>
                                     <% } else if (returnData.status === "Return Approved") { %>
                                         <span class="badge rounded-pill bg-success"><%=returnData.status%></span>
                                     <% } else { %>

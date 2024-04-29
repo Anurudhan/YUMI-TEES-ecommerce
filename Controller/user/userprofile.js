@@ -16,26 +16,12 @@ module.exports={
                 Addres.find({userid:req.session._id}),
                 Coupon.find().sort({ _id: -1 }),
                 Wallet.findOne({ userid: req.session._id}).populate('invited'),
-                walletHistory.findOne({ userId: req.session.user_Id }).sort({ "refund._id": -1 }),
+                walletHistory.findOne({ userid: req.session._id }).sort({ "refund._id": -1 }),
             ])
-            let WalletUserHisto;
-            if(WalletUserHist){
-            const IsuserwalletId=WalletUserHist._id
-            WalletUserHisto = await walletHistory.aggregate([
-              { $match: {_id:IsuserwalletId } }, 
-              { $unwind: "$refund" }, 
-              { $sort: { "refund._id": -1 } }, 
-              {
-                $group: {
-                  _id: "$_id", 
-                  userId: { $first: "$userId" }, 
-                  refund: { $push: "$refund" }, 
-                },
-              },
-            ]);
-        }
+        console.log(WalletUserHist,"result---------------->");
             res.render("user/profile",{successMessage,errorMessage,wish,username:req.session.username,
-                email:req.session.email,cart:req.session.cart,address,coupon,WalletUser,WalletUserHist,WalletUserHisto})
+                email:req.session.email,cart:req.session.cart,address,coupon,WalletUser,WalletUserHist})
+        
         }
         catch(err){
             console.log(err);
