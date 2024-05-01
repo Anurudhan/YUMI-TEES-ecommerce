@@ -6,19 +6,19 @@ const user = require('../model/usermodel');
 
 const CLIENT_ID = '56213233979-f8f6n82j5rm54931r5jqrktqcsapihv2.apps.googleusercontent.com';
 const CLIENT_SECRET = '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';
-const REDIRECT_URI = 'http://localhost:3000/auth/google/callback';
+const REDIRECT_URI = '/auth/google/callback';
 
 // Initiates the Google Login flow
 router.get('/auth/google', (req, res) => {
-  console.log("hhhgghjagbg");
-  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email`;
+  const currentBaseUrl = `${req.protocol}://${req.get('host')}`;
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${currentBaseUrl}${REDIRECT_URI}&response_type=code&scope=profile email`;
   res.redirect(url);
 });
+
 
 // Callback URL for handling the Google Login response
 router.get('/auth/google/callback', async (req, res) => {
   const { code } = req.query;
-  console.log("gggg\ yjjjh hghgg fhghg");
 
   try {
     // Exchange authorization code for access token
@@ -26,10 +26,9 @@ router.get('/auth/google/callback', async (req, res) => {
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       code,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: `${req.protocol}://${req.get('host')}${REDIRECT_URI}`,
       grant_type: 'authorization_code',
     });
-
     console.log("------------------------->Heoo");
     const { access_token, id_token } = data;
 
