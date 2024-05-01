@@ -32,8 +32,9 @@ module.exports={
                     }
                 }
             ]);
+            const order = await Order.find({statorderStatus:"Cancelled"})
             const retns = await returns.find()
-            res.render("admin/orders",{orders,retns})
+            res.render("admin/orders",{orders,retns,order})
         }
         catch(err){
             console.log(err);

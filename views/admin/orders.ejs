@@ -63,7 +63,8 @@ input.border-bottom {
           </tr>
         </thead>
         <tbody>
-            <% orders.forEach((data, index) => { %>                
+            <% orders.forEach((data, index) => { %>   
+                <% if (data.orderStatus === 'Cancelled') { %>             
                     
                 <tr>
                   <td class="text-center" scope="row"><%= index + 1%></td>
@@ -148,6 +149,7 @@ input.border-bottom {
                     <!-- <a href=""><i class="fa-solid fa-trash fa-lg mx-1 text-danger" onclick=""></i></a> -->
                   </td>
                 </tr>
+                <% } %>
 
           <% }) %> 
         </tbody>

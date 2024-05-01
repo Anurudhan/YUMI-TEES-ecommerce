@@ -48,7 +48,8 @@ router.get('/auth/google/callback', async (req, res) => {
     if (!users) {
       users = new user({
         name: name,
-        email: email
+        email: email,
+        status : "1"
         // password: id
       });
       await users.save();
