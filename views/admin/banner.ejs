@@ -1,44 +1,11 @@
 <%-include("../layout/userheader.ejs")-%>
-<link rel="stylesheet" href="stylesheet/adminbanner.css">
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/adminnavbar.ejs")-%>
 <div class="container" style="margin-top: 80px;">
     <div class="row">
-        <div class="modal" id="modal">
-            <div class="modal-header">
-                <div class="title">Add Banner</div>
-                <button data-close-button class="close-button" >&times;</button>
-            </div>
-            <div class="modal-body">
-                <form onsubmit="return validateForm()" id="bannerForm" action="admin/addbanner" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="bannerType">Banner Type</label>
-                        <select id="bannerType" name="bannerName" required>
-                            <option value="mainBanner">Main Banner</option>
-                            <option value="subBanner1">Sub Banner 1</option>
-                            <option value="subBanner2">Sub Banner 2</option>
-                            <option value="subBanner3">Sub Banner 3</option>
-                        </select>
-                    </div>
-            
-                    <label for="banner">Upload Images</label><br><br>
-                    <div class="image-upload">
-                        <div class="dropzone">
-                            <input type="file" id="bannerImage" name="banner" onchange="displayImage(this)">
-                            <img id="previewBanner" class="preview-image" alt="Drag & drop or click to select image">
-                        </div>
-                    </div>
-            
-                    <div class="form-group d-grid gap-2">
-                        <button class="btn btn-primary" type="submit" id="submitButton" disabled>Add Banners</button>
-                    </div>
-                </form>
-            </div>
-            <div id="overlay"></div>
-        </div>
         <div class="col-md-12">
             <a href="/admin/banner" class="m-5" style="text-decoration:wavy;color: black;font-size: 22px;font-weight: bold;">BANNERS</a>
-            <a  class="btn  float-end m-3" style="background-color: blue !important; color: white;" onclick="return openmodal('modal')"><small>Add Banner</small></a>
+            <a href="#" id="addBannerBtn" class="btn float-end m-3" style="background-color: blue ; color: white;"><small>Add Banner</small></a>
         </div>
     </div>
     <div class="row">
@@ -49,53 +16,104 @@
                 <!-- Example banner item, replace with actual data from your server -->
 
                 <% banners.forEach((bnr,index) => { %>
-                 
-                
-
                 <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="/productimages/<%=bnr.bannerimage%>" class="card-img-top" alt="Banner 1">
+                    <div class="card"style="background-attachment: fixed;min-height: 250px;margin-top:50px;">
+                        <img src="/productimages/<%=bnr.bannerimage%>" class="card-img-top" alt="Banner 1" style="min-height: 200px;" >
                         <div class="card-body">
                             <h5 class="card-title"><%-bnr.bannername-%></h5>
                             <!-- Add more details or actions as needed -->
                         </div>
                     </div>
                 </div>
-
-
                 <% }) %>
-
                 <!-- Repeat the above block for each banner -->
             </div>
         </div>
     </div>
     
 </div>
-<script>
-const closemodalbuttons = document.querySelectorAll('[data-close-button]');
-const overlay = document.getElementById('overlay');
-const modal = document.getElementById('modal');
-
-overlay.addEventListener('click', () => {
-    closeModal();
-});
-
-closemodalbuttons.forEach(button => {
-    button.addEventListener('click', () => {
-        closeModal();
-    });
-});
-
-function openmodal(id) {
-    $(`#${id}`).modal('show')
-    modal.classList.add('active');
-    overlay.classList.add('active');
-}
-
-function closeModal() {
-    modal.classList.remove('active');
-    overlay.classList.remove('active');
-}
-
-</script>
+<div id="addBannerModal" class="modal" tabindex="-1" aria-labelledby="addBannerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBannerModalLabel">Add Banner</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Input fields for banner name and image selection -->
+                <form action="/admin/addbanner" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="bannername" class="form-label">Banner Name</label>
+                        <select class="form-select" id="bannername" name="bannername">
+                            <option value="Main Banner">Main Banner</option>
+                            <option value="Sub Banner 1">Sub Banner 1</option>
+                            <option value="Sub Banner 2">Sub Banner 2</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bannerimage" class="form-label">Banner Image</label>
+                        <input type="file" class="form-control" id="bannerImage" name="bannerimage">
+                    </div>
+                    <!-- Preview image container -->
+                    <div id="imagePreview" class="mt-3 text-center"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- Move the form submission button inside the form -->
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<% if (successMessage != null && successMessage != undefined) { %>
+    
+    <script>
+        // Display SweetAlert for success message
+        Swal.fire({
+            title: 'Success!',
+            text: '<%= successMessage %>',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+<% } else if (errorMessage != null && errorMessage != undefined) { %>
+    <script>
+        // Display SweetAlert for error message
+        Swal.fire({
+            title: 'Error!',
+            text: '<%= errorMessage %>',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+<% } %>
 <%-include("../layout/userfooter.ejs")-%>
+<script>
+    // JavaScript to handle modal opening and image preview
+    $(document).ready(function() {
+        $("#addBannerBtn").click(function() {
+            $("#addBannerModal").modal('show');
+        });
+
+        // Show preview of the selected image
+        $("#bannerImage").change(function() {
+            readURL(this);
+        });
+
+        // Function to read and display the selected image
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    $('#imagePreview').html('<img src="' + e.target.result + '" class="img-fluid img-thumbnail" style="max-height: 100%; max-width: 60%;">');
+                }
+                
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+    });
+</script>

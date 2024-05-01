@@ -69,7 +69,8 @@ module.exports={
             const successMessage = req.session.successMessage
             delete req.session.errorMessage
             delete req.session.successMessage
-            res.render("admin/editcategory",{successMessage,errorMessage,id})
+            const category = await Category.findOne({_id:id})
+            res.render("admin/editcategory",{successMessage,errorMessage,id,category})
         }
         catch(err){
             console.log(err);
@@ -80,7 +81,7 @@ module.exports={
             const id = req.params.id
             let cat=req.body.catagoryname;
             cat = cat.toUpperCase()
-            const catcheckimg = await Category.findOne({categoryname:cat.trim()})
+            const catcheckimg = await Category.findOne({_id:{$ne:id},categoryname:cat.trim()})
             console.log(cat);
             if (cat.trim() == "") {
                 req.session.errorMessage = "category contains spaces!!"

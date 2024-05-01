@@ -2,12 +2,17 @@
 
 
 <style>
-body{
-    margin: 0;
-}
-.carousel-item{
-    height: 30%;
-}
+  body{
+        margin: 0;
+    }
+    .carousel-item{
+      margin-top: 80px;
+        height: 30%;
+    }
+    .carousel-item img {
+        max-height: 500px;
+        width: 100%;
+    }
 #men img{
     height: 200px;
 }
@@ -35,32 +40,29 @@ body{
 </style>
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/usernavbar.ejs")-%>
-<div id="carouselExampleIndicators" class="carousel slide" style="margin-top: 65px;"  data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="/assets/BAnner_grande.webp" class="d-block w-100" style="max-height: 500px;" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="/assets/custom-t-shirts-banner-design-template-4900533935ea094ef9a9b73571605d04_screen.jpg" style="max-height: 500px;"  class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="/assets/Custprint-Banner_1.webp" class="d-block w-100" style="max-height: 500px;" alt="...">
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+      <% for (var i = 0; i < banners.length; i++) { %>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= i %>" <% if (i === 0) { %>class="active" <% } %> aria-label="Slide <%= i + 1 %>"></button>
+      <% } %>
+  </div>
+  <div class="carousel-inner">
+      <% for (var i = 0; i < banners.length; i++) { %>
+          <div class="carousel-item <% if (i === 0) { %>active<% } %>">
+              <img src="/productimages/<%= banners[i].bannerimage %>" class="d-block" alt="<%= banners[i].alt %>">
+          </div>
+      <% } %>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
-    </button>
-  </div>
+  </button>
+</div>
+
   <div class="container" id="men" style="margin-top: 3%;">
     <div class="header mb-4">
         <h3>MEN'S</h3>

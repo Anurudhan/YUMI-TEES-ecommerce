@@ -466,7 +466,7 @@ right: 0;
                                           <h5>No Wallet History</h5>
                                         </div>
                                         <% } else{ %>
-                                        <table class="table">
+                                        <table class="table" id="example">
                                           <thead>
                                             <tr>
                                               <th scope="col">Index</th>
@@ -477,7 +477,7 @@ right: 0;
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            <% WalletUserHist.refund.forEach((doc, index) => { %> 
+                                            <% walletHisto.forEach((doc, index) => { %> 
                                             <tr>
                                               <th scope="row"><%- index + 1 %></th>
                                               <!-- Displaying the document index -->
@@ -572,6 +572,14 @@ right: 0;
     </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+          let table = new DataTable('#example');
+        });
+  </script>
 <script>
     // Get references to the edit icon and the save button
     var editIcon = document.getElementById('editIcon');

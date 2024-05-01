@@ -73,8 +73,14 @@ router.put("/editcoupon/:id",adminVerify,couponcontroller.editcoupon)
 router.delete("/deletecoupon/:id",adminVerify,couponcontroller.deleteCoupon)
 
 // banner manage--------------------------------------------------------->
+const uploadBanner = [
+    {name:"bannerimage",maxCount : 1}
+  ]
+  
 
 router.get("/banner",adminVerify,bannercontroller.getbanner)
+router.post('/addbanner',upload.fields(uploadBanner),bannercontroller.AddBanner)
+
 
 // download salesreport-------------------------------------------------------->
 

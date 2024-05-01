@@ -16,11 +16,12 @@ module.exports={
                 Addres.find({userid:req.session._id}),
                 Coupon.find().sort({ _id: -1 }),
                 Wallet.findOne({ userid: req.session._id}).populate('invited'),
-                walletHistory.findOne({ userid: req.session._id }).sort({ "refund._id": -1 }),
+                walletHistory.findOne({ userid: req.session._id }),
             ])
+            const walletHisto = WalletUserHist?WalletUserHist.refund.sort((a,b)=>a-b):"";
         console.log(WalletUserHist,"result---------------->");
             res.render("user/profile",{successMessage,errorMessage,wish,username:req.session.username,
-                email:req.session.email,cart:req.session.cart,address,coupon,WalletUser,WalletUserHist})
+                email:req.session.email,cart:req.session.cart,address,coupon,WalletUser,WalletUserHist,walletHisto})
         
         }
         catch(err){

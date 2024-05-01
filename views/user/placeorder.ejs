@@ -237,6 +237,12 @@
                                 <span style="font-size: small; color: green;">Free</span><del class="text-muted text-nowrap" style="font-size: small;">₹ 40</del>
                             <% } %>
                         </div>
+                        <% if (cpn != null || cpn != undefined) { %>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Coupon Discount:</p>
+                                <p class="mb-2 text-success">-₹ <%= cpndiscnt %></p>
+                            </div>
+                        <% } %>
                         <hr style="color:#554f4f;">
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">TOTAL PAYABLE</p>

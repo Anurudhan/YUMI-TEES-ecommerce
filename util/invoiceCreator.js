@@ -22,7 +22,7 @@ module.exports = {
             address: "silk street,Kozhikode,Kerala, India",
             zip: "673012",
             city: "Calicut",
-            state:"Kerla",
+            state:"Kerala",
             country: "india",
           },
           client: {
@@ -33,7 +33,7 @@ module.exports = {
             country: "India",
           },
           information: {
-            order: orderDetail._id,
+            orderId : orderDetail.orderid,
   
             date: formatDate(orderDetail.orderdate),
   
@@ -42,7 +42,6 @@ module.exports = {
           products: Deliverproduct.map((product) => ({
             quantity: product.quantity.toString(),
             description: product.productid.productName,
-            taxRate: 1,
             price: product.productid.grandprice,
           })),
           bottomNotice: "Thank you for choosing Yumi-Tees",
