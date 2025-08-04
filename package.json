@@ -35,5 +35,8 @@
     "puppeteer": "^22.6.3",
     "razorpay": "^1.4.7",
     "session": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }

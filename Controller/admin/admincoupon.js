@@ -1,4 +1,5 @@
-const Coupon = require("../../model/coupon")
+const Coupon = require("../../model/coupon");
+const MESSAGES = require("../../util/messages");
 
 module.exports = {
     getcoupon : async (req,res)=>{
@@ -16,7 +17,7 @@ module.exports = {
             console.log(couponCode);
             const coupon = await Coupon.findOne({couponCode:couponCode})
             if(coupon){
-                res.json({errorMessage:"This coupon code already exist"})
+                res.json({errorMessage:MESSAGES.COUPON.ERROR.EXISTS})
             }
             else{
                 const newCoupon = new Coupon({
@@ -30,11 +31,11 @@ module.exports = {
 
                 newCoupon.save()
                     .then(savedCoupon => {
-                        res.status(201).json({successMessage:"Coupon added successfully"});
+                        res.status(201).json({successMessage:MESSAGES.COUPON.SUCCESS.ADDED});
                     })
                     .catch(error => {
                         console.error('Error saving coupon:', error);
-                        res.status(500).json({ error: 'Internal server error' });
+                        res.status(500).json({ error: MESSAGES.COUPON.ERROR.SERVER });
                     });
             }     
         }
@@ -60,11 +61,11 @@ module.exports = {
             const { couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo } = req.body;
             const coupon=await Coupon.find({couponCode:couponCode})
             if(coupon.length>1){
-                res.json({errorMessage:"This coupon code already exist"})
+                res.json({errorMessage:MESSAGES.COUPON.ERROR.EXISTS})
             }
             else{
                 await Coupon.updateOne({_id:id},{couponCode, description, minimumPurchaseAmount, discountAmount, validFrom, validTo})
-                res.json({successMessage:"Coupon updated succesfully"})
+                res.json({successMessage:MESSAGES.COUPON.SUCCESS.UPDATED})
             }
             
         }

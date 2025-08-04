@@ -1,136 +1,676 @@
- <%-include("../layout/userheader.ejs")-%> 
+<%-include("../layout/userheader.ejs")-%> 
 <%-include("../layout/usercentre.ejs")-%>
 <style>
-  .gradient-custom-3 {
-/* fallback for old browsers */
-background: #84fab0;
-
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
-
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+/* Modern Gradient Backgrounds - Enhanced Design */
+.gradient-custom-3 {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 212, 170, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 168, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(132, 250, 176, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8), rgba(44, 83, 100, 0.8));
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
 }
+
+.gradient-custom-3::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98px,
+      rgba(0, 212, 170, 0.02) 100px
+    );
+  animation: backgroundShift 25s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes backgroundShift {
+  0% { transform: translateX(-100px) translateY(-100px) rotate(0deg); }
+  100% { transform: translateX(100px) translateY(100px) rotate(360deg); }
+}
+
 .gradient-custom-4 {
-/* fallback for old browsers */
-background: #84fab0;
-
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
-
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+  background: linear-gradient(135deg, #00d4aa, #00a8ff, #4facfe);
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 10px 35px rgba(0, 212, 170, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
 }
-u{
-  color: blue;
+
+.gradient-custom-4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s;
+}
+
+.gradient-custom-4:hover::before {
+  left: 100%;
+}
+
+.gradient-custom-4:hover {
+  background: linear-gradient(135deg, #00c9a7, #0097e6, #3c90fe);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 20px 50px rgba(0, 212, 170, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Container - Optimized Dimensions */
+.col-xl-6 {
+  max-width: 480px;
+}
+
+.col-lg-7 {
+  max-width: 480px;
+}
+
+/* Enhanced Black Container - Better Proportions */
+.card {
+  background: 
+    linear-gradient(145deg, rgba(13, 13, 13, 0.95), rgba(26, 26, 26, 0.95)),
+    radial-gradient(circle at 50% 50%, rgba(0, 212, 170, 0.05) 0%, transparent 70%) !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box;
+  border-radius: 25px !important;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(132, 250, 176, 0.3),
+    0 0 100px rgba(0, 212, 170, 0.1) !important;
+  color: white !important;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(25px);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b6b, #00d4aa, #00a8ff, #84fab0, #ff6b6b);
+  background-size: 200% 100%;
+  animation: gradientMove 3s linear infinite;
+  border-radius: 25px 25px 0 0;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background: 
+    linear-gradient(145deg, rgba(13, 13, 13, 0.98), rgba(26, 26, 26, 0.98));
+  border-radius: 22px;
+  z-index: 1;
+}
+
+/* Card Body Enhanced - Optimized Padding */
+.card-body {
+  padding: 2rem 2rem !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo Enhancement - Perfect Size */
+.card img {
+  width: 75px !important;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: linear-gradient(#1a1a1a, #1a1a1a) padding-box,
+              linear-gradient(135deg, #00d4aa, #00a8ff, #ff6b6b) border-box;
+  box-shadow: 
+    0 0 30px rgba(0, 212, 170, 0.6),
+    0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 1.2rem;
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.card img:hover {
+  transform: scale(1.15) rotate(8deg);
+  box-shadow: 
+    0 0 50px rgba(0, 168, 255, 0.8),
+    0 20px 50px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.3) contrast(1.2);
+}
+
+/* Modern Typography - Perfect Size */
+h2 {
+  background: linear-gradient(135deg, #00d4aa, #00a8ff, #84fab0, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientText 4s ease infinite;
+  font-weight: 800;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-shadow: none;
+  position: relative;
+}
+
+@keyframes gradientText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #00d4aa, #00a8ff);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+}
+
+/* Enhanced Form Controls - Perfect Dimensions */
+.form-control {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(132, 250, 176, 0.2);
+  border-radius: 15px;
+  padding: 1rem 3rem 1rem 1.4rem;
+  font-size: 1rem;
+  color: white !important;
+  font-weight: 500;
+  height: 52px;
+  width: 100%;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(15px);
+  position: relative;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #00d4aa;
+  box-shadow: 
+    0 0 0 4px rgba(0, 212, 170, 0.15),
+    0 0 40px rgba(0, 212, 170, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px) scale(1.01);
+  outline: none;
+  color: white !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+  transition: opacity 0.3s ease;
+}
+
+.form-control:focus::placeholder {
+  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Ensure password input text is white */
+input[type="password"],
+input[type="text"] {
+  color: white !important;
+}
+
+/* Password Input Container */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #00d4aa;
+}
+
+/* Enhanced Labels */
+.form-label {
+  color: #84fab0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  text-shadow: 0 0 10px rgba(132, 250, 176, 0.3);
+}
+
+/* Form Outline Enhanced */
+.form-outline {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-outline::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00d4aa, #00a8ff);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1px;
+}
+
+.form-outline:focus-within::after {
+  width: 100%;
+}
+
+/* Button Enhanced - Perfect Size */
+.btn.gradient-custom-4 {
+  width: 100%;
+  height: 54px;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+}
+
+/* Forgot Password Link - Enhanced */
+a[href="/verifyemail"] {
+  color: #ff6b6b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  position: relative;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+a[href="/verifyemail"]:hover {
+  color: #ff5252;
+  text-shadow: 0 0 15px rgba(255, 82, 82, 0.6);
+  transform: translateY(-1px);
+}
+
+a[href="/verifyemail"]::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #ff5252);
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+a[href="/verifyemail"]:hover::after {
+  width: 100%;
+}
+h6 {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.85rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+
+  h6 {
+    font-size: 0.8rem !important;
+    margin-top: 0.8rem !important;
+  }
+  .signup-link {
+  color: #00d4aa !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.signup-link:hover {
+  color: #00a8ff !important;
+  text-shadow: 0 0 8px rgba(0, 212, 170, 0.5) !important;
+}
+  
+
+/* Social Login Buttons Enhanced */
+.social {
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.go, .fb {
+  padding: 1rem 2rem;
+  border-radius: 18px;
+  font-weight: 700;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.go {
+  background: linear-gradient(135deg, #ea4335, #dd4b39, #c23321);
+  box-shadow: 
+    0 10px 30px rgba(234, 67, 53, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.go::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.go:hover::before {
+  left: 100%;
+}
+
+.go:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 20px 50px rgba(234, 67, 53, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.fb {
+  background: linear-gradient(135deg, #4267B2, #3b5998, #2d4373);
+  box-shadow: 
+    0 10px 30px rgba(66, 103, 178, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.fb::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.fb:hover::before {
+  left: 100%;
+}
+
+.fb:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 20px 50px rgba(66, 103, 178, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .col-xl-6, .col-lg-7 {
+    max-width: 100%;
+  }
+  
+  .card {
+    margin: 1rem;
+    border-radius: 20px !important;
+  }
+  
+  .card-body {
+    padding: 1.8rem 1.5rem !important;
+  }
+  
+  .form-control {
+    padding: 0.9rem 3rem 0.9rem 1.2rem;
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .social {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .go, .fb {
+    width: 100%;
+    text-align: center;
+    padding: 0.9rem 1.8rem;
+  }
+  
+  .btn.gradient-custom-4 {
+    height: 50px;
+    font-size: 1rem;
+  }
+  
+  .form-outline {
+    margin-bottom: 1.3rem;
+  }
+}
+
+/* Enhanced Focus States */
+.btn:focus,
+.form-control:focus,
+a:focus {
+  outline: 3px solid rgba(0, 212, 170, 0.5);
+  outline-offset: 3px;
+}
+
+/* Subtle Animation on Load */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card {
+  animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Form Elements Animation */
+.form-outline {
+  animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.form-outline:nth-child(1) { animation-delay: 0.1s; }
+.form-outline:nth-child(2) { animation-delay: 0.2s; }
+.form-outline:nth-child(3) { animation-delay: 0.3s; }
+
+/* Additional Glow Effects */
+.card:hover {
+  box-shadow: 
+    0 35px 90px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 0 1px rgba(0, 212, 170, 0.5),
+    0 0 120px rgba(0, 212, 170, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Floating Particles Effect */
+.gradient-custom-3::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 170, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(0, 168, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(132, 250, 176, 0.3), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 107, 107, 0.3), transparent);
+  background-repeat: repeat;
+  background-size: 150px 100px;
+  animation: floatingParticles 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@keyframes floatingParticles {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-100px) translateX(50px); }
 }
 </style>
-<section class="vh-100 bg-image "
+
+<section class="vh-100 bg-image"
   style="background-image: url('assets/bgtheme.jpg');background-repeat: no-repeat;background-size: cover;">
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card pt-2" style="border-radius: 15px;color: white; background-color: black;">
-            <div class="card-body ">
+            <div class="card-body">
               <div class="justify-content-center align-items-center d-flex">
-                <a href="/guest"><img src="assets/logoblack.png" style="width:100px;" alt=""></a>
+                <a href="/guest"><img src="assets/mainlogo1.jpeg" style="width:100px;" alt=""></a>
+              </div>
+              <h2 class="text-uppercase text-center mb-2">Login here</h2>
+              <form class="page" action="/login" method="post">
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form3Example3cg">Your Email</label>
+                  <input type="email" id="form3Example3cg" name="email" placeholder="Enter your E-mail" class="form-control form-control-lg" />
+                </div>
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="form3Example4cg">Password</label>
+                  <div class="password-container">
+                    <input type="password" id="form3Example4cg" name="password" placeholder="Enter your password" class="form-control form-control-lg" />
+                    <i class="bi bi-eye toggle-password" id="togglePassword"></i>
+                  </div>
+                </div>
+                <a href="/verifyemail" style="text-decoration: none;color: red;">forgot password?</a>
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">LogiN</button>
+                </div>
+                <h6 class="text-center mt-3 mb-2">Don't have an account? <a href="/signup" class="signup-link text-body"><u>click here</u></a></h6>
+                <div class="social mt-2 d-flex justify-content-center p-3">
+                  <div class="go"><a href="/auth/google" style="text-decoration: none;color: white;"><i class="bi bi-google"></i> Google</a></div>
+                  <div class="fb ps-3"><i class="bi bi-facebook"></i> Facebook</div>
+                </div>
+              </form>
             </div>
-            <h2 class="text-uppercase text-center mb-2">Login here</h2>
-            <label for="" class="text-center" style="color: rgb(235, 90, 6);font-size: smaller;"><%-msg?msg:""-%></label>
-            <form class="page " action="/login" method="post">
-              <div class="form-outline mb-4">
-                <label class="form-label" for="form3Example1cg">Your Email</label>
-                <input type="email" id="form3Example3cg" name="email" placeholder="Enter your E-mail" class="form-control form-control-lg" />
-
-            </div>
-            <div class="form-outline mb-4">
-              <label class="form-label" for="form3Example1cg">Password</label>
-            <input type="password" id="form3Example4cg" name="password" placeholder="Enter your password" class="form-control form-control-lg" />
-            
           </div>
-          <a href="/verifyemail" style="text-decoration: none;color: red;">forgot password?</a>
-          <div class="d-flex justify-content-center">
-            <button type="submit"
-              class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">LogiN</button>
-          </div>
-      
-          <h6 class="text-center mt-3 mb-2">Have don't already an account? <a href="/signup"
-            class="fw-bold text-body"><u>click here</u></a></h6>
-        <div class="social mt-2 d-flex justify-content-center p-3">
-          <div class="go"><a href="/auth/google" style="text-decoration: none;color: white;"><i class="bi bi-google"></i> Google</a></div>
-          <div class="fb ps-3"><i class="bi bi-facebook"></i> Facebook</div>
         </div>
-        
-    </form>
-
+      </div>
+    </div>
   </div>
-</div>
-</div>
-</div>
-</div>
-</div>
 </section>
- <!-- Add this script tag below your HTML content -->
- <% if (email_err) { %>
+
+<!-- Toast Scripts - Unchanged -->
+<% if (email_err) { %>
 <script>
-  // Check if there's an email error
-  
-    // Display a toast message for the email error
-    Toastify({
-      text: '<%= email_err %>',
-      duration: 3000, // Duration in milliseconds
-      gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
-      backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
-      stopOnFocus: true // Stop the toast message when user focuses on the window/tab
-    }).showToast(); // Show the toast message
+  Toastify({
+    text: '<%= email_err %>',
+    duration: 3000,
+    gravity: 'top',
+    backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)',
+    stopOnFocus: true
+  }).showToast();
 </script>
 <% } else if (status_err) { %>
-  <script>
-    // Check if there's an email error
-    
-      // Display a toast message for the email error
-      Toastify({
-        text: '<%= status_err %>',
-        duration: 3000, // Duration in milliseconds
-        gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
-        backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
-        stopOnFocus: true // Stop the toast message when user focuses on the window/tab
-      }).showToast(); // Show the toast message
-  </script>
-<% } else if (pass_err) { %>
-  <script>
-    // Check if there's an email error
-    
-      // Display a toast message for the email error
-      Toastify({
-        text: '<%= pass_err %>',
-        duration: 3000, // Duration in milliseconds
-        gravity: 'top', // Position: 'top', 'bottom', 'left', 'right'
-        backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)', // Background color of the toast message
-        stopOnFocus: true // Stop the toast message when user focuses on the window/tab
-      }).showToast(); // Show the toast message
-  </script>
-<% } %>
 <script>
-  const email = document.getElementById('form3Example3cg')
-  const password = document.getElementById('form3Example4cg')
+  Toastify({
+    text: '<%= status_err %>',
+    duration: 3000,
+    gravity: 'top',
+    backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)',
+    stopOnFocus: true
+  }).showToast();
+</script>
+<% } else if (pass_err) { %>
+<script>
+  Toastify({
+    text: '<%= pass_err %>',
+    duration: 3000,
+    gravity: 'top',
+    backgroundColor: 'linear-gradient(to right, #a15d48, #ff0000)',
+    stopOnFocus: true
+  }).showToast();
+</script>
+<% } %>
 
-  email.addEventListener('input', validateform);
-  password.addEventListener('input', validateform);
+<script>
+  const email = document.getElementById('form3Example3cg');
+  const password = document.getElementById('form3Example4cg');
+  const togglePassword = document.getElementById('togglePassword');
 
-  function validateform(){
+  email.addEventListener('input', validateForm);
+  password.addEventListener('input', validateForm);
+  togglePassword.addEventListener('click', togglePasswordVisibility);
+
+  function validateForm() {
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(password.value.length<8){
-      password.setCustomValidity('Password must be at least 8 characters')
-    }
-    else if(!emailPattern.test(email.value)){
-      email.setCustomValidity('Please enter a valid email address')
-    }
-    else{
-      email.setCustomValidity('')
-      password.setCustomValidity('')
+    if (password.value.length < 8) {
+      password.setCustomValidity('Password must be at least 8 characters');
+    } else if (!emailPattern.test(email.value)) {
+      email.setCustomValidity('Please enter a valid email address');
+    } else {
+      email.setCustomValidity('');
+      password.setCustomValidity('');
     }
   }
+
+  function togglePasswordVisibility() {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    togglePassword.classList.toggle('bi-eye');
+    togglePassword.classList.toggle('bi-eye-slash');
+  }
 </script>   
-<%-include("../layout/userfooter.ejs")-%> 
+<%-include("../layout/userfooter.ejs")-%>

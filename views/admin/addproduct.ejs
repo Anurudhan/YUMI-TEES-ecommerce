@@ -1,76 +1,195 @@
 <%-include("../layout/adminheader.ejs")-%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<style>
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 100px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .form-control, .form-select {
+        border: 1px solid #d1d9e6;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        outline: none;
+    }
+    .form-control::placeholder {
+        color: #a0aec0;
+    }
+    .form-group label {
+        font-size: 14px;
+        color: #2c3e50;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .image-upload {
+        border: 2px dashed #d1d9e6;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        background: #f8fafc;
+        transition: border-color 0.3s;
+    }
+    .image-upload:hover {
+        border-color: #007bff;
+    }
+    .image-preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+    .btn-primary {
+        background: #007bff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+        transition: opacity 0.3s;
+    }
+    .invalid .error-message {
+        display: block;
+        opacity: 1;
+    }
+    .invalid .form-control, .invalid .form-select {
+        border-color: #dc3545;
+    }
+    .modal-content {
+        border-radius: 12px;
+    }
+    .modal-header {
+        background: #f8fafc;
+        border-bottom: none;
+    }
+    .modal-footer {
+        border-top: none;
+    }
+    /* Remove number input arrows */
+    input[type="number"] {
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
 <%-include("../layout/admincentre.ejs")-%>
-
 <%-include("../partials/adminnavbar.ejs")-%>
-<form action="/admin/addProducts"  id="" method="post" enctype="multipart/form-data">
-    <div class="container" style="margin-top: 90px;">
+
+<form action="/admin/addProducts" id="productForm" method="post" enctype="multipart/form-data">
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-12">
-                <h1 class="text-center mb-4">Add Product</h1>
+                <h1 class="text-center mb-4">Add New Product</h1>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <input type="text" name="productName" id="name" class="form-control mb-3" placeholder="Product Name" required>
+                            <label for="name">Product Name</label>
+                            <input type="text" name="productName" id="name" class="form-control" placeholder="Enter product name" required>
+                            <div class="error-message" id="nameError">Product name must start with a letter and cannot be empty.</div>
                         </div>
                         <div class="form-group">
-                            <select class="form-select mb-3" name="Category" required>
+                            <label for="category">Category</label>
+                            <select class="form-select" name="Category" id="category" required>
                                 <option value="" selected disabled>Select a category</option>
                                 <% category.forEach((x) => { %>
                                     <option value="<%= x._id %>"><%= x.categoryname %></option>
                                 <% }) %>
                             </select>
+                            <div class="error-message" id="categoryError">Please select a category.</div>
                         </div>
-                        
                         <% for(let i = 1; i <= 4; i++) { %>
                             <div class="form-group">
-                                <textarea name="Specification<%= i %>" id="spec<%= i %>" class="form-control mb-3" placeholder="Specification<%= i %>" required></textarea>
+                                <label for="spec<%= i %>">Specification <%= i %></label>
+                                <textarea name="Specification<%= i %>" id="spec<%= i %>" class="form-control" placeholder="Enter specification <%= i %>" required></textarea>
+                                <div class="error-message" id="spec<%= i %>Error">Specification must start with a letter and cannot be empty.</div>
                             </div>
                         <% } %>
                         <div class="form-group">
-                            <textarea name="Description" id="desc" class="form-control mb-3" placeholder="Description" required></textarea>
+                            <label for="desc">Description</label>
+                            <textarea name="Description" id="desc" class="form-control" placeholder="Enter product description" required></textarea>
+                            <div class="error-message" id="descError">Description must start with a letter and cannot be empty.</div>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <input type="number" name="price" id="price" class="form-control mb-3" placeholder="Enter the price" required>
+                            <label for="price">Price</label>
+                            <input type="number" name="price" id="price" class="form-control" placeholder="Enter price" min="0" step="0.01" required>
+                            <div class="error-message" id="priceError">Price must be greater than zero and greater than discount amount.</div>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="discountAmount" id="discountAmount" class="form-control mb-3" placeholder="Discount Amount" required>
+                            <label for="discountAmount">Discount Amount</label>
+                            <input type="number" name="discountAmount" id="discountAmount" class="form-control" placeholder="Enter discount amount" min="0" step="0.01" required>
+                            <div class="error-message" id="discountError">Discount must be non-negative and less than price.</div>
                         </div>
                         <div class="form-group">
-                            <input type="number" name="stockQuantity" id="stockquantity" class="form-control mb-3" placeholder="Stock" required>
+                            <label for="stockquantity">Stock Quantity</label>
+                            <input type="number" name="stockQuantity" id="stockquantity" class="form-control" placeholder="Enter stock quantity" min="1" required>
+                            <div class="error-message" id="stockError">Stock quantity must be greater than zero.</div>
                         </div>
-                        <div class="row">
-                            <% for(let i = 1; i <= 4; i++) { %>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <input type="file" name="image<%= i %>" id="imageInput<%= i %>" accept="image/*" onchange="change(event, '<%= i %>')"
-                                        style="width: 100%;height: 35px;border-radius: 5px;padding-left: 5px;margin-bottom: 10px;" required>
-                                        
+                        <div class="form-group">
+                            <label>Product Images (4 required)</label>
+                            <div class="row">
+                                <% for(let i = 1; i <= 4; i++) { %>
+                                    <div class="col-lg-6">
+                                        <div class="image-upload">
+                                            <input type="file" name="image<%= i %>" id="imageInput<%= i %>" accept="image/*" onchange="change(event, '<%= i %>')" required>
+                                            <div style="margin-top: 10px;">
+                                                <img id="imagePreview<%= i %>" src="../assets/pngtree-empty-box-icon-for-your-project-png-image_1533458.jpg" alt="Image Preview <%= i %>" class="image-preview">
+                                            </div>
+                                        </div>
+                                        <div class="error-message" id="image<%= i %>Error">Please upload a valid image file (jpg, jpeg, png, gif).</div>
                                     </div>
-                                </div>
-                                <% if (i === 2) { %>
-                                    </div>
-                                    <div class="row">
+                                    <% if (i === 2) { %>
+                                        </div>
+                                        <div class="row">
+                                    <% } %>
                                 <% } %>
-                            <% } %>
+                            </div>
                         </div>
-                        <div class="row justify-content-center">
-                            <% for(let i = 1; i <= 4; i++) { %>
-                                <div class="col-lg-3">
-                                    <div style="width: 100px;height: 100px;margin: 10px; border: 1px solid grey;">
-                                        <img id="imagePreview<%= i %>" src="../assets/pngtree-empty-box-icon-for-your-project-png-image_1533458.jpg" alt="Image Preview <%= i %>" style="width: 100%; height: 100%;">
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-                        
-                        
                         <div class="form-group">
-                            <input name="tags" class="form-control mb-3" placeholder="Tags" required>
+                            <label for="tags">Tags</label>
+                            <input name="tags" id="tags OH MY GOODNESS I LOVE THIS SONG SO MUCH I COULD LISTEN TO IT A MILLION TIMES AND NEVER GET TIRED OF IT" class="form-control" placeholder="Enter tags (comma-separated)" required>
+                            <div class="error-message" id="tagsError">Tags cannot be empty.</div>
                         </div>
-                       
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -80,23 +199,20 @@
         </div>
     </div>
 </form>
+
 <% for(let i = 1; i <= 4; i++) { %>
-    <div class="modal fade" id="modal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="modalLabel<%= i %>" aria-hidden="true">
         <div class="modal-dialog modal-xl" style="max-width: 800px;" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crop Image</h5>
+                    <h5 class="modal-title" id="modalLabel<%= i %>">Crop Image <%= i %></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="img-container" style="width: 100%;height: auto;">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <img id="cropperImage<%= i %>" class="img-fluid" style="width: 100%; height: 100%;">
-                            </div>
-                        </div>
+                    <div class="img-container">
+                        <img id="cropperImage<%= i %>" class="img-fluid" style="max-width: 100%;">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -106,35 +222,36 @@
             </div>
         </div>
     </div>
-    <% } %>
+<% } %>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
 <script>
-
 function change(event, no) {
-    console.log("File changed, updating preview image...");
     const fileInput = event.target;
     const allowedExtensions = /\.(jpg|jpeg|png|gif)$/i;
+    const errorElement = document.getElementById(`image${no}Error`);
+    const previewImage = document.getElementById(`imagePreview${no}`);
 
-    if (!allowedExtensions.test(fileInput.value)) {
+    if (!fileInput.files.length || !allowedExtensions.test(fileInput.files[0].name)) {
+        fileInput.parentElement.classList.add('invalid');
+        errorElement.style.display = 'block';
+        fileInput.value = '';
+        previewImage.src = '../assets/pngtree-empty-box-icon-for-your-project-png-image_1533458.jpg';
         Swal.fire({
             icon: 'error',
-            title: 'Oops...',
+            title: 'Invalid File',
             text: 'Please upload only image files (jpg, jpeg, png, gif).'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fileInput.value = '';
-            }
         });
         return false;
     }
-    
+
+    fileInput.parentElement.classList.remove('invalid');
+    errorElement.style.display = 'none';
+
     const reader = new FileReader();
     reader.onload = function (e) {
         const image = document.getElementById(`cropperImage${no}`);
@@ -144,43 +261,33 @@ function change(event, no) {
         }
 
         const cropper = new Cropper(image, {
-            aspectRatio: NaN,
-            viewMode: 3,
+            aspectRatio: 1,
+            viewMode: 2,
+            autoCropArea: 0.8,
             ready() {
                 $(`#modal${no}`).modal('show');
-            },
+            }
         });
 
         document.getElementById(`crop${no}`).addEventListener('click', function () {
-            const canvas = cropper.getCroppedCanvas();
-            const croppedImage = canvas.toDataURL(); // You can upload this data to the server
-            console.log("Cropped Image Data: ", croppedImage);
-            
-            // Extract the file name from the cropped image data URL
-            const fileName = `cropped_${no}.png`; // Customize the filename as needed
-            
-            // Set the value of the corresponding file input to the filename
-            const fileInput = document.getElementById(`imageInput${no}`);
-
-            const originalFileName = fileInput.files[0].name;
-
-            // Create a new File object from the cropped image data
+            const canvas = cropper.getCroppedCanvas({
+                width: 300,
+                height: 300
+            });
+            const croppedImage = canvas.toDataURL('image/png');
+            const fileName = `cropped_${no}.png`;
             const croppedBlob = dataURItoBlob(croppedImage);
-            const croppedFile = new File([croppedBlob], `${originalFileName}_cropped${no}`, { type: 'image/png' });
+            const croppedFile = new File([croppedBlob], fileName, { type: 'image/png' });
 
-            // Create a FileList-like object with the new File object
             const newFileList = new DataTransfer();
             newFileList.items.add(croppedFile);
-
-            // Assign the FileList-like object to the file input
             fileInput.files = newFileList.files;
-            
-            // Update the preview image
-            const previewImage = document.getElementById(`imagePreview${no}`);
+
             previewImage.src = croppedImage;
-            
-            // Hide the modal
+            fileInput.parentElement.classList.remove('invalid');
+            errorElement.style.display = 'none';
             $(`#modal${no}`).modal('hide');
+            cropper.destroy();
         });
     };
     reader.readAsDataURL(fileInput.files[0]);
@@ -188,109 +295,203 @@ function change(event, no) {
 }
 
 function dataURItoBlob(dataURI) {
-    // Convert base64 to raw binary data held in a string
     const byteString = atob(dataURI.split(',')[1]);
-
-    // Separate the mime component
     const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-    // Write the bytes of the string to an ArrayBuffer
     const arrayBuffer = new ArrayBuffer(byteString.length);
     const intArray = new Uint8Array(arrayBuffer);
     for (let i = 0; i < byteString.length; i++) {
         intArray[i] = byteString.charCodeAt(i);
     }
-
-    // Write the ArrayBuffer to a blob
     return new Blob([arrayBuffer], { type: mimeString });
 }
 
+const form = document.getElementById('productForm');
+const inputs = {
+    name: document.getElementById('name'),
+    category: document.getElementById('category'),
+    price: document.getElementById('price'),
+    discountAmount: document.getElementById('discountAmount'),
+    stockquantity: document.getElementById('stockquantity'),
+    tags: document.getElementById('tags'),
+    spec1: document.getElementById('spec1'),
+    spec2: document.getElementById('spec2'),
+    spec3: document.getElementById('spec3'),
+    spec4: document.getElementById('spec4'),
+    desc: document.getElementById('desc'),
+    image1: document.getElementById('imageInput1'),
+    image2: document.getElementById('imageInput2'),
+    image3: document.getElementById('imageInput3'),
+    image4: document.getElementById('imageInput4')
+};
 
+function validateTextInput(input, errorId, customMessage) {
+    const value = input.value.trim();
+    const errorElement = document.getElementById(errorId);
+    const isValid = value !== '' && /^[a-zA-Z][\w\s\W]*$/.test(value);
+    if (!isValid) {
+        input.parentElement.classList.add('invalid');
+        errorElement.style.display = 'block';
+        input.setCustomValidity(customMessage);
+    } else {
+        input.parentElement.classList.remove('invalid');
+        errorElement.style.display = 'none';
+        input.setCustomValidity('');
+    }
+    return isValid;
+}
 
-    const priceInput = document.getElementById('price');
-    const discountInput = document.getElementById('discountAmount');
-    const stockInput = document.getElementById("stockquantity")
-    const nameInput = document.getElementById("name")
-    const spec1Input = document.getElementById('spec1')
-    const spec2Input = document.getElementById('spec2')
-    const spec3Input = document.getElementById('spec3')
-    const spec4Input = document.getElementById('spec4')
-    const descInput = document.getElementById('desc')
+function validatePriceDiscount() {
+    const price = parseFloat(inputs.price.value) || 0;
+    const discount = parseFloat(inputs.discountAmount.value) || 0;
+    const priceError = document.getElementById('priceError');
+    const discountError = document.getElementById('discountError');
+    let isValid = true;
 
-    priceInput.addEventListener('input', validatePrice);
-    discountInput.addEventListener('input', validatePrice);
-    stockInput.addEventListener('input', validatestock);
-    nameInput.addEventListener('input',validateTrim)
-    spec1Input.addEventListener('input',validateTrim)
-    spec2Input.addEventListener('input',validateTrim)
-    spec3Input.addEventListener('input',validateTrim)
-    spec4Input.addEventListener('input',validateTrim)
-    descInput.addEventListener('input',validateTrim)
+    inputs.price.parentElement.classList.remove('invalid');
+    inputs.discountAmount.parentElement.classList.remove('invalid');
+    priceError.style.display = 'none';
+    discountError.style.display = 'none';
+    inputs.price.setCustomValidity('');
+    inputs.discountAmount.setCustomValidity('');
 
+    if (price <= 0) {
+        inputs.price.parentElement.classList.add('invalid');
+        priceError.style.display = 'block';
+        inputs.price.setCustomValidity('Price must be greater than zero.');
+        isValid = false;
+    }
+    if (discount < 0) {
+        inputs.discountAmount.parentElement.classList.add('invalid');
+        discountError.style.display = 'block';
+        inputs.discountAmount.setCustomValidity('Discount cannot be negative.');
+        isValid = false;
+    }
+    if (discount >= price) {
+        inputs.discountAmount.parentElement.classList.add('invalid');
+        discountError.style.display = 'block';
+        inputs.discountAmount.setCustomValidity('Discount must be less than price.');
+        isValid = false;
+    }
+    return isValid;
+}
 
-    function validatePrice() {
-        const price = parseFloat(priceInput.value);
-        const discount = parseFloat(discountInput.value);
-        priceInput.setCustomValidity('');
-        discountInput.setCustomValidity('');
-        if (price <= discount) {
-            priceInput.setCustomValidity('Price must be greater than discount amount.');
-        }else if(price<0){
-            priceInput.setCustomValidity('Price must be more than zero') 
-        }else if(discount<0){
-            discountInput.setCustomValidity('discount must be more than or equal to zero')
-        }
-        else {
-            priceInput.setCustomValidity('');
-            discountInput.setCustomValidity('');
+function validateStock() {
+    const stock = parseInt(inputs.stockquantity.value) || 0;
+    const stockError = document.getElementById('stockError');
+    if (stock <= 0) {
+        inputs.stockquantity.parentElement.classList.add('invalid');
+        stockError.style.display = 'block';
+        inputs.stockquantity.setCustomValidity('Stock quantity must be greater than zero.');
+        return false;
+    }
+    inputs.stockquantity.parentElement.classList.remove('invalid');
+    stockError.style.display = 'none';
+    inputs.stockquantity.setCustomValidity('');
+    return true;
+}
+
+function validateImages() {
+    let valid = true;
+    for (let i = 1; i <= 4; i++) {
+        const imageInput = inputs[`image${i}`];
+        const errorElement = document.getElementById(`image${i}Error`);
+        if (!imageInput.files.length || !/\.(jpg|jpeg|png|gif)$/i.test(imageInput.files[0].name)) {
+            imageInput.parentElement.classList.add('invalid');
+            errorElement.style.display = 'block';
+            valid = false;
+        } else {
+            imageInput.parentElement.classList.remove('invalid');
+            errorElement.style.display = 'none';
         }
     }
-    function validatestock() {
-        const stock = parseFloat(stockInput.value)
-        if(stock < 0) stockInput.setCustomValidity('Stock must be more than or equal to zero');
-        else stockInput.setCustomValidity('');
-    }
-    function validateTrim(){
-        const name = nameInput.value
-        nameInput.setCustomValidity("")
-        spec1Input.setCustomValidity("")
-        spec2Input.setCustomValidity("")
-        spec3Input.setCustomValidity("")
-        spec4Input.setCustomValidity("")
-        descInput.setCustomValidity("")
-        if(name.trim()===""){
-            nameInput.setCustomValidity("Fields cannot contain only spaces. Please enter valid values.")
-        }
-        else if(!/^[a-zA-Z\s]+$/.test(name)){
-            nameInput.setCustomValidity("Fields cannot contain numbers.")
-        }
-        else if(spec1Input.value.trim()===""||!/^[a-zA-Z\s]+$/.test(spec1Input.value.charAt(0))){
-            spec1Input.setCustomValidity("Fields cannot contain only spaces and Do not start with numbers and symbols.")
-        }
-        else if(spec2Input.value.trim()===""||!/^[a-zA-Z\s]+$/.test(spec2Input.value.charAt(0))){
-            spec2Input.setCustomValidity("Fields cannot contain only spaces and Do not start with numbers and symbols.")
-        }
-        else if(spec3Input.value.trim()===""||!/^[a-zA-Z\s]+$/.test(spec3Input.value.charAt(0))){
-            spec3Input.setCustomValidity("Fields cannot contain only spaces and Do not start with numbers and symbols.")
-        }
-        else if(spec4Input.value.trim()===""||!/^[a-zA-Z\s]+$/.test(spec4Input.value.charAt(0))){
-            spec4Input.setCustomValidity("Fields cannot contain only spaces and Do not start with numbers and symbols.")
-        }
-        else if (descInput.value.trim()===""){
-            descInput.setCustomValidity("Fields cannot contain only spaces and Do not start with numbers and symbols.")
-        }
-        else{
-            nameInput.setCustomValidity("")
-            spec1Input.setCustomValidity("")
-            spec2Input.setCustomValidity("")
-            spec3Input.setCustomValidity("")
-            spec4Input.setCustomValidity("")
-            descInput.setCustomValidity("")
-        }
-    }
+    return valid;
+}
 
-   
+function validateCategory() {
+    const errorElement = document.getElementById('categoryError');
+    if (!inputs.category.value) {
+        inputs.category.parentElement.classList.add('invalid');
+        errorElement.style.display = 'block';
+        inputs.category.setCustomValidity('Please select a category.');
+        return false;
+    }
+    inputs.category.parentElement.classList.remove('invalid');
+    errorElement.style.display = 'none';
+    inputs.category.setCustomValidity('');
+    return true;
+}
 
+function validateTags() {
+    const errorElement = document.getElementById('tagsError');
+    if (inputs.tags.value.trim() === '') {
+        inputs.tags.parentElement.classList.add('invalid');
+        errorElement.style.display = 'block';
+        inputs.tags.setCustomValidity('Tags cannot be empty.');
+        return false;
+    }
+    inputs.tags.parentElement.classList.remove('invalid');
+    errorElement.style.display = 'none';
+    inputs.tags.setCustomValidity('');
+    return true;
+}
+
+function focusFirstInvalidField() {
+    const fields = [
+        { input: inputs.name, errorId: 'nameError', message: 'Product name must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.name, 'nameError', 'Product name must start with a letter and cannot be empty.') },
+        { input: inputs.category, errorId: 'categoryError', message: 'Please select a category.', validate: validateCategory },
+        { input: inputs.spec1, errorId: 'spec1Error', message: 'Specification must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.spec1, 'spec1Error', 'Specification must start with a letter and cannot be empty.') },
+        { input: inputs.spec2, errorId: 'spec2Error', message: 'Specification must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.spec2, 'spec2Error', 'Specification must start with a letter and cannot be empty.') },
+        { input: inputs.spec3, errorId: 'spec3Error', message: 'Specification must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.spec3, 'spec3Error', 'Specification must start with a letter and cannot be empty.') },
+        { input: inputs.spec4, errorId: 'spec4Error', message: 'Specification must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.spec4, 'spec4Error', 'Specification must start with a letter and cannot be empty.') },
+        { input: inputs.desc, errorId: 'descError', message: 'Description must start with a letter and cannot be empty.', validate: () => validateTextInput(inputs.desc, 'descError', 'Description must start with a letter and cannot be empty.') },
+        { input: inputs.price, errorId: 'priceError', message: 'Price must be greater than zero and greater than discount amount.', validate: validatePriceDiscount },
+        { input: inputs.discountAmount, errorId: 'discountError', message: 'Discount must be non-negative and less than price.', validate: validatePriceDiscount },
+        { input: inputs.stockquantity, errorId: 'stockError', message: 'Stock quantity must be greater than zero.', validate: validateStock },
+        { input: inputs.tags, errorId: 'tagsError', message: 'Tags cannot be empty.', validate: validateTags },
+        { input: inputs.image1, errorId: 'image1Error', message: 'Please upload a valid image file (jpg, jpeg, png, gif).', validate: validateImages },
+        { input: inputs.image2, errorId: 'image2Error', message: 'Please upload a valid image file (jpg, jpeg, png, gif).', validate: validateImages },
+        { input: inputs.image3, errorId: 'image3Error', message: 'Please upload a valid image file (jpg, jpeg, png, gif).', validate: validateImages },
+        { input: inputs.image4, errorId: 'image4Error', message: 'Please upload a valid image file (jpg, jpeg, png, gif).', validate: validateImages }
+    ];
+
+    for (const field of fields) {
+        if (!field.validate()) {
+            field.input.focus();
+            field.input.parentElement.classList.add('invalid');
+            document.getElementById(field.errorId).style.display = 'block';
+            return false;
+        }
+    }
+    return true;
+}
+
+// Real-time validation on input/change
+inputs.name.addEventListener('input', () => validateTextInput(inputs.name, 'nameError', 'Product name must start with a letter and cannot be empty.'));
+inputs.spec1.addEventListener('input', () => validateTextInput(inputs.spec1, 'spec1Error', 'Specification must start with a letter and cannot be empty.'));
+inputs.spec2.addEventListener('input', () => validateTextInput(inputs.spec2, 'spec2Error', 'Specification must start with a letter and cannot be empty.'));
+inputs.spec3.addEventListener('input', () => validateTextInput(inputs.spec3, 'spec3Error', 'Specification must start with a letter and cannot be empty.'));
+inputs.spec4.addEventListener('input', () => validateTextInput(inputs.spec4, 'spec4Error', 'Specification must start with a letter and cannot be empty.'));
+inputs.desc.addEventListener('input', () => validateTextInput(inputs.desc, 'descError', 'Description must start with a letter and cannot be empty.'));
+inputs.tags.addEventListener('input', validateTags);
+inputs.price.addEventListener('input', validatePriceDiscount);
+inputs.discountAmount.addEventListener('input', validatePriceDiscount);
+inputs.stockquantity.addEventListener('input', validateStock);
+inputs.category.addEventListener('change', validateCategory);
+inputs.image1.addEventListener('change', validateImages);
+inputs.image2.addEventListener('change', validateImages);
+inputs.image3.addEventListener('change', validateImages);
+inputs.image4.addEventListener('change', validateImages);
+
+form.addEventListener('submit', (e) => {
+    if (!focusFirstInvalidField()) {
+        e.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please correct the errors in the form before submitting.'
+        });
+    }
+});
 </script>
 
 <%-include("../layout/adminfooter.ejs")-%>

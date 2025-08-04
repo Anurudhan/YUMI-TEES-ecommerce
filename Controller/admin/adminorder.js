@@ -1,45 +1,50 @@
 const Order = require("../../model/order")
 const User  = require('../../model/usermodel');
-const returns =require("../../model/return");
+const returndetails =require("../../model/return");
 const Wallet = require("../../model/wallet")
 const WalletHistory = require("../../model/walletHistory")
 const product = require('../../model/productSchema');
 module.exports={
-    getorder: async (req,res)=>{
-        try{
-            let perPage=1
-            let skip = 0
-            const orders = await Order.aggregate([
-                { $lookup: { from: 'users', localField: 'userid', foreignField: '_id', as: 'userName' } },
-                { $unwind: '$userName' },
-                { $sort: { orderdate: -1 } },
-                {
-                    $project: {
-                        username: "$userName.name",
-                        'userid': 1,
-                        'products': 1,
-                        'address': 1,
-                        'orderdate': 1,
-                        'expectedDeliveryDate': 1,
-                        'paymentMethod': 1,
-                        'PaymentStatus': 1,
-                        'totalAmount': 1,
-                        'deliveryDate': 1,
-                        'orderStatus': 1,
-                        'couponDiscount': 1,
-                        'couponCode': 1,
-                        'discountAmount': 1
-                    }
-                }
-            ]);
-            const order = await Order.find({statorderStatus:"Cancelled"})
-            const retns = await returns.find()
-            res.render("admin/orders",{orders,retns,order})
+    getorder: async (req, res) => {
+  try {
+    const perPage = 10; // Show 10 orders per page
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * perPage;
+    const orders = await Order.aggregate([
+      { $lookup: { from: 'users', localField: 'userid', foreignField: '_id', as: 'userName' } },
+      { $unwind: '$userName' },
+      { $sort: { orderdate: -1 } },
+      { $skip: skip },
+      { $limit: perPage },
+      {
+        $project: {
+          username: '$userName.name',
+          userid: 1,
+          products: 1,
+          address: 1,
+          orderdate: 1,
+          expectedDeliveryDate: 1,
+          paymentMethod: 1,
+          PaymentStatus: 1,
+          totalAmount: 1,
+          deliveryDate: 1,
+          orderStatus: 1,
+          couponDiscount: 1,
+          couponCode: 1,
+          discountAmount: 1,
+          orderid: 1
         }
-        catch(err){
-            console.log(err);
-        }
-    },
+      }
+    ]);
+    const totalOrders = await Order.countDocuments(); // Count total orders
+    const retns = await returndetails.find();
+    console.log(`Orders: ${orders.length}, Page: ${page}, Total: ${totalOrders}`);
+    res.render('admin/orders', { orders, retns, page, totalOrders, perPage });
+  } catch (err) {
+    console.error('Error fetching orders:', err);
+    res.status(500).send('Server Error');
+  }
+},
     orderstatuschanging:async(req,res)=>{
         try{
             const id = req.params.id

@@ -1,3 +1,5 @@
+const MESSAGES = require("../../util/messages");
+
 module.exports={
     loginpage:async (req,res)=>{
         try{
@@ -10,8 +12,8 @@ module.exports={
     postloginpage: async (req,res)=>{
         try{
             const credential={
-                email:"teesyumi@gmail.com",
-                password:12345
+                email:process.env.ADMIN_EMAIL,
+                password:process.env.ADMIN_PASSWORD
             }
             const {email,password}=req.body;
             if(email==credential.email&&password==credential.password){
@@ -19,7 +21,7 @@ module.exports={
                 req.session.adminemail=email;
                 res.redirect("/admin");
             }
-            else res.render("admin/login",{err:"your enter the password or email incorrect"})
+            else res.render("admin/login",{err:MESSAGES.AUTH.ERROR.INVALID_CREDENTIALS})
         }
         catch(err){
             console.log(err);

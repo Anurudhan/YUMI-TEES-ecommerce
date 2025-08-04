@@ -1,5 +1,6 @@
 const Banner = require('../../model/banner');
 const upload = require("../../middleware/multer");
+const MESSAGES = require('../../util/messages');
 module.exports={
     getbanner:async (req,res)=>{
         try{
@@ -34,12 +35,12 @@ module.exports={
 
             if (!bannerExist) {
 
-                req.session.successMessage = 'New Banner Added successfully';
+                req.session.successMessage = MESSAGES.BANNER.SUCCESS.ADDED;
                 await Banner.create(bannerDtls)
                 res.redirect('/admin/banner')
             } else {
                 await Banner.updateOne({ bannername: req.body.bannername }, { $set: { bannerimage: bannerimage } })
-                req.session.successMessage = 'Existing Banner is replaced successfully';
+                req.session.successMessage = MESSAGES.BANNER.SUCCESS.REPLACED;;
                 res.redirect('/admin/banner')
             }
         }

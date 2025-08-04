@@ -72,12 +72,14 @@ router.get("/downloadinginvoice/:orderId",userVerify,CountOfCart,ordercontroller
 
 // product views in user side
 
-router.get("/allproduct",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
+router.get("/allproduct",userVerify,CountOfCart,wishCount,productcontroller.getProducts)
 router.get("/uniqueproduct/:id",userVerify,CountOfCart,wishCount,productcontroller.uniqueproduct)
-router.get("/searchproduct",userVerify,CountOfCart,wishCount,productcontroller.searchproduct)
-router.post("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
-router.get("/filter",userVerify,CountOfCart,wishCount,productcontroller.getallproduct)
-router.get("/searchfilter",userVerify,CountOfCart,wishCount,productcontroller.searchproduct)
+router.get("/searchproduct", (req, res) => {
+    res.redirect(`/allproduct?search=${encodeURIComponent(req.query.search || '')}`);
+});
+router.post("/filter",userVerify,CountOfCart,wishCount,productcontroller.getProducts)
+router.get("/filter",userVerify,CountOfCart,wishCount,productcontroller.getProducts)
+router.get("/searchfilter",userVerify,CountOfCart,wishCount,productcontroller.getProducts)
 
 // user-profile 
 router.get("/profile",userVerify,CountOfCart,wishCount,profilecontroller.profilepage)

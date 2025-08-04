@@ -1,0 +1,56 @@
+
+<%- include("../layout/userheader.ejs") -%>
+<%- include("../layout/usercentre.ejs") -%>
+<%- include("../partials/usernavbar.ejs") -%>
+
+<style>
+    .error-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(145deg, #f7fafc, #edf2f7);
+    }
+
+    .error-container h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 20px;
+    }
+
+    .error-container p {
+        font-size: 18px;
+        color: #718096;
+        margin-bottom: 30px;
+        max-width: 600px;
+    }
+
+    .error-container a {
+        background: linear-gradient(135deg, #3c2065, #5e3e8c);
+        color: #e2e8f0;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .error-container a:hover {
+        background: linear-gradient(135deg, #2b1a3d, #4b2e6b);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(60, 32, 101, 0.4);
+    }
+</style>
+
+<section class="error-container">
+    <h1>Error</h1>
+    <p><%- message %></p>
+    <a href="/allproduct">Return to Products</a>
+</section>
+
+<%- include("../partials/userfooter.ejs") -%>
+<%- include("../layout/adminfooter.ejs") -%>

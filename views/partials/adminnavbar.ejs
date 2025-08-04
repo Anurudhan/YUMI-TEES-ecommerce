@@ -1,156 +1,272 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@300;400;500;600&display=swap');
-*{
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@300;400;500;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css');
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
 
-nav{
+nav {
     position: fixed;
-    top:0;
+    top: 0;
     left: 0;
     height: 70px;
-    width:100%;
-    display:flex ;
+    width: 100%;
+    display: flex;
     align-items: center;
-    background-color: #8fe66a;
-    box-shadow: 0 8 1px rgba(8,0,0,0.1);
+    background-color: #1a1a1a;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
 }
-nav .logo{
+
+nav .logo {
     display: flex;
     align-items: center;
     margin: 0 24px;
 }
-.logo .menu-icon{
-    color: #333;
-    font-size:24px;
+
+.logo .menu-icon {
+    color: #ccc;
+    font-size: 24px;
     margin-right: 14px;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
-.logo .logo-name{
-    color:#333;
+
+.logo .menu-icon:hover {
+    color: #fff;
+}
+
+.logo .logo-name {
+    color: #ccc;
     font-size: 22px;
     font-weight: 500;
 }
-nav .sidebar{
-    position: fixed;
-    top: 0%;
-    left: -100%;
-    height: 100%;
-    width: 240px;
-    padding: 20px 0;
-    color: #fff;
-    background-color: black;
-    box-shadow: 0  5px 10px rgba(0,0,0,0.1);
-    transition: all 0.4s ease;
-}
-nav.open .sidebar{
-    left: 0;
-    z-index: 10;
-}
 
-.sidebar .sidebar-content{
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    padding:30px 16px ;
-    z-index: 10;
-}
-.sidebar-content .list{
-    list-style-type: none;
-}
-.list .nav-link{
+.top-icons {
+    margin-left: auto;
+    margin-right: 24px;
     display: flex;
     align-items: center;
-    padding: 14px 12px;
-    border-radius: 8px;
-    text-decoration: none;
+    gap: 16px;
 }
-.nav-link:hover{
-    background-color: gray;
-}
-.nav-link .icons{
-    margin-right: 14px;
+
+.top-icons i {
     font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
-.nav-link .link{
-    font-size: 16px;
-    font-weight: 400;
+
+.top-icons i:hover {
+    color: #fff;
 }
-.nav-link:hover .icons,
-.nav-link:hover .link{
-    color: black;
+
+.profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #ccc;
 }
-.overlay{
+
+/* Sidebar */
+nav .sidebar {
     position: fixed;
     top: 0;
-    left: -100%;
-    height: 1000vh;
-    width: 200%;
-    opacity: 0;
-    pointer-events: none;
+    left: -250px;
+    height: 100vh;
+    width: 250px;
+    background-color: #1a1a1a;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.2);
     transition: all 0.4s ease;
+    z-index: 1001;
 }
-nav.open ~.overlay{
+
+nav.open .sidebar {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #333;
+}
+
+.sidebar-header .menu-icon {
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.sidebar-logo {
+    width: 150px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Logo in navbar - added styles for proper sizing */
+.logo .sidebar-logo {
+    width: 140px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.sidebar-content {
+    padding: 20px 0;
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+}
+
+.lists {
+    list-style: none;
+    padding: 0;
+}
+
+.list {
+    margin-bottom: 5px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #ccc;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background-color: #333;
+    color: #8fe66a;
+    border-left-color: #8fe66a;
+    transform: translateX(5px);
+}
+
+.nav-link.active {
+    background-color: #8fe66a;
+    color: #1a1a1a;
+    border-left-color: #8fe66a;
+}
+
+.nav-link .icons {
+    margin-right: 15px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-link .link {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+    z-index: 999;
+}
+
+nav.open ~ .overlay {
     opacity: 1;
-    left:240px;
-    pointer-events: auto;
+    visibility: visible;
 }
-.icons{
-    margin-right: 100px;
-    font-size: 20px;
-    font-weight:500;
+
+/* Main content area adjustment */
+.main-content {
+    margin-top: 70px;
+    padding: 20px;
+    transition: margin-left 0.4s ease;
 }
-.profile{
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logo .logo-name {
+        display: none;
+    }
+    
+    .top-icons {
+        gap: 10px;
+    }
+    
+    nav .sidebar {
+        width: 280px;
+        left: -280px;
+    }
 }
 </style>
-<nav>
-    <div class="logo col-div-4">
-            <i class="bi bi-list menu-icon" id="menu"></i>
-            <span class="logo-name">YUMI TEES</span>
-    </div>
-    <div class="col-div-4">
 
+<nav id="navbar">
+    <div class="logo">
+        <i class="bi bi-list menu-icon" id="menu"></i>
+        <span class="logo-name"><img src="/assets/mainlogo1.jpeg" class="sidebar-logo" alt="Logo"></span>
     </div>
-    <div class="col-div-4 icons ms-auto">
-        <i class="bi bi-three-dots-vertical pe-5"></i>
-        <i class="bi bi-bell pe-5"></i>
-        <img class="profile" src="/assets/imgc.jpg" alt="">
-    </div>  
-    <div class="sidebar" ">
-        <div class="logo ">
-            <i class="bi bi-list menu-icon" id="menuclose" style="color: #fff;"></i>
-            <img src="/assets/logoblack.png" style="width: 100px;" class="ms-3" alt="">
+    
+    <div class="top-icons">
+        <i class="bi bi-three-dots-vertical"></i>
+        <i class="bi bi-bell"></i>
+        <img class="profile" src="/assets/imgc.jpg" alt="Profile">
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-x-lg menu-icon" id="menuclose"></i>
+            <img src="/assets/mainlogo1.jpeg" class="sidebar-logo" alt="Logo">
         </div>
+        
         <div class="sidebar-content">
             <ul class="lists">
                 <li class="list">
-                    <a href="/admin" class="nav-link">
+                    <a href="/admin" class="nav-link active">
                         <i class="bi bi-house-door icons"></i>
                         <span class="link">Dashboard</span>
                     </a>
                 </li>
                 <li class="list">
                     <a href="/admin/Product" class="nav-link">
-                        <i class="bi bi-border-all icons"></i>
+                        <i class="bi bi-box-seam icons"></i>
                         <span class="link">Products</span>
                     </a>
                 </li>
                 <li class="list">
                     <a href="/admin/category" class="nav-link">
-                        <i class="bi bi-gear-wide-connected icons"></i>
+                        <i class="bi bi-tags icons"></i>
                         <span class="link">Categories</span>
                     </a>
                 </li>
                 <li class="list">
                     <a href="/admin/Customers" class="nav-link">
-                        <i class="bi bi-collection-fill icons"></i>
+                        <i class="bi bi-people icons"></i>
                         <span class="link">Customers</span>
                     </a>
                 </li>
@@ -162,20 +278,14 @@ nav.open ~.overlay{
                 </li>
                 <li class="list">
                     <a href="/admin/coupons" class="nav-link">
-                        <i class="bi bi-cash-coin icons"></i>
+                        <i class="bi bi-percent icons"></i>
                         <span class="link">Coupons</span>
                     </a>
                 </li>
                 <li class="list">
                     <a href="/admin/banner" class="nav-link">
-                        <i class="bi bi-card-image icons"></i>
+                        <i class="bi bi-image icons"></i>
                         <span class="link">Banner</span>
-                    </a>
-                </li>
-                <li class="list">
-                    <a href="" class="nav-link">
-                        <i class="bi bi-wallet icons"></i>
-                        <span class="link">Payments</span>
                     </a>
                 </li>
                 <li class="list">
@@ -184,27 +294,127 @@ nav.open ~.overlay{
                         <span class="link">Logout</span>
                     </a>
                 </li>
-           
-                
-            </ul>       
+            </ul>
         </div>
     </div>
 </nav>
-<section class="overlay"></section>
+
+
+
 <script>
-    const navBar = document.querySelector("nav"),
-    menuBtns = document.querySelectorAll(".menu-icon"),
-    overlay = document.querySelector(".overlay");
-   
-    menuBtns.forEach((menuBtn) => {
-        menuBtn.addEventListener("click", () => {
-            navBar.classList.toggle("open");
-        })
-    })
+    class AdminSidebar {
+        constructor() {
+            this.navBar = document.querySelector("nav");
+            this.menuBtns = document.querySelectorAll(".menu-icon");
+            this.overlay = document.querySelector(".overlay");
+            this.navLinks = document.querySelectorAll(".nav-link");
+            
+            this.init();
+        }
 
-    overlay.addEventListener("click", () => {
-        navBar.classList.toggle("open");
-    })
+        init() {
+            // Toggle sidebar
+            this.menuBtns.forEach((menuBtn) => {
+                menuBtn.addEventListener("click", () => {
+                    this.toggleSidebar();
+                });
+            });
 
+            // Close sidebar when clicking overlay
+            this.overlay.addEventListener("click", () => {
+                this.closeSidebar();
+            });
 
+            // Handle navigation
+            this.navLinks.forEach((link) => {
+                link.addEventListener("click", (e) => {
+                    this.handleNavigation(e, link);
+                });
+            });
+
+            // Close sidebar on escape key
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && this.navBar.classList.contains("open")) {
+                    this.closeSidebar();
+                }
+            });
+
+            // Set active link based on current page
+            this.setActiveLink();
+        }
+
+        toggleSidebar() {
+            this.navBar.classList.toggle("open");
+        }
+
+        closeSidebar() {
+            this.navBar.classList.remove("open");
+        }
+
+        openSidebar() {
+            this.navBar.classList.add("open");
+        }
+
+        handleNavigation(e, clickedLink) {
+            // Remove active class from all links
+            this.navLinks.forEach(link => link.classList.remove("active"));
+            
+            // Add active class to clicked link
+            clickedLink.classList.add("active");
+            
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    this.closeSidebar();
+                }, 300);
+            }
+
+            // You can add more navigation logic here
+            console.log(`Navigating to: ${clickedLink.href}`);
+        }
+
+        setActiveLink() {
+            const currentPath = window.location.pathname;
+            this.navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // Public methods for external use
+        setActivePage(href) {
+            this.navLinks.forEach(link => {
+                if (link.getAttribute('href') === href) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        updateProfileImage(imageSrc) {
+            const profileImg = document.querySelector('.profile');
+            if (profileImg && imageSrc) {
+                profileImg.src = imageSrc;
+            }
+        }
+
+        updateLogo(logoSrc) {
+            const sidebarLogo = document.querySelector('.sidebar-logo');
+            if (sidebarLogo && logoSrc) {
+                sidebarLogo.src = logoSrc;
+            }
+        }
+    }
+
+    // Initialize the sidebar
+    const adminSidebar = new AdminSidebar();
+
+    // Example of how to use the public methods:
+    // adminSidebar.setActivePage('/admin/products');
+    // adminSidebar.updateProfileImage('/assets/new-profile.jpg');
+    // adminSidebar.updateLogo('/assets/new-logo.jpg');
 </script>

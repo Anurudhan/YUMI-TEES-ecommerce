@@ -1,84 +1,583 @@
 <%-include("../layout/userheader.ejs")-%>
 <%-include("../layout/usercentre.ejs")-%>
 <style>
-    .gradient-custom-3 {
-/* fallback for old browsers */
-background: #84fab0;
-
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
-
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+/* Modern Gradient Backgrounds - Enhanced Design */
+.gradient-custom-3 {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 212, 170, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 168, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(132, 250, 176, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8), rgba(44, 83, 100, 0.8));
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
 }
+
+.gradient-custom-3::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98px,
+      rgba(0, 212, 170, 0.02) 100px
+    );
+  animation: backgroundShift 25s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes backgroundShift {
+  0% { transform: translateX(-100px) translateY(-100px) rotate(0deg); }
+  100% { transform: translateX(100px) translateY(100px) rotate(360deg); }
+}
+
 .gradient-custom-4 {
-/* fallback for old browsers */
-background: #84fab0;
-
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
-
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+  background: linear-gradient(135deg, #00d4aa, #00a8ff, #4facfe);
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 25px rgba(0, 212, 170, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
 }
-u{
-    color: blue;
+
+.gradient-custom-4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s;
+}
+
+.gradient-custom-4:hover::before {
+  left: 100%;
+}
+
+.gradient-custom-4:hover {
+  background: linear-gradient(135deg, #00c9a7, #0097e6, #3c90fe);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 15px 40px rgba(0, 212, 170, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Container - Compact Proportions */
+.col-xl-6 {
+  max-width: 420px;
+}
+
+.col-lg-7 {
+  max-width: 420px;
+}
+
+/* Enhanced Black Container - Better Proportions */
+.card {
+  background: 
+    linear-gradient(145deg, rgba(13, 13, 13, 0.95), rgba(26, 26, 26, 0.95)),
+    radial-gradient(circle at 50% 50%, rgba(0, 212, 170, 0.05) 0%, transparent 70%) !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(132, 250, 176, 0.3),
+    0 0 80px rgba(0, 212, 170, 0.1) !important;
+  color: white !important;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  min-height: auto;
+  width: 100%;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #00d4aa, #00a8ff, #84fab0, #ff6b6b);
+  background-size: 200% 100%;
+  animation: gradientMove 3s linear infinite;
+  border-radius: 20px 20px 0 0;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background: 
+    linear-gradient(145deg, rgba(13, 13, 13, 0.98), rgba(26, 26, 26, 0.98));
+  border-radius: 18px;
+  z-index: 1;
+}
+
+/* Card Body Enhanced - Compact Padding */
+.card-body {
+  padding: 1.5rem 2rem !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo Enhancement - Compact Size */
+.card img {
+  width: 65px !important;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: linear-gradient(#1a1a1a, #1a1a1a) padding-box,
+              linear-gradient(135deg, #00d4aa, #00a8ff, #ff6b6b) border-box;
+  box-shadow: 
+    0 0 20px rgba(0, 212, 170, 0.6),
+    0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 1rem;
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.card img:hover {
+  transform: scale(1.15) rotate(8deg);
+  box-shadow: 
+    0 0 40px rgba(0, 168, 255, 0.8),
+    0 15px 40px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.3) contrast(1.2);
+}
+
+/* Modern Typography - Compact Size */
+h2 {
+  background: linear-gradient(135deg, #00d4aa, #00a8ff, #84fab0, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientText 4s ease infinite;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  text-shadow: none;
+  position: relative;
+}
+
+@keyframes gradientText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #00d4aa, #00a8ff);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+}
+
+/* Enhanced Form Controls - Compact Size */
+.form-control {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 2px solid rgba(132, 250, 176, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 0.8rem 2.2rem 0.8rem 1.2rem !important;
+  font-size: 0.9rem !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  height: 42px !important;
+  width: 100% !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(15px) !important;
+  position: relative !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #00d4aa !important;
+  box-shadow: 
+    0 0 0 3px rgba(0, 212, 170, 0.2),
+    0 0 30px rgba(0, 212, 170, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-weight: 400 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.form-control:focus::placeholder {
+  opacity: 0.8 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Ensure input text is always white and visible */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  color: #ffffff !important;
+
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Password Input Container - Compact Positioning */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  color: #00d4aa;
+}
+
+/* Enhanced Labels - Compact Size */
+.form-label {
+  color: #84fab0 !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  text-shadow: 0 0 8px rgba(132, 250, 176, 0.4) !important;
+}
+
+/* Form Outline Enhanced - Compact Spacing */
+.form-outline {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.form-outline::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00d4aa, #00a8ff);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1px;
+}
+
+.form-outline:focus-within::after {
+  width: 100%;
+}
+
+/* Button Enhanced - Compact Size */
+.btn.gradient-custom-4 {
+  width: 100%;
+  height: 42px;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+}
+
+/* Checkbox Styling - Compact Size */
+.form-check-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(132, 250, 176, 0.4);
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-right: 0.4rem;
+  transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: #00d4aa;
+  border-color: #00d4aa;
+  box-shadow: 0 0 8px rgba(0, 212, 170, 0.6);
+}
+
+.form-check-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Link Styling - Fixed Login Link */
+.login-link {
+  color: #00d4aa !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-link:hover {
+  color: #00a8ff !important;
+  text-shadow: 0 0 8px rgba(0, 212, 170, 0.5) !important;
+}
+
+/* Terms link styling */
+a.text-body u {
+  color: #00a8ff !important;
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+}
+
+a.text-body:hover u {
+  color: #00d4aa !important;
+  text-shadow: 0 0 6px rgba(0, 168, 255, 0.4) !important;
+}
+
+/* Error Message Styling - Better Visibility */
+.error {
+  color: #ff6b6b !important;
+  font-size: 0.85rem !important;
+  margin-top: 0.5rem !important;
+  display: block !important;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.4) !important;
+  font-weight: 500 !important;
+}
+
+/* Sign Up Link - Compact Size */
+h6 {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.85rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+}
+
+/* Responsive Design - Compact Mobile Experience */
+@media (max-width: 768px) {
+  .col-xl-6, .col-lg-7 {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .card {
+    margin: 0.5rem;
+    border-radius: 15px !important;
+  }
+  
+  .card-body {
+    padding: 1.2rem 1.5rem !important;
+  }
+  
+  .form-control {
+    padding: 0.7rem 2rem 0.7rem 1rem !important;
+    height: 38px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .btn.gradient-custom-4 {
+    height: 38px;
+    font-size: 0.85rem;
+  }
+  
+  .form-outline {
+    margin-bottom: 0.8rem;
+  }
+  
+  .form-label {
+    font-size: 0.75rem !important;
+  }
+  
+  .form-check-input {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .form-check-label {
+    font-size: 0.75rem;
+  }
+  
+  .error {
+    font-size: 0.75rem !important;
+  }
+  
+  h6 {
+    font-size: 0.8rem !important;
+    margin-top: 0.8rem !important;
+  }
+  
+  .card img {
+    width: 55px !important;
+    height: 55px;
+    margin-bottom: 0.8rem;
+  }
+  
+  .toggle-password {
+    right: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Enhanced Focus States */
+.btn:focus,
+.form-control:focus,
+a:focus {
+  outline: 2px solid rgba(0, 212, 170, 0.6);
+  outline-offset: 2px;
+}
+
+/* Subtle Animation on Load */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card {
+  animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Form Elements Animation */
+.form-outline {
+  animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.form-outline:nth-child(1) { animation-delay: 0.1s; }
+.form-outline:nth-child(2) { animation-delay: 0.2s; }
+.form-outline:nth-child(3) { animation-delay: 0.3s; }
+.form-outline:nth-child(4) { animation-delay: 0.4s; }
+
+/* Additional Glow Effects */
+.card:hover {
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 0 1px rgba(0, 212, 170, 0.5),
+    0 0 100px rgba(0, 212, 170, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Floating Particles Effect */
+.gradient-custom-3::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 170, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(0, 168, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(132, 250, 176, 0.3), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 107, 107, 0.3), transparent);
+  background-repeat: repeat;
+  background-size: 150px 100px;
+  animation: floatingParticles 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@keyframes floatingParticles {
+  0% { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-100px) translateX(50px); }
 }
 </style>
-<section class=" bg-image "
+<section class="vh-100 bg-image"
   style="background-image: url('assets/bgtheme.jpg');background-repeat: no-repeat;background-size: cover;">
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card pt-2" style="border-radius: 15px;color: white; background-color: black;">
-            <div class="card-body ">
-                <div class="justify-content-center align-items-center d-flex">
-                    <a href="/guest"><img src="assets/logoblack.png" style="width:100px;" alt=""></a>
-                </div>
+            <div class="card-body">
+              <div class="justify-content-center align-items-center d-flex">
+                <a href="/guest"><img src="assets/mainlogo1.jpeg" style="width:100px;" alt=""></a>
+              </div>
               <h2 class="text-uppercase text-center mb-2">Create an account</h2>
-
               <form action="/signup" method="post">
                 <input type="hidden" value="1" name="status">
                 <div class="form-outline mb-4">
-                <label class="form-label" for="form3Example1cg">Your Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" class="form-control form-control-lg" />
+                  <label class="form-label" for="name">Your Name</label>
+                  <input type="text" id="name" name="name" placeholder="Enter your name" class="form-control form-control-lg" />
                 </div>
-
                 <div class="form-outline mb-4">
-                    <label class="form-label" for="form3Example1cg">Your Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your E-mail" class="form-control form-control-lg"  />
+                  <label class="form-label" for="email">Your Email</label>
+                  <input type="email" id="email" name="email" placeholder="Enter your E-mail" class="form-control form-control-lg" />
                   <span id="email-err" class="error"></span>
                 </div>
-
                 <div class="form-outline mb-4">
-                    <label class="form-label" for="form3Example1cg">Password</label>
-                  <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control form-control-lg"  />
-                   <span id="pass-err" class="error"></span>
+                  <label class="form-label" for="password">Password</label>
+                  <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control form-control-lg" />
+                    <i class="bi bi-eye toggle-password" id="togglePassword"></i>
+                  </div>
+                  <span id="pass-err" class="error"></span>
                 </div>
-
                 <div class="form-outline mb-4">
-                  <label class="form-label" for="form3Example1cg">Confirm password</label>
-                  <input type="password" id="confirm-password" placeholder="Repeat your password" class="form-control form-control-lg" />                
+                  <label class="form-label" for="confirm-password">Confirm password</label>
+                  <div class="password-container">
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Repeat your password" class="form-control form-control-lg" />
+                    <i class="bi bi-eye toggle-password" id="toggleConfirmPassword"></i>
+                  </div>
                 </div>
-
                 <div class="form-check d-flex justify-content-center mb-3">
                   <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
-                  <label class="form-check-label" for="form2Example3g">
+                  <label class="form-check-label" for="form2Example3cg">
                     I agree all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>
                   </label>
                 </div>
-
                 <div class="d-flex justify-content-center">
-                  <button type="submit"
-                    class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Sign Up</button>
+                  <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Sign Up</button>
                 </div>
-
-                <h6 class="text-center mt-3 mb-2">Have already an account? <a href="/login"
-                    class="fw-bold text-body"><u>Login here</u></a></h6>
-
+                <h6 class="text-center mt-3 mb-2">Have already an account? <a href="/login" class="login-link">Login here</a></h6>
               </form>
-
             </div>
           </div>
         </div>
@@ -87,49 +586,55 @@ u{
   </div>
 </section>
 <script>
-  const email = document.getElementById('email')
-  const password = document.getElementById('password')
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
-  const name = document.getElementById('name')
+  const name = document.getElementById('name');
+  const togglePassword = document.getElementById('togglePassword');
+  const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
 
-  name.addEventListener('input', validateform)
-  email.addEventListener('input', validateform);
-  password.addEventListener('input', validateform);
-  confirmPassword.addEventListener('input', validateform);
+  name.addEventListener('input', validateForm);
+  email.addEventListener('input', validateForm);
+  password.addEventListener('input', validateForm);
+  confirmPassword.addEventListener('input', validateForm);
+  togglePassword.addEventListener('click', () => togglePasswordVisibility('password', 'togglePassword'));
+  toggleConfirmPassword.addEventListener('click', () => togglePasswordVisibility('confirm-password', 'toggleConfirmPassword'));
 
-  function validateform(){
+  function validateForm() {
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/.,<>])(?=.*[^\d\w]).{8,}$/;
-    name.setCustomValidity('')
-    email.setCustomValidity('')
-    password.setCustomValidity('')
-    confirmPassword.setCustomValidity('')
-  
-    if(name.value.trim() === ''){
-      name.setCustomValidity('Fields cannot contain only spaces. Please enter valid values.')
-    }
-    else if(!/^[a-zA-Z\s]+$/.test(name.value)){
-      name.setCustomValidity('Fields cannot contain numbers and symbols. Please enter valid values.')
-    }
-    else if(!emailPattern.test(email.value)){
-      email.setCustomValidity('Please enter a valid email address')
-    }
-    else if(password.value.length<8){
-      password.setCustomValidity('Password must be at least 8 characters')
-    }
-    else if(!passwordPattern.test(password.value)){
-      password.setCustomValidity('Password must contain at least one number, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long.')
-    }
-    else if(confirmPassword.value !== password.value){
-      confirmPassword.setCustomValidity('Passwords do not match.')
-    }
-    else{
-      name.setCustomValidity('')
-      email.setCustomValidity('')
-      password.setCustomValidity('')
-      confirmPassword.setCustomValidity('')
-    }
-  }    
-</script>
+    name.setCustomValidity('');
+    email.setCustomValidity('');
+    password.setCustomValidity('');
+    confirmPassword.setCustomValidity('');
 
+    if (name.value.trim() === '') {
+      name.setCustomValidity('Fields cannot contain only spaces. Please enter valid values.');
+    } else if (!/^[a-zA-Z\s]+$/.test(name.value)) {
+      name.setCustomValidity('Fields cannot contain numbers and symbols. Please enter valid values.');
+    } else if (!emailPattern.test(email.value)) {
+      email.setCustomValidity('Please enter a valid email address');
+    } else if (password.value.length < 8) {
+      password.setCustomValidity('Password must be at least 8 characters');
+    } else if (!passwordPattern.test(password.value)) {
+      password.setCustomValidity('Password must contain at least one number, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long.');
+    } else if (confirmPassword.value !== password.value) {
+      confirmPassword.setCustomValidity('Passwords do not match.');
+    } else {
+      name.setCustomValidity('');
+      email.setCustomValidity('');
+      password.setCustomValidity('');
+      confirmPassword.setCustomValidity('');
+    }
+  }
+
+  function togglePasswordVisibility(inputId, toggleId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleId);
+    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+    input.setAttribute('type', type);
+    toggle.classList.toggle('bi-eye');
+    toggle.classList.toggle('bi-eye-slash');
+  }
+</script>
 <%-include("../layout/userfooter.ejs")-%>

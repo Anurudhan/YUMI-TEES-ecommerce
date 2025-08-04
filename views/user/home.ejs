@@ -38,6 +38,7 @@
     height: 200px;
 }
 </style>
+
 <%-include("../layout/usercentre.ejs")-%>
 <%-include("../partials/usernavbar.ejs")-%>
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -63,15 +64,15 @@
   </button>
 </div>
 
-  <div class="container" id="men" style="margin-top: 3%;">
-    <div class="header mb-4">
+  <div class="container" id="men" style="height: 100vh;padding-top: 60px;" >
+    <div class="row header mb-4" style="margin-top: 60px;">
         <h3>MEN'S</h3>
     </div>
     
     <div class="row row-cols row-cols-md-4 g-4 d-flex mt-4 pb-2">
         <% mens.splice(0,4).forEach((product,index)=> { %>
           <a href="/uniqueproduct/<%-product._id-%>" style="text-decoration: none;" >
-        <div class="col">
+        <div class="col" style="margin-top: 50px;">
           <div class="card h-100 shadow">
             <img src="/productimages/<%=product.images[0]%>" class="card-img-top" alt="...">
             <div class="card-body">
@@ -89,14 +90,14 @@
       <% }) %>
     </div>
   </div>
-  <div class="container" id="women" style="margin-top: 3%;">
-    <div class="header mb-4">
+  <div class="container" id="women" style="height: 100vh;padding-top: 60px;">
+    <div class="header mb-4" style="margin-top: 60px;">
         <h3>WOMEN'S</h3>
     </div>
     
-    <div class="row row-cols row-cols-md-4 g-4 d-flex pb-2 mt-4" style="max-height: 100vh;">
+    <div class="row row-cols row-cols-md-4 g-4 d-flex pb-2 mt-4" style="text-decoration: none;">
         <% womens.splice(0,4).forEach((product,index)=> { %>
-        <div class="col">
+        <div class="col" style="margin-top: 50px;">
           <div class="card h-100 shadow">
             <img src="/productimages/<%=product.images[0]%>" class="card-img-top" alt="...">
             <div class="card-body">
@@ -114,14 +115,14 @@
       <% }) %>
     </div>
   </div>
-  <div class="container" id="kid" style="margin-top: 3%;">
-    <div class="header mb-4">
-        <h3>KID'S</h3>
+  <div class="container" id="kid" style="height: 100vh;padding-top: 30px;">
+    <div class="header mb-4" style="margin-top: 50px;">
+        <h3 style="margin-top: 100px;">KID'S</h3>
     </div>
     
     <div class="row row-cols row-cols-md-4 g-4 d-flex">
         <% kids.forEach((product,index)=> { %>
-        <div class="col">
+        <div class="col" style="margin-top: 60px;">
           <div class="card h-100">
             <img src="/productimages/<%=product.images[0]%>" class="card-img-top" alt="...">
             <div class="card-body">

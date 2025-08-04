@@ -48,4 +48,4 @@ mongoose.connect(process.env.MONGOURL)
 
 // server connection---------------------------------------------------------->
 
-app.listen(3000,()=>{console.log("server connected succesfully");})
+app.listen(3001,()=>{console.log("server connected succesfully");})

@@ -1,96 +1,123 @@
 <%-include("../layout/userheader.ejs")-%>
-<link rel="stylesheet" href="/stylesheet/productdetails.css">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <script src="/javascript/cartAjax.js"></script>
 <%-include("../layout/usercentre.ejs")-%>
-<style media="screen">
+<style>
     figure.zoom {
         background-position: 50% 50%;
         position: relative;
-        /* margin: 150px auto; */
-        /* border: 5px solid white;
-        box-shadow: -1px 5px 15px black; */
-        /* height: 400px;
-        width: 520px; */
         width: 100%;
         height: 60vh;
         overflow: hidden;
         cursor: zoom-in;
-      
     }
-  
+
     figure.zoom img:hover {
         opacity: 0;
     }
-  
+
     figure.zoom img {
         transition: opacity 0.5s;
         display: block;
         width: 100%;
-  
     }
-  
-    .small-images {
-        max-width: 120px;
+
+    .gradient-button {
+        background: linear-gradient(45deg, #4f46e5, #7c3aed);
+        transition: transform 0.2s ease-in-out;
     }
-  </style>
+
+    .gradient-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .equal-height {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+</style>
 <%-include("../partials/usernavbar.ejs")-%>
-<div class="container-fluid" style="padding-left: 8%;" >
-    <div class="card shadow " style="margin-top: 100px; width: 92%;max-height: 570px;">
-        <div class="container-fluid">
-            <div class="wrapper row">
-                <div class="preview col-md-6" style="padding-left: 10%;">
-                    
-                    <div class="border rounded-4 mb-3" style="width: 80%; max-height: 400px;">
-                        <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" >
-                          <figure class="zoom" onmousemove="zoom(event)" id="main-bg"
-                                    style="background-image: url('/productimages/<%- product.images[0] -%>');background-size:200%;">
-                          <img style="width: 100%;height: 100%; margin: auto;"  class="rounded-8 fit" src="/productimages/<%- product.images[0]-%>" id="mainimg" />
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-24">
+    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 md:p-8">
+            <!-- Image Section -->
+            <div class="equal-height">
+                <div class="border rounded-xl overflow-hidden shadow-lg w-full max-w-md mx-auto">
+                    <a data-fslightbox="mygalley" class="block" target="_blank" data-type="image">
+                        <figure class="zoom" onmousemove="zoom(event)" id="main-bg"
+                                style="background-image: url('/productimages/<%- product.images[0] -%>'); background-size: 200%;">
+                            <img class="w-full h-[60vh] object-contain rounded-xl" src="/productimages/<%- product.images[0]-%>" id="mainimg" />
                         </figure>
-                        </a>
-                      </div>
-            
-                    <div class="mb-3" style="padding-left: 5%;">
-                        <% product.images.forEach((ele,index) => { %>
-                        <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"    class="item-thumb">
-                          <img width="60" height="60" class="rounded-2" src="/productimages/<%= ele%>" onclick="change('<%-index+1-%>')" id="img<%-index+1-%>"/>
-                        </a>
-                        <% }) %>
-                      </div>
-                                        
+                    </a>
                 </div>
-                <div class="details col-md-6 ps-5">
-                    <h3 class="product-title"><%= product.productName %></h3>
-                    <p class="product-description"><%=product.Description %>.</p>
-                    <h4 class="price">current price: <span class="bi bi-currency-rupee"><%=product.price-product.discountAmount%></span></h4>
-                    <h6 class="discount"><%=Math.round((product.discountAmount*100)/product.price)%>% Discount of <%=product.price%> </h6>
-                    <h4 class="product-details" style="font-weight:bold;">Product Details</h4>
-                    <ul class="product-details">
-                        <li><%=product.Specification1%></li>
-                        <li><%=product.Specification2%></li>
-                        <li><%=product.Specification3%></li>
-                        <li><%=product.Specification4%></li>
-                    </ul>
-                    <div class="action">
-                        <a href=""><button class="buynow btn btn-default" type="button">buy now</button></a>
-                        <% if (checkcart) { %>
-                          <!-- If checkcart is true, render the "Go to Cart" button -->
-                          <a href="/cart">
-                              <button class="go-to-cart btn "><i class="bi bi-cart4" style="font-size: 20px;"></i>Go to Cart</button>
-                          </a>
-                      <% } else { %>
-                        <% if (product.stockQuantity<=0) { %>
-                            <a class="disabled">
-                                <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
-                            </a>
-                            <% }else{ %>
-                          <!-- If checkcart is false, render the "Add to Cart" button -->
-                          <a>
-                            <button class="add-to-cart btn btn-default" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
+                <div class="flex space-x-3 justify-center mt-4">
+                    <% product.images.forEach((ele, index) => { %>
+                        <a data-fslightbox="mygalley" class="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow" target="_blank" data-type="image">
+                            <img width="100" height="100" class="rounded-lg object-cover" src="/productimages/<%= ele%>" onclick="change('<%-index+1-%>')" id="img<%-index+1-%>"/>
                         </a>
-                          <%}%>
-                      <% } %>
-                        <!-- <a><button class="add-to-cart btn btn-default"  onclick="addTocart('<%-product._id-%>')">add to cart</button></a> -->
-                        <a href=""><button class="like btn btn-default" type="button"><span class="bi bi-heart"></span></button></a>    
+                    <% }) %>
+                </div>
+            </div>
+            <!-- Details Section -->
+            <div class="equal-height">
+                <div class="flex flex-col h-full">
+                    <div class="space-y-6">
+                        <h1 class="text-4xl font-extrabold text-gray-800"><%= product.productName %></h1>
+                        <p class="text-gray-600 leading-relaxed text-lg"><%= product.Description %>.</p>
+                        <div class="flex items-center space-x-4">
+                            <h3 class="text-3xl font-semibold text-indigo-600">
+                                <span class="bi bi-currency-rupee"></span><%= product.price - product.discountAmount %>
+                            </h3>
+                            <span class="text-sm text-green-600 font-medium">
+                                <%= Math.round((product.discountAmount * 100) / product.price) %>% Off
+                            </span>
+                            <span class="text-sm text-gray-500 line-through"><%= product.price %></span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800">Product Details</h4>
+                            <ul class="mt-3 space-y-3 text-gray-600">
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span><%= product.Specification1 %></li>
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span><%= product.Specification2 %></li>
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span><%= product.Specification3 %></li>
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span><%= product.Specification4 %></li>
+                            </ul>
+                        </div>
+                        <div class="pt-4">
+                            <h4 class="text-lg font-semibold text-gray-800">Why Choose TeeCraze?</h4>
+                            <ul class="mt-2 space-y-2 text-gray-600">
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>Vibrant, fade-resistant prints</li>
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>Eco-friendly packaging</li>
+                                <li class="flex items-center"><span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>Designed for all-day comfort</li>
+                            </ul>
+                        </div>
+                        <div class="pt-4">
+                            <h4 class="text-lg font-semibold text-gray-800">Care Instructions</h4>
+                            <p class="text-gray-600 mt-2">Machine wash cold, tumble dry low. Do not iron directly on print. Use mild detergent for best results.</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto flex space-x-4 items-center pt-6">
+                        <% if (checkcart) { %>
+                            <a href="/cart">
+                                <button class="flex items-center px-8 py-3 gradient-button text-white rounded-lg shadow-lg text-lg font-medium">
+                                    <i class="bi bi-cart4 mr-2 text-xl"></i>Go to Cart
+                                </button>
+                            </a>
+                        <% } else { %>
+                            <% if (product.stockQuantity <= 0) { %>
+                                <button class="flex items-center px-8 py-3 bg-gray-400 text-white rounded-lg cursor-not-allowed shadow-lg text-lg font-medium" disabled>
+                                    <i class="bi bi-cart4 mr-2 text-xl"></i>Add to Cart
+                                </button>
+                            <% } else { %>
+                                <button class="flex items-center px-8 py-3 gradient-button text-white rounded-lg shadow-lg text-lg font-medium" onclick="addTocart('<%-product._id-%>')">
+                                    <i class="bi bi-cart4 mr-2 text-xl"></i>Add to Cart
+                                </button>
+                            <% } %>
+                        <% } %>
+                        <button class="flex items-center px-4 py-3 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors shadow-md" onclick="addToWishlist('<%-product._id-%>')">
+                            <span class="bi bi-heart text-xl"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -98,32 +125,21 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    function change(data){
-      var mainimg=document.getElementById('mainimg').src
-      console.log(mainimg)
-     
-        console.log("ok")
-        imgs=document.getElementById(`img${data}`).src
-        document.getElementById('mainimg').src=imgs
+    function change(data) {
+        var imgs = document.getElementById(`img${data}`).src;
+        document.getElementById('mainimg').src = imgs;
         document.getElementById('main-bg').style.backgroundImage = `url(${imgs})`;
-    
     }
-    
-    </script>
-    
-    
-    <script type="text/javascript">
-      function zoom(e) {
-          var zoomer = e.currentTarget;
-          e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX
-          e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX
-          x = offsetX / zoomer.offsetWidth * 100
-          y = offsetY / zoomer.offsetHeight * 100
-          zoomer.style.backgroundPosition = x + '% ' + y + '%';
-      }
-    </script>
-    
+
+    function zoom(e) {
+        var zoomer = e.currentTarget;
+        e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX;
+        e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX;
+        x = offsetX / zoomer.offsetWidth * 100;
+        y = offsetY / zoomer.offsetHeight * 100;
+        zoomer.style.backgroundPosition = x + '% ' + y + '%';
+    }
+</script>
 <%-include("../partials/userfooter.ejs")-%>
 <%-include("../layout/userfooter.ejs")-%>

@@ -5,6 +5,7 @@ const { generateSalesPDF } = require("../../util/generatesalespdfcreator");
 const pdf =  require("../../util/generatesalesreportcreator")
 const moment  =  require("moment");
 const { format } = require("date-fns");
+const MESSAGES = require("../../util/messages");
 
 module.exports = {
     getdashboard:async(req,res)=>{
@@ -246,8 +247,8 @@ module.exports = {
             }).populate("products.productid").populate("userid");
             console.log(orders);
             if(orders.length==0){
-                if(interval) req.session.errorMessage = `There is no order for this ${interval}.`;
-                else req.session.errorMessage = "There is no order in this days";
+                if(interval) req.session.errorMessage = MESSAGES.DASHBOARD.ERROR.NO_ORDERS(interval);
+                else req.session.errorMessage = MESSAGES.DASHBOARD.ERROR.NO_ORDERS();
                 res.redirect("/admin")
             }
             else{

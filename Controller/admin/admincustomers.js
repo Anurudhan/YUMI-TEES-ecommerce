@@ -1,4 +1,5 @@
-const User=require("../../model/usermodel")
+const User=require("../../model/usermodel");
+const MESSAGES = require("../../util/messages");
 module.exports={
     customerpage:async(req,res)=>{
         try{
@@ -18,11 +19,11 @@ module.exports={
             const user=await User.findOne({_id:id})
             if(status=="1"){
                 await User.updateOne({_id:id},{$set:{status:0}})
-                message=`successfully blocked ${user.name} from this site`
+                message=MESSAGES.USER.SUCCESS.BLOCKED(user.name)
             }
             else{
                 await User.updateOne({_id:id},{$set:{status:1}})
-                message=`successfully activated ${user.name} from this site`
+                message=MESSAGES.USER.SUCCESS.ACTIVATED(user.name)
             }
             res.json({message:message})
         }

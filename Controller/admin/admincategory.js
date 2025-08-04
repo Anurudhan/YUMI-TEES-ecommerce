@@ -1,4 +1,5 @@
 const Category=require("../../model/category")
+const MESSAGES = require("../../util/messages")
 
 module.exports={
     categorypage:async(req,res)=>{
@@ -33,27 +34,27 @@ module.exports={
             const catcheckimg = await Category.findOne({categoryname:cat.trim()})
             console.log(cat);
             if (cat.trim() == "") {
-                req.session.errorMessage = "category cannot contains spaces!!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.EMPTY
                 res.redirect("/admin/addcategory")
             }
                 
             else if (/\d/.test(cat)) { 
-                req.session.errorMessage = "category cannot contain numbers!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.HAS_NUMBERS
                 res.redirect("/admin/addcategory")      
             }
             else if(catcheckimg){
-                req.session.errorMessage = "category already consist!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.EXISTS
                 res.redirect("/admin/addcategory") 
             }
             else{
                 const exist= await Category.findOne({categoryname:cat})
                 if(exist){
-                    req.session.errorMessage = "This category also exist"
+                    req.session.errorMessage = MESSAGES.CATEGORY.ERROR.DUPLICATE
                     res.redirect("/admin/addcategory")
                 }
                 else{
                     await Category.create({categoryname:cat})
-                    req.session.successMessage = "successfully added the category"
+                    req.session.successMessage = MESSAGES.CATEGORY.SUCCESS.ADDED
                     res.redirect("/admin/category")
                 }
             }
@@ -84,21 +85,21 @@ module.exports={
             const catcheckimg = await Category.findOne({_id:{$ne:id},categoryname:cat.trim()})
             console.log(cat);
             if (cat.trim() == "") {
-                req.session.errorMessage = "category contains spaces!!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.EMPTY
                 res.redirect(`/admin/editcategory/${id}`)
             }
                 
             else if (/\d/.test(cat)) { 
-                req.session.errorMessage = "category cannot contain numbers!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.HAS_NUMBERS
                 res.redirect(`/admin/editcategory/${id}`)      
             }
             else if(catcheckimg){
-                req.session.errorMessage = "category already consist!"
+                req.session.errorMessage = MESSAGES.CATEGORY.ERROR.EXISTS
                 res.redirect("/admin/addcategory") 
             }
             else{
                 await Category.updateOne({_id:id},{categoryname:cat})
-                req.session.successMessage = "successfully modified the category"
+                req.session.successMessage = MESSAGES.CATEGORY.SUCCESS.MODIFIED
                 res.redirect("/admin/category")
             }
         }
@@ -118,13 +119,13 @@ module.exports={
                   { _id: id },
                   { $set: { Status: "Hide" } }
                 );
-                message = `successfully hide ${result.categoryname} category for user side`;
+                message = MESSAGES.CATEGORY.SUCCESS.HIDE(result.categoryname)
               } else {
                 await Category.updateOne(
                   { _id: id },
                   { $set: { Status: "Show" } }
                 );
-                message = `successfully show ${result.categoryname} category for user side`;
+                message = MESSAGES.CATEGORY.SUCCESS.SHOW(result.categoryname)
               }
             res.status(200).json({message});
 

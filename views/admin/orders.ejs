@@ -63,13 +63,12 @@ input.border-bottom {
           </tr>
         </thead>
         <tbody>
-            <% orders.forEach((data, index) => { %>   
-                <% if (data.orderStatus === 'Cancelled') { %>             
+            <% orders.forEach((data, index) => { %>            
                     
                 <tr>
                   <td class="text-center" scope="row"><%= index + 1%></td>
                   <td class="text-center" style="white-space: nowrap;"><%-data.username-%></td>
-                  <td class="text-center"><%-data._id-%></td>
+                  <td class="text-center"><%-data.orderid-%></td>
                   <td class="text-center"><%- data.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></td>
                   <td class="text-center"><%-data.paymentMethod-%></td>
                   <td class="text-center" style="white-space: nowrap;" >₹  <%-data.totalAmount-%></td>
@@ -149,7 +148,6 @@ input.border-bottom {
                     <!-- <a href=""><i class="fa-solid fa-trash fa-lg mx-1 text-danger" onclick=""></i></a> -->
                   </td>
                 </tr>
-                <% } %>
 
           <% }) %> 
         </tbody>
