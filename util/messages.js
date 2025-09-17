@@ -21,7 +21,9 @@ const MESSAGES = {
       EXISTS: "This coupon code already exists",
       SERVER: "Internal server error",
       ALREADY_APPLIED: "This order already has a coupon applied",
-      NOT_APPLIED: "There is no coupon applied"
+      NOT_APPLIED: "There is no coupon applied",
+      NOT_FOUND:"Coupon not found",
+      CAN_NOT_DELETE:"Cannot delete coupon that has been used"
     },
     SUCCESS: {
       ADDED: "Coupon added successfully",

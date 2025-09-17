@@ -1,0 +1,167 @@
+<%-include("../layout/adminheader.ejs")-%>
+<link rel="stylesheet" href="/stylesheet/latestCoupon.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+<%-include("../layout/admincentre.ejs")-%>
+
+<%-include("../partials/adminnavbar.ejs")-%>
+
+<div class="container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="m-3" style="color: black; font-weight: bold;">COUPON MANAGEMENT</h2>
+            <button id="addCouponBtn" class="btn btn-primary p-2 m-3 float-end">
+                <i class="bi bi-plus-circle me-2"></i>Add Coupon
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <%-include("./LatestPartial/couponTable.ejs")-%>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="couponModalLabel">Add New Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="couponForm" novalidate>
+                    <input type="hidden" id="couponId" name="couponId">
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="couponCode" class="form-label">Coupon Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="couponCode" name="couponCode" required readonly>
+                                <div class="invalid-feedback" id="couponCodeFeedback">
+                                    Please provide a valid coupon code.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="button" class="btn btn-generate d-block w-100" onclick="generateCouponCode()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Generate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="2" placeholder="Enter coupon description"></textarea>
+                        <div class="invalid-feedback" id="descriptionFeedback">
+                            Please provide a description.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="minimumPurchaseAmount" class="form-label">Minimum Purchase Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" id="minimumPurchaseAmount" name="minimumPurchaseAmount" min="0" required>
+                                    <div class="invalid-feedback" id="minimumPurchaseAmountFeedback">
+                                        Please provide a valid minimum purchase amount.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="discountType" class="form-label">Discount Type <span class="text-danger">*</span></label>
+                                <select class="form-control" id="discountType" name="discountType" required onchange="updateDiscountLabel()">
+                                    <option value="Flat">Flat Amount</option>
+                                    <option value="Percentage">Percentage</option>
+                                </select>
+                                <div class="invalid-feedback" id="discountTypeFeedback">
+                                    Please select a discount type.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discountValue" class="form-label">
+                            Discount Value <span class="text-danger">*</span>
+                            <span id="discountLabel">(₹)</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="discountSymbol">₹</span>
+                            <input type="number" class="form-control" id="discountValue" name="discountValue" min="0" required>
+                            <div class="invalid-feedback" id="discountValueFeedback">
+                                Please provide a valid discount value.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="validFrom" class="form-label">Valid From <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="validFrom" name="validFrom" required>
+                                <div class="invalid-feedback" id="validFromFeedback">
+                                    Please provide a valid start date.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="validTo" class="form-label">Valid To <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="validTo" name="validTo" required>
+                                <div class="invalid-feedback" id="validToFeedback">
+                                    Please provide a valid end date.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="saveCouponBtn">
+                    <i class="bi bi-check-circle me-1"></i>Save Coupon
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Coupon Modal -->
+<div class="modal fade" id="viewCouponModal" tabindex="-1" role="dialog" aria-labelledby="viewCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewCouponModalLabel">Coupon Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewCouponBody">
+                <!-- Coupon details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/javascript/latest/coupon.js"></script>
+
+
+<%-include("../layout/adminfooter.ejs")-%>

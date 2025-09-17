@@ -8,7 +8,7 @@ const categorycontroller=require("../Controller/admin/admincategory")
 const customercontroller=require("../Controller/admin/admincustomers")
 const ordercontroller = require("../Controller/admin/adminorder")
 const bannercontroller = require("../Controller/admin/asminbanner")
-const couponcontroller = require('../Controller/admin/admincoupon');
+const couponcontroller = require('../Controller/admin/latestVersion/adminCouponLatest');
 const router=express();
 
 // login and home page ------------------------------------------------>
@@ -68,9 +68,9 @@ router.post("/rejectReturn",adminVerify,)
 
 router.get("/coupons",adminVerify,couponcontroller.getcoupon)
 router.get("/coupon/:id",adminVerify,couponcontroller.coupon)
-router.post("/addcoupon",adminVerify,couponcontroller.addcoupon)
-router.put("/editcoupon/:id",adminVerify,couponcontroller.editcoupon)
-router.delete("/deletecoupon/:id",adminVerify,couponcontroller.deleteCoupon)
+router.post("/coupon",adminVerify,couponcontroller.addcoupon)
+router.put("/coupon/:id",adminVerify,couponcontroller.editcoupon)
+router.delete("/coupon/:id",adminVerify,couponcontroller.deleteCoupon)
 
 // banner manage--------------------------------------------------------->
 const uploadBanner = [

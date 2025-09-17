@@ -1,0 +1,165 @@
+
+/* Table Header Styling */
+thead th {
+vertical-align: middle !important;
+height: 60px;
+padding: 8px 4px !important;
+font-size: 12px;
+font-weight: 600;
+text-align: center;
+line-height: 1.2;
+white-space: nowrap;
+}
+
+/* Responsive table adjustments */
+.table-responsive {
+box-shadow: 0 0 10px rgba(0,0,0,0.1);
+border-radius: 8px;
+overflow-x: auto;
+}
+
+.table td {
+padding: 12px 8px;
+vertical-align: middle;
+font-size: 13px;
+}
+
+/* Modal Styling */
+.modal-header {
+background-color: #f8f9fa;
+border-bottom: 1px solid #dee2e6;
+}
+
+.form-group {
+margin-bottom: 1rem;
+}
+
+.form-control:focus {
+border-color: #80bdff;
+box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-generate {
+background-color: #28a745;
+border-color: #28a745;
+color: white;
+}
+
+.btn-generate:hover {
+background-color: #218838;
+border-color: #1e7e34;
+}
+
+/* Status badges */
+.status-badge {
+padding: 0.25rem 0.5rem;
+border-radius: 0.25rem;
+font-size: 0.75rem;
+font-weight: 500;
+white-space: nowrap;
+}
+
+.status-active { background-color: #d4edda; color: #155724; }
+.status-inactive { background-color: #f8d7da; color: #721c24; }
+.status-expired { background-color: #fff3cd; color: #856404; }
+.status-upcoming { background: linear-gradient(135deg, #cce5ff, #99d1ff);color: #004085;}
+
+/* Custom Pagination */
+.custom-pagination {
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 20px 0;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+.pagination-info {
+font-size: 14px;
+color: #6c757d;
+margin: 0 15px;
+}
+
+.pagination-btn {
+padding: 8px 12px;
+border: 1px solid #dee2e6;
+background: white;
+border-radius: 4px;
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+background-color: #e9ecef;
+border-color: #adb5bd;
+}
+
+.pagination-btn:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.pagination-btn.active {
+background-color: #007bff;
+color: white;
+border-color: #007bff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+.container {
+padding: 0 10px;
+}
+
+thead th {
+font-size: 10px;
+padding: 6px 3px !important;
+height: 50px;
+}
+
+.table td {
+font-size: 11px;
+padding: 8px 4px;
+}
+
+.btn-group .btn {
+padding: 4px 8px;
+font-size: 12px;
+}
+
+.custom-pagination {
+flex-direction: column;
+gap: 10px;
+}
+
+.pagination-controls {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 5px;
+}
+}
+
+@media (max-width: 576px) {
+thead th {
+font-size: 9px;
+padding: 4px 2px !important;
+height: 45px;
+}
+
+.table td {
+font-size: 10px;
+padding: 6px 3px;
+}
+}
+/* Remove arrows in Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove arrows in Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
