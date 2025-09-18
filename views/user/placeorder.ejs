@@ -1,505 +1,6 @@
 <%-include("../layout/userheader.ejs")-%>
+<link rel="stylesheet" href="/stylesheet/user/placeOrder.css">
 <%-include("../layout/usercentre.ejs")-%>
-<style>
-    body {
-        min-height: 100vh;  
-    }
-
-    .main-container {
-        padding: 10px;
-        max-width: 1400px; /* Increased max-width for larger screens */
-    }
-
-    .section-card {
-        background: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        margin-bottom: 20px;
-        overflow: hidden;
-    }
-
-    .section-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .section-header {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 20px 20px;
-        font-size: 1.3rem;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .add-address-btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        border-radius: 25px;
-        padding: 10px 25px;
-        font-size: 1rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .add-address-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-1px);
-        color: white;
-        text-decoration: none;
-    }
-
-    .address-card {
-        background: #ffffff;
-        border: 2px solid #f0f0f0;
-        border-radius: 12px;
-        margin: 25px;
-        padding: 25px;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .address-card:hover {
-        border-color: #667eea;
-        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
-    }
-
-    .address-card.selected {
-        border-color: #28a745;
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(40, 167, 69, 0.02));
-    }
-
-    .address-type-badge {
-        background: linear-gradient(135deg, #333, #555);
-        color: white;
-        border-radius: 20px;
-        padding: 8px 18px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: none;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .selected-check {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 30px;
-        color: #28a745;
-        animation: checkBounce 0.3s ease;
-    }
-
-    @keyframes checkBounce {
-        0% { transform: scale(0); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
-    }
-
-    .deliver-btn {
-        background: linear-gradient(135deg, #ffc107, #ff8f00);
-        border: none;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-    }
-
-    .deliver-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
-        color: white;
-    }
-
-    .show-all-link {
-        color: #667eea;
-        font-weight: 600;
-        text-decoration: none;
-        padding: 12px 25px;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-
-    .show-all-link:hover {
-        background: rgba(102, 126, 234, 0.1);
-        color: #5a67d8;
-        text-decoration: none;
-    }
-
-    /* Payment Methods Styling */
-    .payment-options {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 25px;
-        padding: 30px;
-    }
-
-    .payment-card {
-        background: #ffffff;
-        border: 2px solid #f0f0f0;
-        border-radius: 16px;
-        padding: 30px;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .payment-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-        transition: left 0.5s ease;
-    }
-
-    .payment-card:hover::before {
-        left: 100%;
-    }
-
-    .payment-card:hover {
-        border-color: #667eea;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-    }
-
-    .payment-card.selected {
-        border-color: #667eea;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-        transform: translateY(-2px);
-    }
-
-    .payment-icon {
-        font-size: 2.8rem;
-        color: #667eea;
-        margin-bottom: 20px;
-        display: block;
-    }
-
-    .payment-label {
-        font-weight: 600;
-        color: #333;
-        font-size: 1.2rem;
-    }
-
-    .razorpay-logo {
-        height: 3.5rem;
-        width: auto;
-        margin-bottom: 15px;
-    }
-
-    /* Error/Warning Messages */
-    .alert-custom {
-        border-radius: 12px;
-        border: none;
-        padding: 20px 25px;
-        margin: 25px 0;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .alert-error {
-        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
-        color: #dc3545;
-        border-left: 4px solid #dc3545;
-    }
-
-    .alert-success {
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
-        color: #28a745;
-        border-left: 4px solid #28a745;
-    }
-
-    .alert-warning {
-        background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
-        color: #856404;
-        border-left: 4px solid #ffc107;
-    }
-
-    /* Coupon Section */
-    .coupon-section {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 25px;
-        margin-bottom: 25px;
-    }
-
-    .coupon-header {
-        color: #667eea;
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .coupon-input-group {
-        display: flex;
-        border-radius: 30px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        background: #f8f9fa;
-    }
-
-    .coupon-select {
-        flex: 1;
-        border: none;
-        padding: 14px 20px;
-        font-size: 1rem;
-        border-radius: 30px 0 0 30px;
-        background: #ffffff;
-        outline: none;
-        transition: box-shadow 0.3s ease;
-    }
-
-    .coupon-select:focus {
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    }
-
-    .coupon-btn {
-        padding: 14px 30px;
-        border: none;
-        font-weight: 600;
-        font-size: 1rem;
-        border-radius: 0 30px 30px 0;
-        transition: all 0.3s ease;
-        min-width: 120px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .apply-button {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-    }
-
-    .apply-button:hover {
-        background: linear-gradient(135deg, #218838, #1ca085);
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-
-    .remove-button {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: white;
-    }
-
-    .remove-button:hover {
-        background: linear-gradient(135deg, #c82333, #bd2130);
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-    }
-
-    /* Price Details */
-    .price-card {
-        background: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-        position: sticky;
-        top: 120px;
-        overflow: hidden;
-        min-width: 320px;
-    }
-
-    .price-header {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        padding: 25px;
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    .price-details {
-        padding: 25px;
-    }
-
-    .price-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 10px 0;
-    }
-
-    .price-row:not(:last-child) {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .total-row {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-        margin: 25px -25px -25px;
-        padding: 25px;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #333;
-    }
-
-    /* Action Buttons */
-    .action-row {
-        padding: 40px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 25px;
-    }
-
-    .continue-shopping {
-        color: #6c757d;
-        text-decoration: none;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 15px 0;
-        transition: color 0.3s ease;
-    }
-
-    .continue-shopping:hover {
-        color: #667eea;
-        text-decoration: none;
-    }
-
-    .proceed-btn {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        border: none;
-        color: white;
-        padding: 15px 50px;
-        border-radius: 30px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
-        cursor: pointer;
-        text-decoration: none;
-    }
-
-    .proceed-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-
-    .proceed-btn button {
-        background: none;
-        border: none;
-        color: inherit;
-        font: inherit;
-        cursor: inherit;
-    }
-
-    /* Responsive Design */
-    @media (min-width: 1200px) {
-        .main-container {
-            padding: 50px;
-        }
-
-        .col-lg-9 {
-            padding-right: 30px;
-        }
-
-        .col-lg-3 {
-            padding-left: 30px;
-        }
-
-        .price-card {
-            min-width: 350px;
-        }
-    }
-
-    @media (max-width: 991px) {
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 140px); /* Adjust based on header/footer height */
-            margin-top: 80px;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .action-row {
-            margin-top: auto; /* Pushes action-row to the bottom */
-            flex-direction: column;
-            text-align: center;
-            padding: 20px 0;
-            width: 100%;
-        }
-
-        .proceed-btn,
-        .continue-shopping {
-            width: 100%; /* Full width for buttons on small screens */
-            justify-content: center;
-        }
-
-        .proceed-btn {
-            order: 1; /* Ensure Proceed to Checkout is first */
-        }
-
-        .continue-shopping {
-            order: 2; /* Continue Shopping comes second */
-            margin-top: 15px;
-        }
-
-        .payment-options {
-            grid-template-columns: 1fr;
-        }
-
-        .price-card {
-            position: static;
-            margin-top: 30px;
-            min-width: auto;
-        }
-
-        .coupon-input-group {
-            flex-direction: column;
-            border-radius: 12px;
-        }
-
-        .coupon-select {
-            border-radius: 12px 12px 0 0;
-            border-bottom: none;
-        }
-
-        .coupon-btn {
-            border-radius: 0 0 12px 12px;
-        }
-    }
-
-    /* Hidden address animation */
-    .hidden-address {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-    }
-
-    .hidden-address.show-hidden-addresses {
-        max-height: 500px;
-        transition: max-height 0.3s ease-in;
-    }
-</style>
 
 <%-include("../partials/usernavbar.ejs")-%>
 
@@ -623,10 +124,10 @@
                             </label>
                         </div>
                         
-                        <% if (totalprice>1000) { %>
+                        <% if (grandtotal - disctotal - cpndiscnt > 1000) { %>
                             <div class="alert-custom alert-error">
                                 <i class="bi bi-exclamation-triangle-fill"></i>
-                                Orders above ₹1000 cannot be placed with Cash on Delivery
+                                Orders above ₹1000 (after discounts) cannot be placed with Cash on Delivery
                             </div>
                         <% } %>
                     </div>
@@ -641,32 +142,23 @@
                                 <i class="bi bi-ticket-perforated"></i>
                                 HAVE A COUPON?
                             </div>
-                            
-                            <% if ( couponCount >= 1 || cpn ) { %>
+                            <input type="hidden" id="totalPrice" value="<%= grandtotal %>">
+                            <input type="hidden" id="offerDiscount" value="<%= disctotal %>">
+
+                            <% if (couponCount >= 1) { %>
                                 <div class="coupon-input-group">
                                     <select class="coupon-select" id="category" name="Category" required>
-                                        <option value="" selected disabled><%= cpn?cpn:"Select a coupon code" %></option>
+                                        <option value="" selected disabled>Select a coupon code</option>
                                         <% coupon.forEach((ele) => { %>
                                             <option value="<%= ele.couponCode %>"><%= ele.couponCode %></option>
                                         <% }) %>
                                     </select>
-                                    <% if (cpn != null || cpn != undefined) { %>
-                                        <button type="button" class="coupon-btn remove-button">Remove</button>
-                                    <% } else { %>
-                                        <button type="button" class="coupon-btn apply-button">Apply</button>
-                                    <% } %>
+                                    <button type="button" class="coupon-btn apply-button btn-primary">Apply</button>
                                 </div>
-                                <% if (cpn != null || cpn != undefined) { %>
-                                    <div class="alert-custom alert-warning" style="margin-top: 15px; font-size: 0.9rem;">
-                                        <i class="bi bi-info-circle"></i>
-                                        Remove coupon if you don't want to use it
-                                    </div>
-                                <% } else { %>
-                                    <div class="alert-custom alert-success" style="margin-top: 15px; font-size: 0.9rem;">
-                                        <i class="bi bi-check-circle"></i>
-                                        <%= couponCount %> coupon(s) available for your order
-                                    </div>
-                                <% } %>
+                                <div class="alert-custom coupon-message alert-success" style="margin-top: 15px; font-size: 0.9rem;">
+                                    <i class="bi bi-check-circle"></i>
+                                    <%= couponCount %> coupon(s) available for your order
+                                </div>
                             <% } else { %>
                                 <div class="coupon-input-group">
                                     <select class="coupon-select" disabled>
@@ -690,40 +182,40 @@
                         <div class="price-details">
                             <div class="price-row">
                                 <span>Total price:</span>
-                                <span>₹ <%= grandtotal %></span>
+                                <span id="grandRow">₹ <%= grandtotal %></span>
                             </div>
                             
                             <div class="price-row">
-                                <span>Discount:</span>
-                                <span style="color: #28a745;">-₹ <%= disctotal %></span>
+                                <span>Offer Discount:</span>
+                                <span id="offerDiscountRow" style="color: #28a745;">-₹ <%= disctotal %></span>
+                            </div>
+                            
+                            <div class="price-row">
+                                <span>Coupon Discount:</span>
+                                <span id="couponRow" style="color: #28a745;">-₹ <%= cpndiscnt %></span>
                             </div>
                             
                             <div class="price-row">
                                 <span>Delivery charges:</span>
-                                <% if (totalprice-cpndiscnt < 1000) { %>
-                                    <span style="color: #dc3545;">+₹ 40</span>
-                                <% } else { %>
-                                    <div>
+                                <span id="deliveryRow">
+                                    <% if (grandtotal - disctotal - cpndiscnt < 1000) { %>
+                                        +₹ 40
+                                    <% } else { %>
                                         <span style="color: #28a745; font-size: 0.9rem;">Free</span>
                                         <del class="text-muted" style="font-size: 0.9rem; margin-left: 5px;">₹ 40</del>
-                                    </div>
-                                <% } %>
+                                    <% } %>
+                                </span>
                             </div>
-                            
-                            <% if (cpn != null || cpn != undefined) { %>
-                                <div class="price-row">
-                                    <span>Coupon Discount:</span>
-                                    <span style="color: #28a745;">-₹ <%= cpndiscnt %></span>
-                                </div>
-                            <% } %>
                             
                             <div class="price-row total-row">
                                 <span>TOTAL PAYABLE</span>
-                                <% if (totalprice-cpndiscnt < 1000) { %>
-                                    <span>₹ <%= totalprice + 40-cpndiscnt %></span>
-                                <% } else { %>
-                                    <span>₹ <%= totalprice-cpndiscnt %></span>
-                                <% } %>
+                                <span id="totalRow">
+                                    <% if (grandtotal - disctotal - cpndiscnt < 1000) { %>
+                                        ₹ <%= grandtotal  - disctotal - cpndiscnt + 40 %>
+                                    <% } else { %>
+                                        ₹ <%= grandtotal - disctotal - cpndiscnt %>
+                                    <% } %>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -748,186 +240,10 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
 <script>
-    // Payment method selection
-    document.querySelectorAll('input[name="pay-method"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            document.querySelectorAll('.payment-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            this.closest('.payment-card').classList.add('selected');
-        });
-    });
-
-    // Initialize selected payment method
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkedRadio = document.querySelector('input[name="pay-method"]:checked');
-        if (checkedRadio) {
-            checkedRadio.closest('.payment-card').classList.add('selected');
-        }
-    });
-
-    function toggleHiddenAddresses() {
-        var hiddenAddresses = document.querySelectorAll('.hidden-address');
-        hiddenAddresses.forEach(function(address) {
-            address.classList.toggle('show-hidden-addresses');
-        });
-
-        var showAllLink = document.querySelector('.show-all-link');
-        if (showAllLink) {
-            if (showAllLink.textContent.includes('Show All')) {
-                showAllLink.innerHTML = '<i class="bi bi-chevron-up me-1"></i>Show Less';
-            } else {
-                showAllLink.innerHTML = '<i class="bi bi-chevron-down me-1"></i>Show All Addresses';
-            }
-        }
-    }
-
-    function showButton(buttonId) {
-        var buttons = document.querySelectorAll('.deliver-btn');
-        buttons.forEach(function(button) {
-            button.classList.add('d-none');
-        });
-        var button = document.getElementById(buttonId);
-        if (button) {
-            button.classList.remove('d-none');
-        }
-        
-        // Update address card selection
-        document.querySelectorAll('.address-card').forEach(card => {
-            card.classList.remove('selected');
-        });
-        
-        const selectedRadio = document.querySelector('input[name="existingAddress"]:checked');
-        if (selectedRadio) {
-            selectedRadio.closest('.address-card').classList.add('selected');
-        }
-    }
-
-    $(document).ready(function() {
-        $("#proceedButton").click(function() {
-            
-            var paymentMethod = $('input[name="pay-method"]:checked').val();
-            var price = "<%=totalprice%>";
-            var url = `/placeorder/${paymentMethod}`
-           if(price > 1000 && paymentMethod == "cashOnDelivery"){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: `Order above Rs 1000 can't allowed for Cash On Delivery`
-                });
-           }
-           else{
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                contentType: "application/json; charset=utf-8",
-                success: function(response) {
-                    
-                    if(response.msg){
-                        Swal.fire({
-                        icon: 'error',
-                        title: response.msg,
-                        showConfirmButton: false,
-                        timer: 3000 // Adjust the time the alert is displayed if needed
-                        })
-                    }
-                    if(response.paymentMethod==="COD"){
-                        window.location.href = "/ordersuccess"
-                    }
-                    else if(response.paymentMethod == "online"){
-                        console.log("Hlo I am here----->");
-                        createRazorpay(response.order);
-                    }
-                    else if (response.paymentMethod == "wallet") {
-                        window.location.href = "/ordersuccess";
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle any errors that occur during the request
-                    console.error('Request failed. Status: ' + status + ', Error: ' + error);
-                }
-            });
-           }  
-        });
-    });
-
-    $(document).ready(function() {
-        $('.apply-button').click(function() {
-            var couponCode = $('.coupon-select').val();
-            if (!couponCode) {
-                // Display SweetAlert message
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Please choose a coupon.',
-                });
-                return; // Exit the function if coupon code is empty
-            }
-            $.ajax({
-                type: 'POST',
-                url: '/couponapply',
-                data: { couponcode: couponCode },
-                success: function(response) {
-                    if(response.successMsg){
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: response.successMsg,
-                        }).then(function() {
-                            // Reload the window after displaying the success message
-                            window.location.reload();
-                        });
-                    }
-                    else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: response.errorMsg,
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-    });
-
-    $(document).ready(function() {
-        $('.remove-button').click(function() {
-            $.ajax({
-                type: 'POST',
-                url: '/removecouponapply',
-                success: function(response) {
-                    if(response.successMsg){
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: response.successMsg,
-                        }).then(function() {
-                            // Reload the window after displaying the success message
-                            window.location.reload();
-                        });
-                    }
-                    else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: response.errorMsg,
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-    });
+window.availableCoupons = JSON.parse('<%- JSON.stringify(coupon) %>');
 </script>
+
+<script src="/javascript/user/placeorder.js"></script>
 
 <%-include("../layout/userfooter.ejs")-%>

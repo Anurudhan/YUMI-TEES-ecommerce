@@ -39,6 +39,7 @@ module.exports = {
                         req.session.logged = true;
                         req.session.email = email;
                         req.session.username = userdata.name;
+                        req.session._id = userdata._id
                         res.redirect("/");
                     } else {
                         req.session.pass_err = MESSAGES.USER.ERROR.INVALID_PASSWORD;
@@ -129,12 +130,13 @@ module.exports = {
             console.log(generateotp);
             if (generateotp.otp == userotp) {
                 req.session.logged = true;
-                await User.create({
+                const data = await User.create({
                     email: req.session.email,
                     name: req.session.username,
                     status: req.session.status,
                     password: req.session.password
                 });
+                req.session._id=data._id
                 res.redirect("/");
             } else {
                 res.redirect("/invalid_otp");

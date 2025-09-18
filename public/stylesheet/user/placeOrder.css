@@ -1,0 +1,536 @@
+/* General Body Styling */
+body {
+    min-height: 100vh;
+    background: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Main Container */
+.main-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Section Card */
+.section-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.section-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Section Header */
+.section-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Add Address Button */
+.add-address-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-address-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+/* Address Card */
+.address-card {
+    background: #ffffff;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    margin: 25px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.address-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+.address-card.selected {
+    border-color: #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(40, 167, 69, 0.02));
+}
+
+/* Address Type Badge */
+.address-type-badge {
+    background: linear-gradient(135deg, #333, #555);
+    color: white;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Selected Check Icon */
+.selected-check {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: #28a745;
+    animation: checkBounce 0.3s ease;
+}
+
+@keyframes checkBounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Deliver Button */
+.deliver-btn {
+    background: linear-gradient(135deg, #ffc107, #ff8f00);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deliver-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+    color: white;
+}
+
+/* Show All Addresses Link */
+.show-all-link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.show-all-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #5a67d8;
+    text-decoration: none;
+}
+
+/* Hidden Address Animation */
+.hidden-address {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.hidden-address.show-hidden-addresses {
+    max-height: 500px;
+    transition: max-height 0.3s ease-in;
+}
+
+/* Payment Options */
+.payment-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 30px;
+}
+
+.payment-card {
+    background: #ffffff;
+    border: 2px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.payment-card:hover::before {
+    left: 100%;
+}
+
+.payment-card:hover {
+    border-color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.payment-card.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    transform: translateY(-2px);
+}
+
+.payment-icon {
+    font-size: 2.8rem;
+    color: #667eea;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.payment-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.razorpay-logo {
+    height: 3.5rem;
+    width: auto;
+    margin-bottom: 15px;
+}
+
+/* Alert Messages */
+.alert-custom {
+    border-radius: 12px;
+    border: none;
+    padding: 20px 25px;
+    margin: 25px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+/* Coupon Section */
+.coupon-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.coupon-header {
+    color: #667eea;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.coupon-input-group {
+    display: flex;
+    align-items: stretch;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.coupon-select {
+    flex: 1;
+    border: none;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 30px 0 0 30px;
+    background: #ffffff;
+    outline: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1px solid #ccc;
+    border-right: none;
+}
+
+.coupon-select:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+
+.coupon-btn {
+    padding: 14px 20px;
+    border: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 0 30px 30px 0;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align button text to the left */
+    cursor: pointer;
+}
+
+.apply-button {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.apply-button:hover {
+    background: linear-gradient(135deg, #218838, #1ca085);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.remove-button {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.remove-button:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.coupon-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    color: #666;
+}
+
+/* Price Card */
+.price-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 120px;
+    overflow: hidden;
+    min-width: 320px;
+}
+
+.price-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 25px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-details {
+    padding: 25px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+}
+
+.price-row:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.total-row {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    margin: 25px -25px -25px;
+    padding: 25px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Action Buttons */
+.action-row {
+    padding: 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.continue-shopping {
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 0;
+    transition: color 0.3s ease;
+}
+
+.continue-shopping:hover {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.proceed-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    color: white;
+    padding: 15px 50px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.proceed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.proceed-btn button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Responsive Design */
+@media (min-width: 1200px) {
+    .main-container {
+        padding: 50px;
+    }
+
+    .col-lg-9 {
+        padding-right: 30px;
+    }
+
+    .col-lg-3 {
+        padding-left: 30px;
+    }
+
+    .price-card {
+        min-width: 350px;
+    }
+}
+
+@media (max-width: 991px) {
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 140px);
+        margin-top: 80px;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .action-row {
+        margin-top: auto;
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 0;
+        width: 100%;
+    }
+
+    .proceed-btn,
+    .continue-shopping {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .proceed-btn {
+        order: 1;
+    }
+
+    .continue-shopping {
+        order: 2;
+        margin-top: 15px;
+    }
+
+    .payment-options {
+        grid-template-columns: 1fr;
+    }
+
+    .price-card {
+        position: static;
+        margin-top: 30px;
+        min-width: auto;
+    }
+
+    .coupon-input-group {
+        flex-direction: column;
+        border-radius: 12px;
+    }
+
+    .coupon-select {
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .coupon-btn {
+        border-radius: 12px;
+        justify-content: center; /* Center text on small screens */
+    }
+}
