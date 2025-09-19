@@ -9,7 +9,8 @@ const session = require('express-session');
 const flash = require("connect-flash")
 const nocahe= require('nocache');
 const app=express()
-const Razorpay=require('razorpay')
+const Razorpay=require('razorpay');
+const errorHandler = require('./middleware/errorHandler');
 
 // nocache---------------------------------------------------------------->
 
@@ -40,6 +41,7 @@ app.use("/", userRouter)
 app.use("/admin", adminRouter)
 app.use("/",authRouter)
 
+app.use(errorHandler);
 // mongoose connection------------------------------------------------------->
 
 mongoose.connect(process.env.MONGOURL)

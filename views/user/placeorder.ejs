@@ -1,8 +1,7 @@
-<%-include("../layout/userheader.ejs")-%>
+<%- include("../layout/userheader.ejs") -%>
 <link rel="stylesheet" href="/stylesheet/user/placeOrder.css">
-<%-include("../layout/usercentre.ejs")-%>
-
-<%-include("../partials/usernavbar.ejs")-%>
+<%- include("../layout/usercentre.ejs") -%>
+<%- include("../partials/usernavbar.ejs") -%>
 
 <section class="bg-light" style="padding: 60px 0; min-height: 100vh;">
     <div class="container">
@@ -15,6 +14,12 @@
                             <div>
                                 <i class="bi bi-geo-alt-fill me-2"></i>
                                 Delivery Address
+                                <% if (!address || address.length === 0) { %>
+                                    <span class="text-danger ms-2" style="font-size: 0.9rem;">
+                                        <i class="bi bi-exclamation-circle"></i>
+                                        Required
+                                    </span>
+                                <% } %>
                             </div>
                             <a class="add-address-btn" href="/addaddress?flag=1">
                                 <i class="bi bi-plus-circle"></i>
@@ -23,14 +28,22 @@
                         </div>
                         
                         <% if (address != null && address.length > 0) { %>
+                            <!-- Address Status Indicator -->
+                            <div class="address-status-indicator mb-3" style="padding: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #ffc107;">
+                                <i class="bi bi-info-circle text-warning me-2"></i>
+                                <span style="font-size: 0.9rem; color: #856404;">
+                                    Select an address and click "Deliver Here" to confirm your delivery location
+                                </span>
+                            </div>
+
                             <div id="addressCard0">
                                 <div id="existingAddressesContainer">
                                     <!-- First Address -->
                                     <div class="form-check address-card <%= adrsSelect == address[0]._id ? 'selected' : '' %>">
-                                        <% if (adrsSelect==null || adrsSelect == undefined ) { %>
-                                        <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')" style="transform: scale(1.2);">
+                                        <% if (adrsSelect == null || adrsSelect == undefined) { %>
+                                            <input class="form-check-input" type="radio" name="existingAddress" id="address0" value="<%- address[0]._id %>" onclick="showButton('deliverHereBtn0')" style="transform: scale(1.2);">
                                         <% } else { %>
-                                            <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')" <%= adrsSelect != address[0]._id ? 'disabled' : '' %> style="transform: scale(1.2);"> 
+                                            <input class="form-check-input" type="radio" name="existingAddress" id="address0" value="<%- address[0]._id %>" onclick="showButton('deliverHereBtn0')" <%= adrsSelect != address[0]._id ? 'disabled' : '' %> style="transform: scale(1.2);">
                                         <% } %>
                                         
                                         <% if (adrsSelect == address[0]._id) { %>
@@ -42,11 +55,11 @@
                                                 <button type="button" class="address-type-badge">
                                                     <%= address[0].addressType %>
                                                 </button>
-                                                <h6 style="font-weight: bold; margin: 15px 0 10px;"><%-address[0].name-%></h6>
+                                                <h6 style="font-weight: bold; margin: 15px 0 10px;"><%- address[0].name -%></h6>
                                                 <p style="color: #666; margin-bottom: 8px;"><%= address[0].address %>, <%= address[0].locality %>, <%= address[0].city %>, <%= address[0].district %>, <%= address[0].state %></p>
-                                                <p style="color: #666; margin-bottom: 8px;"><i class="bi bi-telephone me-1"></i><%-address[0].mobile-%></p>
-                                                <p style="color: #666; margin-bottom: 20px;"><i class="bi bi-geo-alt me-1"></i><%-address[0].pincode-%></p>
-                                                <button type="button" class="deliver-btn d-none" id="deliverHereBtn0" onclick="selectAddress('<%-address[0]._id-%>')">
+                                                <p style="color: #666; margin-bottom: 8px;"><i class="bi bi-telephone me-1"></i><%- address[0].mobile -%></p>
+                                                <p style="color: #666; margin-bottom: 20px;"><i class="bi bi-geo-alt me-1"></i><%- address[0].pincode -%></p>
+                                                <button type="button" class="deliver-btn <%= adrsSelect == address[0]._id ? '' : 'd-none' %>" id="deliverHereBtn0" onclick="confirmDelivery('address0')">
                                                     <i class="bi bi-truck me-2"></i>Deliver Here
                                                 </button>
                                             </li>
@@ -57,10 +70,10 @@
                                     <% address.forEach(function(data, i) { %>
                                         <% if (i != 0) { %>
                                             <div class="hidden-address form-check address-card <%= adrsSelect == data._id ? 'selected' : '' %>">
-                                                <% if (adrsSelect==null || adrsSelect == undefined ) { %>
-                                                <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')" style="transform: scale(1.2);">
+                                                <% if (adrsSelect == null || adrsSelect == undefined) { %>
+                                                    <input class="form-check-input" type="radio" name="existingAddress" id="address<%= i %>" value="<%- data._id %>" onclick="showButton('deliverHereBtn<%= i %>')" style="transform: scale(1.2);">
                                                 <% } else { %>
-                                                    <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')" <%= adrsSelect != data._id ? 'disabled' : '' %> style="transform: scale(1.2);"> 
+                                                    <input class="form-check-input" type="radio" name="existingAddress" id="address<%= i %>" value="<%- data._id %>" onclick="showButton('deliverHereBtn<%= i %>')" <%= adrsSelect != data._id ? 'disabled' : '' %> style="transform: scale(1.2);">
                                                 <% } %>
                                                 
                                                 <% if (adrsSelect == data._id) { %>
@@ -74,7 +87,7 @@
                                                         <p style="color: #666; margin-bottom: 8px;"><%= data.address %>, <%= data.locality %>, <%= data.city %>, <%= data.district %>, <%= data.state %></p>
                                                         <p style="color: #666; margin-bottom: 8px;"><i class="bi bi-telephone me-1"></i><%= data.mobile %></p>
                                                         <p style="color: #666; margin-bottom: 20px;"><i class="bi bi-geo-alt me-1"></i><%= data.pincode %></p>
-                                                        <button type="button" class="deliver-btn d-none" id=<%= "deliverHereBtn" + i %> onclick="selectAddress('<%-data._id-%>')">
+                                                        <button type="button" class="deliver-btn <%= adrsSelect == data._id ? '' : 'd-none' %>" id="deliverHereBtn<%= i %>" onclick="confirmDelivery('address<%= i %>')">
                                                             <i class="bi bi-truck me-2"></i>Deliver Here
                                                         </button>
                                                     </li>
@@ -92,6 +105,16 @@
                                     <% } %>
                                 </div>
                             </div>
+                        <% } else { %>
+                            <!-- No Address Available -->
+                            <div class="alert-custom alert-error text-center" style="padding: 40px;">
+                                <i class="bi bi-geo-alt-fill" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                                <h5 style="margin-bottom: 15px;">No Delivery Address Found</h5>
+                                <p style="color: #666; margin-bottom: 20px;">You need to add a delivery address to place your order.</p>
+                                <a href="/addaddress?flag=1" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Add Your First Address
+                                </a>
+                            </div>
                         <% } %>
                     </div>
 
@@ -101,6 +124,10 @@
                             <div>
                                 <i class="bi bi-credit-card-2-front-fill me-2"></i>
                                 Payment Options
+                                <span class="text-danger ms-2" style="font-size: 0.9rem;">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    Required
+                                </span>
                             </div>
                         </div>
                         
@@ -118,7 +145,7 @@
                             </label>
 
                             <label class="payment-card" for="pay-methodoption3">
-                                <input type="radio" name="pay-method" id="pay-methodoption3" class="d-none" value="cashOnDelivery" checked="">
+                                <input type="radio" name="pay-method" id="pay-methodoption3" value="COD" class="d-none" checked>
                                 <i class="bi bi-cash-stack payment-icon"></i>
                                 <div class="payment-label">Cash on Delivery</div>
                             </label>
@@ -142,8 +169,8 @@
                                 <i class="bi bi-ticket-perforated"></i>
                                 HAVE A COUPON?
                             </div>
-                            <input type="hidden" id="totalPrice" value="<%= grandtotal %>">
-                            <input type="hidden" id="offerDiscount" value="<%= disctotal %>">
+                            <input type="hidden" id="grandTotal" value="<%= grandtotal %>">
+                            <input type="hidden" id="productDiscount" value="<%= disctotal %>">
 
                             <% if (couponCount >= 1) { %>
                                 <div class="coupon-input-group">
@@ -187,7 +214,7 @@
                             
                             <div class="price-row">
                                 <span>Offer Discount:</span>
-                                <span id="offerDiscountRow" style="color: #28a745;">-₹ <%= disctotal %></span>
+                                <span id="productDiscountRow" style="color: #28a745;">-₹ <%= disctotal %></span>
                             </div>
                             
                             <div class="price-row">
@@ -211,7 +238,7 @@
                                 <span>TOTAL PAYABLE</span>
                                 <span id="totalRow">
                                     <% if (grandtotal - disctotal - cpndiscnt < 1000) { %>
-                                        ₹ <%= grandtotal  - disctotal - cpndiscnt + 40 %>
+                                        ₹ <%= grandtotal - disctotal - cpndiscnt + 40 %>
                                     <% } else { %>
                                         ₹ <%= grandtotal - disctotal - cpndiscnt %>
                                     <% } %>
@@ -229,7 +256,7 @@
                     Continue Shopping
                 </a>
                 <a class="proceed-btn" id="proceedButton">
-                    <button type="submit">
+                    <button type="submit" disabled style="opacity: 0.6;">
                         <i class="bi bi-basket2-fill"></i>
                         Proceed to Checkout
                     </button>
@@ -242,8 +269,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
 window.availableCoupons = JSON.parse('<%- JSON.stringify(coupon) %>');
+let isAddressConfirmed = "<%= (adrsSelect != null && adrsSelect != undefined) ? 'true' : 'false' %>";
 </script>
-
 <script src="/javascript/user/placeorder.js"></script>
-
-<%-include("../layout/userfooter.ejs")-%>
+<%- include("../layout/userfooter.ejs") -%>

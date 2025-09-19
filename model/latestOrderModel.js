@@ -9,9 +9,6 @@ const orderSchema = new mongoose.Schema({
     products: [
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: "product", required: true },
-            name: String,   // snapshot
-            price: Number,  // snapshot (base price at order time)
-            discountAmount: Number, // snapshot if product had discount
             quantity: { type: Number, required: true },
             status: {
                 type: String,

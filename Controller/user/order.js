@@ -625,36 +625,36 @@ module.exports = {
             console.log(err);
         }
     },
-    couponapply: async (req, res) => {
-        try {
-            if (req.session.couponCode) {
-                res.json({ errorMsg: MESSAGES.COUPON.ERROR.ALREADY_APPLIED });
-            } else {
-                const { couponcode } = req.body;
-                console.log(couponcode);
-                const coupon = await Coupon.findOne({ couponCode: couponcode });
-                req.session.totalprice -= coupon.discountAmount;
-                req.session.couponCode = couponcode;
-                req.session.cpnDiscount = coupon.discountAmount;
-                console.log(req.session.totalprice, req.session.couponCode, req.session.cpnDiscount);
-                res.json({ success: true, successMsg: MESSAGES.COUPON.SUCCESS.APPLIED });
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    },
-    removecouponaply: async (req, res) => {
-        try {
-            if (req.session.couponCode == null || req.session.couponCode == undefined) {
-                res.json({ errorMsg: MESSAGES.COUPON.ERROR.NOT_APPLIED });
-            } else {
-                delete req.session.couponCode;
-                req.session.totalprice += req.session.cpnDiscount;
-                delete req.session.cpnDiscount;
-                res.json({ successMsg: MESSAGES.COUPON.SUCCESS.REMOVED });
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    // couponapply: async (req, res) => {
+    //     try {
+    //         if (req.session.couponCode) {
+    //             res.json({ errorMsg: MESSAGES.COUPON.ERROR.ALREADY_APPLIED });
+    //         } else {
+    //             const { couponcode } = req.body;
+    //             console.log(couponcode);
+    //             const coupon = await Coupon.findOne({ couponCode: couponcode });
+    //             req.session.totalprice -= coupon.discountAmount;
+    //             req.session.couponCode = couponcode;
+    //             req.session.cpnDiscount = coupon.discountAmount;
+    //             console.log(req.session.totalprice, req.session.couponCode, req.session.cpnDiscount);
+    //             res.json({ success: true, successMsg: MESSAGES.COUPON.SUCCESS.APPLIED });
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // },
+    // removecouponaply: async (req, res) => {
+    //     try {
+    //         if (req.session.couponCode == null || req.session.couponCode == undefined) {
+    //             res.json({ errorMsg: MESSAGES.COUPON.ERROR.NOT_APPLIED });
+    //         } else {
+    //             delete req.session.couponCode;
+    //             req.session.totalprice += req.session.cpnDiscount;
+    //             delete req.session.cpnDiscount;
+    //             res.json({ successMsg: MESSAGES.COUPON.SUCCESS.REMOVED });
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 };

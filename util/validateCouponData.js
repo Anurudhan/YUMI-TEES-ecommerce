@@ -1,49 +1,44 @@
-function validateCouponData({ couponCode, description, minimumPurchaseAmount, discountType, discountValue, validFrom, validTo }) {
+const Coupon = require("../model/latestCouponModel");
+const AppError = require("./AppError");
 
-    // Coupon Code
-    if (!couponCode || couponCode.trim().length === 0) {
-        return "Coupon code is required.";
+
+async function validateCoupon(couponCode, userId) {
+    if (!couponCode) {
+        return { couponId: null, coupon: null };
     }
 
-    // Description
-    if (!description || description.trim().length < 4) {
-        return "Description must be at least 4 characters long.";
+    const coupon = await Coupon.findOne({ couponCode });
+    if (!coupon) throw new AppError("Coupon not found", 404);
+    if (coupon.status !== "Active") throw new AppError("Coupon is not active", 400);
+
+    const now = new Date();
+    if (now < coupon.validFrom) throw new AppError("Coupon is not yet valid", 400);
+    if (now > coupon.validTo) throw new AppError("Coupon has expired", 400);
+
+    const userUsage = coupon.usedBy.find(u => u.userId.toString() === userId.toString());
+    if (userUsage && userUsage.count >= coupon.perUserLimit) {
+        throw new AppError("You have already used this coupon maximum times", 409);
     }
 
-    // Minimum Purchase
-    if (!minimumPurchaseAmount || minimumPurchaseAmount < 500) {
-        return "Minimum purchase amount must be at least ₹500.";
-    }
-
-    // Discount Type
-    if (!discountType || !["Flat", "Percentage"].includes(discountType)) {
-        return "Invalid discount type. Must be Flat or Percentage.";
-    }
-
-    // Discount Value
-    if (!discountValue || discountValue <= 0) {
-        return "Discount value must be greater than 0.";
-    } 
-    if (discountType === "Percentage" && discountValue > 30) {
-        return "Percentage discount cannot exceed 30%.";
-    } 
-    if (discountType === "Flat") {
-        const maxDiscount = 0.3 * minimumPurchaseAmount;
-        if (discountValue > maxDiscount) {
-            return `Flat discount cannot exceed 30% of minimum purchase (₹${maxDiscount.toFixed(2)}).`;
-        }
-    }
-
-    // Dates
-    const today = new Date();
-    if (new Date(validFrom) < today.setHours(0, 0, 0, 0)) {
-        return "Start date must be today or in the future.";
-    }
-    if (new Date(validTo) <= new Date(validFrom)) {
-        return "End date must be after start date.";
-    }
-
-    // ✅ All good
-    return null;
+    return { couponId: coupon._id, coupon };
 }
-module.exports = validateCouponData;
+
+function calculateCouponDiscount(coupon, totalAmount, productDiscount = 0) {
+    const eligibleAmount = totalAmount - productDiscount;
+
+    if (eligibleAmount < coupon.minimumPurchaseAmount) {
+        throw new AppError(
+            `Minimum purchase of ₹${coupon.minimumPurchaseAmount} required`,
+            400
+        );
+    }
+
+    const validCouponDiscount =
+        coupon.discountType === "Flat"
+            ? coupon.discountValue
+            : Math.floor((eligibleAmount * coupon.discountValue) / 100);
+
+    return validCouponDiscount;
+}
+
+module.exports = { validateCoupon, calculateCouponDiscount };

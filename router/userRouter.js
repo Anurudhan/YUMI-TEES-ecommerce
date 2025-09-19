@@ -5,7 +5,7 @@ const usercontoller = require("../Controller/user/controller")
 const productcontroller = require("../Controller/user/userproduct")
 const profilecontroller = require("../Controller/user/userprofile")
 const cartcontroller=require("../Controller/user/cart")
-const ordercontroller = require("../Controller/user/order")
+const ordercontroller = require("../Controller/user/latestVersion/order")
 const wishlistcontroller =  require("../Controller/user/whishlist")
 const {CountOfCart}=require("../middleware/cartCount");
 const {wishCount} = require("../middleware/wishCount");
@@ -51,7 +51,7 @@ router.get("/nowishlist",userVerify,CountOfCart,wishCount,wishlistcontroller.noW
 
 router.get("/placeorder",userVerify,CountOfCart,wishCount,ordercontroller.getplaceorder);
 router.get("/getaddress/:id",userVerify,CountOfCart,wishCount,ordercontroller.getaddress);
-router.post("/placeorder/:type",userVerify,CountOfCart,wishCount,ordercontroller.confirmorder);
+router.post("/confirmorder",userVerify,CountOfCart,wishCount,ordercontroller.confirmorder);
 router.post("/verifypayment",userVerify,CountOfCart,wishCount,ordercontroller.verifypayment);
 router.get("/userorder",userVerify,CountOfCart,wishCount,ordercontroller.getorder);
 router.get("/vieworderdetails/:id",CountOfCart,wishCount,userVerify,ordercontroller.getorderdetails);
@@ -60,9 +60,13 @@ router.post("/cancelsingleorder/:id/:index",userVerify,CountOfCart,wishCount,ord
 router.post("/returnorder",userVerify,CountOfCart,wishCount,ordercontroller.returnorder);
 router.get("/ordersuccess",userVerify,CountOfCart,wishCount,ordercontroller.ordersucess);
 router.get("/failedpayment",userVerify,CountOfCart,wishCount,ordercontroller.paymentFailed)
-router.post("/couponapply",userVerify,CountOfCart,wishCount,ordercontroller.couponapply);
-router.post("/removecouponapply",userVerify,CountOfCart,wishCount,ordercontroller.removecouponaply);
 router.get("/repaymentOnline/:id",userVerify,CountOfCart,wishCount,ordercontroller.repayment)
+
+// coupon
+
+// router.post("/couponapply",userVerify,CountOfCart,wishCount,ordercontroller.couponapply);
+// router.post("/removecouponapply",userVerify,CountOfCart,wishCount,ordercontroller.removecouponaply);
+
 
 // Invoice 
 
